@@ -4,7 +4,7 @@
 /* 面板容器 */
 .device-library-panel {
     position: fixed;
-    width: 400px;
+    width: 320px;
     max-height: calc(100vh - 100px);
     background: #2b2b2b;
     border: 1px solid #444;
