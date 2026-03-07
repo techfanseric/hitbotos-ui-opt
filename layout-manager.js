@@ -273,7 +273,8 @@ class LayoutManager {
 
             // 全屏模式: fs_windowCode
             if (state.fullscreenWindowType) {
-                const windowCode = windowCodeMap[state.fullscreenWindowType] || '3d';
+                const windowCode = windowCodeMap[state.fullscreenWindowType];
+                if (!windowCode) return null; // 无效窗口类型
                 return `fs_${windowCode}`;
             }
 
