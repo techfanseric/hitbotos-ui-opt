@@ -236,7 +236,8 @@
 }
 
 .device-library-panel .device-category {
-    display: none;
+    color: #999;
+    font-size: 10px;
 }
 
 /* 无结果提示 */
