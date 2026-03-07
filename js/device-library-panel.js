@@ -72,7 +72,7 @@ class DeviceLibraryPanel {
             if (!deviceBtn) return;
 
             const btnRect = deviceBtn.getBoundingClientRect();
-            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
 
             // 左侧位置：工具栏右侧（60px工具栏宽度 + 16px间距）
             const targetLeft = 76;
@@ -80,16 +80,15 @@ class DeviceLibraryPanel {
             // 顶部位置：与设备库按钮对齐
             const targetTop = btnRect.top;
 
+            // 计算可用高度（从按钮顶部到画布底部，保留20px边距）
+            const availableHeight = viewportHeight - targetTop - 20;
+
+            // 设置面板最大高度为可用高度
+            this.panel.style.maxHeight = availableHeight + 'px';
+
             this.panel.style.left = targetLeft + 'px';
             this.panel.style.top = targetTop + 'px';
             this.panel.style.transform = 'none';
-
-            // 确保面板不会超出屏幕底部
-            const rect = this.panel.getBoundingClientRect();
-            const viewportHeight = window.innerHeight;
-            if (rect.top + rect.height > viewportHeight - 20) {
-                this.panel.style.top = (viewportHeight - rect.height - 20) + 'px';
-            }
         }, 100);
     }
 
