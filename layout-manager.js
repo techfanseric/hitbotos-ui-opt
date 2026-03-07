@@ -80,7 +80,12 @@ class LayoutManager {
             console.log('正在从URL恢复布局状态:', savedState);
 
             // 检查状态有效性
-            if (!savedState.hasOwnProperty('isInLayoutMode') || !savedState.currentLayoutType) {
+            // 全屏模式：fullscreenWindowType 存在即可
+            // 布局模式：isInLayoutMode 为 true 且 currentLayoutType 存在
+            const isFullscreen = !!savedState.fullscreenWindowType;
+            const isLayoutMode = savedState.isInLayoutMode && savedState.currentLayoutType;
+
+            if (!isFullscreen && !isLayoutMode) {
                 console.log('URL中的状态格式无效，使用默认布局');
                 return false;
             }
@@ -113,7 +118,9 @@ class LayoutManager {
     
     // 恢复全屏状态
     restoreFullscreenState(windowType, source) {
+        console.log('[restoreFullscreenState] windowType:', windowType, 'source:', source);
         const windowElement = this.getWindowByType(windowType);
+        console.log('[restoreFullscreenState] windowElement:', windowElement);
         if (windowElement) {
             // 延迟执行，确保DOM完全加载
             setTimeout(() => {
@@ -296,15 +303,21 @@ class LayoutManager {
     // 从URL参数解码状态
     decodeStateFromURL(encoded) {
         try {
+            console.log('[decodeStateFromURL] encoded:', encoded);
             // 格式: layoutCode_windows 或 fs_windowCode
             const parts = encoded.split('_');
-            if (parts.length !== 2) return null;
+            if (parts.length !== 2) {
+                console.warn('[decodeStateFromURL] invalid format, parts:', parts);
+                return null;
+            }
 
             const [prefix, value] = parts;
+            console.log('[decodeStateFromURL] prefix:', prefix, 'value:', value);
 
             // 全屏模式: fs_windowCode
             if (prefix === 'fs') {
                 const windowType = this.getWindowNameFromCode(value);
+                console.log('[decodeStateFromURL] fullscreen mode, windowType:', windowType);
                 return {
                     isInLayoutMode: false,
                     currentLayoutType: null,
