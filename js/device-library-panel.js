@@ -59,17 +59,29 @@ class DeviceLibraryPanel {
         setTimeout(() => {
             this.panel.classList.remove('initial-position');
 
-            const rect = this.panel.getBoundingClientRect();
-            const viewportWidth = window.innerWidth;
-            const viewportHeight = window.innerHeight;
+            // 获取设备库按钮的位置
+            const deviceBtn = document.querySelector('[data-tool="devices"]');
+            if (!deviceBtn) return;
 
-            // 左侧居中位置
-            const targetLeft = 80;
-            const targetTop = (viewportHeight - rect.height) / 2;
+            const btnRect = deviceBtn.getBoundingClientRect();
+            const viewportWidth = window.innerWidth;
+
+            // 左侧位置：工具栏右侧（60px工具栏宽度 + 16px间距）
+            const targetLeft = 76;
+
+            // 顶部位置：与设备库按钮对齐
+            const targetTop = btnRect.top;
 
             this.panel.style.left = targetLeft + 'px';
             this.panel.style.top = targetTop + 'px';
             this.panel.style.transform = 'none';
+
+            // 确保面板不会超出屏幕底部
+            const rect = this.panel.getBoundingClientRect();
+            const viewportHeight = window.innerHeight;
+            if (rect.top + rect.height > viewportHeight - 20) {
+                this.panel.style.top = (viewportHeight - rect.height - 20) + 'px';
+            }
         }, 100);
     }
 
