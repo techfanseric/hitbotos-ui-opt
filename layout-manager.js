@@ -68,55 +68,45 @@ class LayoutManager {
         }
     }
     
-    // 从localStorage恢复布局状态
+    // 从URL参数恢复布局状态
     restoreLayoutState() {
         try {
-            const savedState = localStorage.getItem(this.STORAGE_KEY);
+            const savedState = this.getStateFromURL();
             if (!savedState) {
-                console.log('未找到保存的布局状态，使用默认布局');
+                console.log('URL中未找到布局参数，使用默认布局');
                 return false;
             }
-            
-            const state = JSON.parse(savedState);
-            console.log('正在恢复布局状态:', state);
-            
+
+            console.log('正在从URL恢复布局状态:', savedState);
+
             // 检查状态有效性
-            if (!state.timestamp || !state.hasOwnProperty('isInLayoutMode')) {
-                console.log('保存的状态格式无效，使用默认布局');
+            if (!savedState.hasOwnProperty('isInLayoutMode') || !savedState.currentLayoutType) {
+                console.log('URL中的状态格式无效，使用默认布局');
                 return false;
             }
-            
-            // 检查是否过期（可选，这里设置24小时过期）
-            const isExpired = Date.now() - state.timestamp > 24 * 60 * 60 * 1000;
-            if (isExpired) {
-                console.log('保存的状态已过期，使用默认布局');
-                localStorage.removeItem(this.STORAGE_KEY);
-                return false;
-            }
-            
+
             // 恢复状态
-            this.isInLayoutMode = state.isInLayoutMode;
-            this.selectedWindows = state.selectedWindows || [];
-            this.currentLayoutType = state.currentLayoutType;
-            this.fullscreenSource = state.fullscreenSource;
-            
+            this.isInLayoutMode = savedState.isInLayoutMode;
+            this.selectedWindows = savedState.selectedWindows || [];
+            this.currentLayoutType = savedState.currentLayoutType;
+            this.fullscreenSource = savedState.fullscreenSource;
+
             // 恢复布局
-            if (state.fullscreenWindowType) {
+            if (savedState.fullscreenWindowType) {
                 // 恢复全屏状态
-                this.restoreFullscreenState(state.fullscreenWindowType, state.fullscreenSource);
-            } else if (state.isInLayoutMode && state.currentLayoutType) {
+                this.restoreFullscreenState(savedState.fullscreenWindowType, savedState.fullscreenSource);
+            } else if (savedState.isInLayoutMode && savedState.currentLayoutType) {
                 // 恢复布局模式
-                this.restoreLayoutMode(state.currentLayoutType, state.selectedWindows);
+                this.restoreLayoutMode(savedState.currentLayoutType, savedState.selectedWindows);
             } else {
                 // 如果状态不完整，使用默认布局
-                console.log('保存的状态不完整，使用默认布局');
+                console.log('URL中的状态不完整，使用默认布局');
                 this.createDefaultLayout();
             }
-            
+
             return true;
         } catch (error) {
             console.warn('恢复布局状态失败:', error);
-            localStorage.removeItem(this.STORAGE_KEY);
             return false;
         }
     }
