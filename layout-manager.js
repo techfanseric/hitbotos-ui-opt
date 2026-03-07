@@ -262,61 +262,51 @@ class LayoutManager {
         return codeMap[code] || null;
     }
 
-    // 将状态对象编码为简洁的URL参数
-    // 格式: layoutCode:window1,window2,window3 或 f:fullscreenWindow
+    // 将状态对象编码为直观的URL参数
+    // 格式: layoutName/window1,window2,window3 或 fullscreen/windowName
     encodeStateToURL(state) {
         try {
-            const layoutCodeMap = this.getLayoutCode();
-            const windowCodeMap = this.getWindowCode();
-
             // 如果是全屏状态
             if (state.fullscreenWindowType) {
-                const fsCode = windowCodeMap[state.fullscreenWindowType] || 's';
-                return `f:${fsCode}`;
+                return `fullscreen/${state.fullscreenWindowType}`;
             }
 
-            // 布局模式: layoutCode:window1,window2,window3
-            const layoutCode = layoutCodeMap[state.currentLayoutType] || 'l2';
-            const windowCodes = state.selectedWindows.map(w => windowCodeMap[w] || '').filter(Boolean);
-            return `${layoutCode}:${windowCodes.join(',')}`;
+            // 布局模式: layoutName/window1,window2,window3
+            const windows = state.selectedWindows.filter(w => w).join(',');
+            return `${state.currentLayoutType}/${windows}`;
         } catch (error) {
             console.warn('编码状态到URL失败:', error);
             return null;
         }
     }
 
-    // 从简洁的URL参数解码状态对象
+    // 从直观的URL参数解码状态对象
     decodeStateFromURL(encoded) {
         try {
-            // 格式: layoutCode:window1,window2,window3 或 f:fullscreenWindow
-            const parts = encoded.split(':');
+            // 格式: layoutName/window1,window2,window3 或 fullscreen/windowName
+            const parts = encoded.split('/');
             if (parts.length !== 2) return null;
 
-            const [prefix, value] = parts;
+            const [mode, value] = parts;
 
             // 全屏模式
-            if (prefix === 'f') {
-                const windowType = this.getWindowNameFromCode(value);
+            if (mode === 'fullscreen') {
                 return {
                     isInLayoutMode: false,
                     currentLayoutType: null,
                     selectedWindows: [],
-                    fullscreenWindowType: windowType,
+                    fullscreenWindowType: value,
                     fullscreenSource: 'statusbar',
                     timestamp: Date.now()
                 };
             }
 
             // 布局模式
-            const layoutType = this.getLayoutNameFromCode(prefix);
-            if (!layoutType) return null;
-
-            const windowCodes = value.split(',');
-            const selectedWindows = windowCodes.map(code => this.getWindowNameFromCode(code)).filter(Boolean);
+            const selectedWindows = value.split(',').filter(w => w);
 
             return {
                 isInLayoutMode: true,
-                currentLayoutType: layoutType,
+                currentLayoutType: mode,
                 selectedWindows: selectedWindows,
                 fullscreenWindowType: null,
                 fullscreenSource: null,
