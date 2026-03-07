@@ -14,7 +14,10 @@ class LayoutManager {
         
         // 持久化存储键名
         this.STORAGE_KEY = 'hitbotos_layout_state';
-        
+
+        // URL参数名
+        this.URL_PARAM_NAME = 'layout';
+
         // 窗口类型定义
         this.windowTypes = [
             { id: 'electrical', name: '电气拓扑', icon: 'bi bi-diagram-3' },
@@ -223,7 +226,73 @@ class LayoutManager {
             console.warn('清除布局状态失败:', error);
         }
     }
-    
+
+    // 将状态对象编码为URL参数
+    encodeStateToURL(state) {
+        try {
+            // 简化状态对象，使用短属性名
+            const simplified = {
+                m: state.currentLayoutType,
+                w: state.selectedWindows,
+                f: state.fullscreenWindowType,
+                s: state.fullscreenSource
+            };
+            const json = JSON.stringify(simplified);
+            // 使用 Base64 编码
+            return btoa(encodeURIComponent(json));
+        } catch (error) {
+            console.warn('编码状态到URL失败:', error);
+            return null;
+        }
+    }
+
+    // 从URL参数解码状态对象
+    decodeStateFromURL(encoded) {
+        try {
+            const json = decodeURIComponent(atob(encoded));
+            const simplified = JSON.parse(json);
+            // 还原为完整状态对象
+            return {
+                isInLayoutMode: true,
+                currentLayoutType: simplified.m,
+                selectedWindows: simplified.w || [],
+                fullscreenWindowType: simplified.f,
+                fullscreenSource: simplified.s,
+                timestamp: Date.now()
+            };
+        } catch (error) {
+            console.warn('从URL解码状态失败:', error);
+            return null;
+        }
+    }
+
+    // 更新URL中的布局参数
+    updateURLWithState(state) {
+        const encoded = this.encodeStateToURL(state);
+        if (!encoded) return;
+
+        const url = new URL(window.location.href);
+        if (encoded) {
+            url.searchParams.set(this.URL_PARAM_NAME, encoded);
+        }
+        window.history.replaceState({}, '', url.toString());
+    }
+
+    // 从URL获取布局状态
+    getStateFromURL() {
+        const params = new URLSearchParams(window.location.search);
+        const encoded = params.get(this.URL_PARAM_NAME);
+        if (!encoded) return null;
+        return this.decodeStateFromURL(encoded);
+    }
+
+    // 清除URL中的布局参数
+    clearStateFromURL() {
+        const url = new URL(window.location.href);
+        url.searchParams.delete(this.URL_PARAM_NAME);
+        window.history.replaceState({}, '', url.toString());
+    }
+
     // 初始化布局管理器
     initialize() {
         this.layoutSelector = document.querySelector('.layout-selector');
