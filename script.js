@@ -22,6 +22,13 @@ document.addEventListener('DOMContentLoaded', function() {
     setupWindowSwapControls();
     initializeWindowStates();
     setupPanelTabs();
+
+    // 初始化设备库面板
+    import('./js/device-library-panel.js').then(module => {
+        window.initDeviceLibraryPanel = module.initDeviceLibraryPanel;
+        window.getDeviceLibraryPanel = module.getDeviceLibraryPanel;
+        window.initDeviceLibraryPanel();
+    });
     
     // 确保所有窗口控制状态正确
     updateAllWindowControls();
@@ -140,6 +147,14 @@ function setupToolbarControls() {
                     }
                     // 联动激活右侧属性面板的结构tab
                     activateStructureTab();
+                }
+            } else if (toolType === 'devices') {
+                // 设备库按钮：切换设备库面板显示/隐藏
+                const devicePanel = window.getDeviceLibraryPanel?.();
+                if (devicePanel) {
+                    devicePanel.toggle();
+                    // 切换按钮激活状态
+                    this.classList.toggle('active');
                 }
             } else {
                 // 其他按钮：触发窗口打开逻辑（预留）
