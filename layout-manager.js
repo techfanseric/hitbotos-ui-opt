@@ -211,8 +211,8 @@ class LayoutManager {
     // 清除保存的布局状态
     clearLayoutState() {
         try {
-            localStorage.removeItem(this.STORAGE_KEY);
-            console.log('布局状态已清除');
+            this.clearStateFromURL();
+            console.log('URL中的布局状态已清除');
         } catch (error) {
             console.warn('清除布局状态失败:', error);
         }
