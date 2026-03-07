@@ -243,21 +243,21 @@ class LayoutManager {
         return codeMap[code] || null;
     }
 
-    // 窗口代码映射（使用拼音首字母，更直观）
-    // 电(dian) 3D(3D) 动(dong)
+    // 窗口代码映射（使用英文缩写）
+    // ele (electrical) sim (simulation) act (action)
     getWindowCode() {
         return {
-            'electrical': 'd',
-            'simulation': '3d',
-            'action': 'dong'
+            'electrical': 'ele',
+            'simulation': 'sim',
+            'action': 'act'
         };
     }
 
     getWindowNameFromCode(code) {
         const codeMap = {
-            'd': 'electrical',
-            '3d': 'simulation',
-            'dong': 'action'
+            'ele': 'electrical',
+            'sim': 'simulation',
+            'act': 'action'
         };
         return codeMap[code] || null;
     }
