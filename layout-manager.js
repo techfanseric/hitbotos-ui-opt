@@ -36,21 +36,21 @@ class LayoutManager {
         this.onUpdateAllWindowControls = null;
     }
     
-    // 保存布局状态到localStorage
+    // 保存布局状态到URL参数
     saveLayoutState() {
         try {
             // 如果在布局模式但没有完整配置，不保存状态
             if (this.isInLayoutMode && this.selectedWindows.length > 0) {
                 const validWindows = this.selectedWindows.filter(w => w !== null && w !== undefined && w !== '');
                 const expectedCount = this.currentLayoutType && this.currentLayoutType.startsWith('dual-') ? 2 : 3;
-                
+
                 // 如果窗口配置不完整且不是全屏状态，暂时不保存
                 if (validWindows.length < expectedCount && !this.fullscreenWindow) {
                     console.log('窗口配置不完整，暂时不保存状态');
                     return;
                 }
             }
-            
+
             const state = {
                 isInLayoutMode: this.isInLayoutMode,
                 selectedWindows: [...this.selectedWindows],
@@ -59,9 +59,10 @@ class LayoutManager {
                 fullscreenSource: this.fullscreenSource,
                 timestamp: Date.now()
             };
-            
-            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(state));
-            console.log('布局状态已保存:', state);
+
+            // 更新URL参数
+            this.updateURLWithState(state);
+            console.log('布局状态已保存到URL:', state);
         } catch (error) {
             console.warn('保存布局状态失败:', error);
         }
