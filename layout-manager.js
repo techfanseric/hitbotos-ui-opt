@@ -218,95 +218,114 @@ class LayoutManager {
         }
     }
 
-    // 布局类型和窗口类型的短代码映射
+    // 布局代码映射（简洁直观）
+    // 使用数字和简单的单词缩写
     getLayoutCode() {
         return {
-            'layout1': 'l1',
-            'layout2': 'l2',
-            'layout3': 'l3',
-            'dual-lr-73': 'd73',
-            'dual-lr-55': 'd55',
-            'dual-tb-55': 'dt5'
+            'layout1': '1',      // 上下分层
+            'layout2': '2',      // 默认布局
+            'layout3': '3',      // 三列并排
+            'dual-lr-73': '2-7', // 双窗口左右7:3
+            'dual-lr-55': '2-5', // 双窗口左右5:5
+            'dual-tb-55': '2-t'  // 双窗口上下5:5
         };
     }
 
     getLayoutNameFromCode(code) {
         const codeMap = {
-            'l1': 'layout1',
-            'l2': 'layout2',
-            'l3': 'layout3',
-            'd73': 'dual-lr-73',
-            'd55': 'dual-lr-55',
-            'dt5': 'dual-tb-55'
+            '1': 'layout1',
+            '2': 'layout2',
+            '3': 'layout3',
+            '2-7': 'dual-lr-73',
+            '2-5': 'dual-lr-55',
+            '2-t': 'dual-tb-55'
         };
         return codeMap[code] || null;
     }
 
+    // 窗口代码映射（使用拼音首字母，更直观）
+    // 电(dian) 3D(3D) 动(dong)
     getWindowCode() {
         return {
-            'electrical': 'e',
-            'simulation': 's',
-            'action': 'a',
-            '3D仿真': 's',
-            '电气拓扑': 'e',
-            '动作编辑': 'a'
+            'electrical': 'd',
+            'simulation': '3d',
+            'action': 'dong'
         };
     }
 
     getWindowNameFromCode(code) {
         const codeMap = {
-            'e': 'electrical',
-            's': 'simulation',
-            'a': 'action'
+            'd': 'electrical',
+            '3d': 'simulation',
+            'dong': 'action'
         };
         return codeMap[code] || null;
     }
 
-    // 将状态对象编码为直观的URL参数
-    // 格式: layoutName/window1,window2,window3 或 fullscreen/windowName
+    // 将状态编码为简洁的URL参数
+    // 格式: layout_windows 或 fs_window
+    // 例如: 2_d-3d-dong (layout2 with 电气,3D,动作)
+    // 例如: fs_3d (fullscreen 3D)
     encodeStateToURL(state) {
         try {
-            // 如果是全屏状态
+            const layoutCodeMap = this.getLayoutCode();
+            const windowCodeMap = this.getWindowCode();
+
+            // 全屏模式: fs_windowCode
             if (state.fullscreenWindowType) {
-                return `fullscreen/${state.fullscreenWindowType}`;
+                const windowCode = windowCodeMap[state.fullscreenWindowType] || '3d';
+                return `fs_${windowCode}`;
             }
 
-            // 布局模式: layoutName/window1,window2,window3
-            const windows = state.selectedWindows.filter(w => w).join(',');
-            return `${state.currentLayoutType}/${windows}`;
+            // 布局模式: layoutCode_window1-window2-window3
+            const layoutCode = layoutCodeMap[state.currentLayoutType] || '2';
+            const windowCodes = state.selectedWindows
+                .filter(w => w)
+                .map(w => windowCodeMap[w] || '')
+                .filter(Boolean)
+                .join('-');
+
+            return `${layoutCode}_${windowCodes}`;
         } catch (error) {
             console.warn('编码状态到URL失败:', error);
             return null;
         }
     }
 
-    // 从直观的URL参数解码状态对象
+    // 从URL参数解码状态
     decodeStateFromURL(encoded) {
         try {
-            // 格式: layoutName/window1,window2,window3 或 fullscreen/windowName
-            const parts = encoded.split('/');
+            // 格式: layoutCode_windows 或 fs_windowCode
+            const parts = encoded.split('_');
             if (parts.length !== 2) return null;
 
-            const [mode, value] = parts;
+            const [prefix, value] = parts;
 
-            // 全屏模式
-            if (mode === 'fullscreen') {
+            // 全屏模式: fs_windowCode
+            if (prefix === 'fs') {
+                const windowType = this.getWindowNameFromCode(value);
                 return {
                     isInLayoutMode: false,
                     currentLayoutType: null,
                     selectedWindows: [],
-                    fullscreenWindowType: value,
+                    fullscreenWindowType: windowType,
                     fullscreenSource: 'statusbar',
                     timestamp: Date.now()
                 };
             }
 
-            // 布局模式
-            const selectedWindows = value.split(',').filter(w => w);
+            // 布局模式: layoutCode_windows
+            const layoutType = this.getLayoutNameFromCode(prefix);
+            if (!layoutType) return null;
+
+            const windowCodes = value.split('-');
+            const selectedWindows = windowCodes
+                .map(code => this.getWindowNameFromCode(code))
+                .filter(Boolean);
 
             return {
                 isInLayoutMode: true,
-                currentLayoutType: mode,
+                currentLayoutType: layoutType,
                 selectedWindows: selectedWindows,
                 fullscreenWindowType: null,
                 fullscreenSource: null,
