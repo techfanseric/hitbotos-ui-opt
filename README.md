@@ -1,4 +1,4 @@
-# Hithotos UI - 仿真面板
+# HitbotOS UI - 仿真面板
 
 基于纯HTML/CSS/JavaScript的3D仿真系统用户界面，提供多窗口布局管理、电气拓扑编辑、动作编辑等功能。
 
@@ -9,12 +9,6 @@
 - **电气拓扑编辑**：可视化电气连接关系编辑
 - **动作编辑器**：设备动作序列编程
 - **响应式设计**：自适应不同屏幕尺寸和布局模式
-
-## 技术栈
-
-- 纯HTML5 + CSS3 + JavaScript（无框架依赖）
-- Bootstrap Icons（图标库）
-- Chrome DevTools Protocol（调试支持）
 
 ## 版本历史
 
@@ -38,13 +32,6 @@
 - 点击"工具"按钮展开/收起子工具栏
 - 子工具栏展开后位于左侧，不影响画布中心区域
 
-#### 技术实现
-
-- 使用 `ResizeObserver` 实时监听画布容器实际宽度
-- 基于画布容器（`.center-content`）而非浏览器窗口宽度判断
-- 动态添加/移除 `space-constrained` 类实现响应式切换
-- 支持全屏模式、多窗口布局切换等场景
-
 #### 适用场景
 
 - 全屏3D仿真时，工具栏自动居中显示
@@ -57,13 +44,7 @@
 - 3D仿真面板基本功能
 - 工具栏点击展开/收起交互
 
-## 浏览器兼容性
-
-- Chrome/Edge 90+
-- Firefox 88+
-- Safari 14+
-
-## 开发
+## 开发预览
 
 ```bash
 # 直接在浏览器中打开
@@ -73,6 +54,12 @@ open index.html
 python -m http.server 8000
 ```
 
+## 浏览器兼容性
+
+- Chrome/Edge 90+
+- Firefox 88+
+- Safari 14+
+
 ## 许可证
 
-版权所有 (c) 2026 Hithotos
+版权所有 (c) 2026 HitbotOS
