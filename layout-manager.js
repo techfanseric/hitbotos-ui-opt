@@ -218,37 +218,108 @@ class LayoutManager {
         }
     }
 
-    // 将状态对象编码为URL参数
+    // 布局类型和窗口类型的短代码映射
+    getLayoutCode() {
+        return {
+            'layout1': 'l1',
+            'layout2': 'l2',
+            'layout3': 'l3',
+            'dual-lr-73': 'd73',
+            'dual-lr-55': 'd55',
+            'dual-tb-55': 'dt5'
+        };
+    }
+
+    getLayoutNameFromCode(code) {
+        const codeMap = {
+            'l1': 'layout1',
+            'l2': 'layout2',
+            'l3': 'layout3',
+            'd73': 'dual-lr-73',
+            'd55': 'dual-lr-55',
+            'dt5': 'dual-tb-55'
+        };
+        return codeMap[code] || null;
+    }
+
+    getWindowCode() {
+        return {
+            'electrical': 'e',
+            'simulation': 's',
+            'action': 'a',
+            '3D仿真': 's',
+            '电气拓扑': 'e',
+            '动作编辑': 'a'
+        };
+    }
+
+    getWindowNameFromCode(code) {
+        const codeMap = {
+            'e': 'electrical',
+            's': 'simulation',
+            'a': 'action'
+        };
+        return codeMap[code] || null;
+    }
+
+    // 将状态对象编码为简洁的URL参数
+    // 格式: layoutCode:window1,window2,window3 或 f:fullscreenWindow
     encodeStateToURL(state) {
         try {
-            // 简化状态对象，使用短属性名
-            const simplified = {
-                m: state.currentLayoutType,
-                w: state.selectedWindows,
-                f: state.fullscreenWindowType,
-                s: state.fullscreenSource
-            };
-            const json = JSON.stringify(simplified);
-            // 使用 Base64 编码
-            return btoa(encodeURIComponent(json));
+            const layoutCodeMap = this.getLayoutCode();
+            const windowCodeMap = this.getWindowCode();
+
+            // 如果是全屏状态
+            if (state.fullscreenWindowType) {
+                const fsCode = windowCodeMap[state.fullscreenWindowType] || 's';
+                return `f:${fsCode}`;
+            }
+
+            // 布局模式: layoutCode:window1,window2,window3
+            const layoutCode = layoutCodeMap[state.currentLayoutType] || 'l2';
+            const windowCodes = state.selectedWindows.map(w => windowCodeMap[w] || '').filter(Boolean);
+            return `${layoutCode}:${windowCodes.join(',')}`;
         } catch (error) {
             console.warn('编码状态到URL失败:', error);
             return null;
         }
     }
 
-    // 从URL参数解码状态对象
+    // 从简洁的URL参数解码状态对象
     decodeStateFromURL(encoded) {
         try {
-            const json = decodeURIComponent(atob(encoded));
-            const simplified = JSON.parse(json);
-            // 还原为完整状态对象
+            // 格式: layoutCode:window1,window2,window3 或 f:fullscreenWindow
+            const parts = encoded.split(':');
+            if (parts.length !== 2) return null;
+
+            const [prefix, value] = parts;
+
+            // 全屏模式
+            if (prefix === 'f') {
+                const windowType = this.getWindowNameFromCode(value);
+                return {
+                    isInLayoutMode: false,
+                    currentLayoutType: null,
+                    selectedWindows: [],
+                    fullscreenWindowType: windowType,
+                    fullscreenSource: 'statusbar',
+                    timestamp: Date.now()
+                };
+            }
+
+            // 布局模式
+            const layoutType = this.getLayoutNameFromCode(prefix);
+            if (!layoutType) return null;
+
+            const windowCodes = value.split(',');
+            const selectedWindows = windowCodes.map(code => this.getWindowNameFromCode(code)).filter(Boolean);
+
             return {
                 isInLayoutMode: true,
-                currentLayoutType: simplified.m,
-                selectedWindows: simplified.w || [],
-                fullscreenWindowType: simplified.f,
-                fullscreenSource: simplified.s,
+                currentLayoutType: layoutType,
+                selectedWindows: selectedWindows,
+                fullscreenWindowType: null,
+                fullscreenSource: null,
                 timestamp: Date.now()
             };
         } catch (error) {
