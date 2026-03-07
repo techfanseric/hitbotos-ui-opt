@@ -77,7 +77,7 @@
 
 /* 搜索栏 */
 .device-library-panel .panel-search {
-    padding: 12px 16px;
+    padding: 12px 8px;
     background: #2b2b2b;
     border-bottom: 1px solid #444;
     position: relative;
