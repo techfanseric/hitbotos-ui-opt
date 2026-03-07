@@ -72,7 +72,14 @@ class DeviceLibraryPanel {
             if (!deviceBtn) return;
 
             const btnRect = deviceBtn.getBoundingClientRect();
-            const viewportHeight = window.innerHeight;
+
+            // 获取状态栏的位置
+            const statusBar = document.querySelector('.status-bar');
+            let statusBarTop = window.innerHeight; // 默认使用窗口底部
+            if (statusBar) {
+                const statusRect = statusBar.getBoundingClientRect();
+                statusBarTop = statusRect.top;
+            }
 
             // 左侧位置：工具栏右侧（60px工具栏宽度 + 16px间距）
             const targetLeft = 76;
@@ -80,8 +87,8 @@ class DeviceLibraryPanel {
             // 顶部位置：与设备库按钮对齐
             const targetTop = btnRect.top;
 
-            // 计算可用高度（从按钮顶部到画布底部，保留20px边距）
-            const availableHeight = viewportHeight - targetTop - 20;
+            // 计算可用高度（从按钮顶部到状态栏顶部）
+            const availableHeight = statusBarTop - targetTop;
 
             // 设置面板最大高度为可用高度
             this.panel.style.maxHeight = availableHeight + 'px';
