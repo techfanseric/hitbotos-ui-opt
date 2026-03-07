@@ -1,0 +1,493 @@
+<!-- Tab内容区域 -->
+<div class="panel-content-wrapper">
+    <!-- 结构Tab内容 -->
+    <div class="panel-tab-content" data-content="structure">
+        <!-- 结构体信息面板 -->
+        <div class="panel-section">
+            <div class="panel-header">
+                <span class="panel-title">结构体信息</span>
+                <button class="panel-toggle">
+                    <i class="bi bi-caret-down-fill"></i>
+                </button>
+            </div>
+            <div class="panel-content">
+                <div class="collection-tree">
+                    <!-- 根节点 - 场景集合 -->
+                    <div class="collection-item group" data-level="0">
+                        <span class="tree-toggle">
+                            <i class="bi bi-chevron-down"></i>
+                        </span>
+                        <span class="item-icon">
+                            <i class="bi bi-folder2"></i>
+                        </span>
+                        <span class="item-name">scene_root</span>
+                        <div class="item-actions">
+                            <button class="action-btn locate-btn" title="定位">
+                                <i class="bi bi-crosshair2"></i>
+                            </button>
+                            <button class="action-btn visibility-btn" title="显示/隐藏" data-visible="true">
+                                <i class="bi bi-eye-fill"></i>
+                            </button>
+                            <button class="action-btn edit-btn" title="编辑">
+                                <i class="bi bi-pencil-fill"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 第一级子节点 -->
+                    <div class="collection-item group" data-level="1">
+                        <span class="tree-toggle">
+                            <i class="bi bi-chevron-down"></i>
+                        </span>
+                        <span class="item-icon">
+                            <i class="bi bi-folder2"></i>
+                        </span>
+                        <span class="item-name">geom_grp</span>
+                        <div class="item-actions">
+                            <button class="action-btn locate-btn" title="定位">
+                                <i class="bi bi-crosshair2"></i>
+                            </button>
+                            <button class="action-btn visibility-btn" title="显示/隐藏" data-visible="true">
+                                <i class="bi bi-eye-fill"></i>
+                            </button>
+                            <button class="action-btn edit-btn" title="编辑">
+                                <i class="bi bi-pencil-fill"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 第二级子节点 - 几何体分组下的子分组 -->
+                    <div class="collection-item group" data-level="2">
+                        <span class="tree-toggle">
+                            <i class="bi bi-chevron-down"></i>
+                        </span>
+                        <span class="item-icon">
+                            <i class="bi bi-folder2"></i>
+                        </span>
+                        <span class="item-name">basic_geom</span>
+                        <div class="item-actions">
+                            <button class="action-btn locate-btn" title="定位">
+                                <i class="bi bi-crosshair2"></i>
+                            </button>
+                            <button class="action-btn visibility-btn" title="显示/隐藏" data-visible="true">
+                                <i class="bi bi-eye-fill"></i>
+                            </button>
+                            <button class="action-btn edit-btn" title="编辑">
+                                <i class="bi bi-pencil-fill"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 第三级子节点 - 末端几何体 -->
+                    <div class="collection-item leaf" data-level="3">
+                        <span class="tree-toggle">
+                            <span class="tree-spacer"></span>
+                        </span>
+                        <span class="item-icon">
+                            <i class="bi bi-square"></i>
+                        </span>
+                        <span class="item-name">cube_001</span>
+                        <div class="item-actions">
+                            <button class="action-btn locate-btn" title="定位">
+                                <i class="bi bi-crosshair2"></i>
+                            </button>
+                            <button class="action-btn visibility-btn" title="显示/隐藏" data-visible="true">
+                                <i class="bi bi-eye-fill"></i>
+                            </button>
+                            <button class="action-btn edit-btn" title="编辑">
+                                <i class="bi bi-pencil-fill"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="collection-item leaf" data-level="3">
+                        <span class="tree-toggle">
+                            <span class="tree-spacer"></span>
+                        </span>
+                        <span class="item-icon">
+                            <i class="bi bi-circle"></i>
+                        </span>
+                        <span class="item-name">sphere_01</span>
+                        <div class="item-actions">
+                            <button class="action-btn locate-btn" title="定位">
+                                <i class="bi bi-crosshair2"></i>
+                            </button>
+                            <button class="action-btn visibility-btn" title="显示/隐藏" data-visible="false">
+                                <i class="bi bi-eye-slash-fill"></i>
+                            </button>
+                            <button class="action-btn edit-btn" title="编辑">
+                                <i class="bi bi-pencil-fill"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="collection-item leaf" data-level="3">
+                        <span class="tree-toggle">
+                            <span class="tree-spacer"></span>
+                        </span>
+                        <span class="item-icon">
+                            <i class="bi bi-dash"></i>
+                        </span>
+                        <span class="item-name">line_seg_1</span>
+                        <div class="item-actions">
+                            <button class="action-btn locate-btn" title="定位">
+                                <i class="bi bi-crosshair2"></i>
+                            </button>
+                            <button class="action-btn visibility-btn" title="显示/隐藏" data-visible="true">
+                                <i class="bi bi-eye-fill"></i>
+                            </button>
+                            <button class="action-btn edit-btn" title="编辑">
+                                <i class="bi bi-pencil-fill"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 第二级子节点 - 曲面分组 -->
+                    <div class="collection-item group" data-level="2">
+                        <span class="tree-toggle">
+                            <i class="bi bi-chevron-right"></i>
+                        </span>
+                        <span class="item-icon">
+                            <i class="bi bi-folder2"></i>
+                        </span>
+                        <span class="item-name">surf_grp</span>
+                        <div class="item-actions">
+                            <button class="action-btn locate-btn" title="定位">
+                                <i class="bi bi-crosshair2"></i>
+                            </button>
+                            <button class="action-btn visibility-btn" title="显示/隐藏" data-visible="true">
+                                <i class="bi bi-eye-fill"></i>
+                            </button>
+                            <button class="action-btn edit-btn" title="编辑">
+                                <i class="bi bi-pencil-fill"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 第三级子节点 - 曲面分组下的末端（已折叠） -->
+                    <div class="collection-item leaf collapsed" data-level="3">
+                        <span class="tree-toggle">
+                            <span class="tree-spacer"></span>
+                        </span>
+                        <span class="item-icon">
+                            <i class="bi bi-app"></i>
+                        </span>
+                        <span class="item-name">surf_mesh</span>
+                        <div class="item-actions">
+                            <button class="action-btn locate-btn" title="定位">
+                                <i class="bi bi-crosshair2"></i>
+                            </button>
+                            <button class="action-btn visibility-btn" title="显示/隐藏" data-visible="true">
+                                <i class="bi bi-eye-fill"></i>
+                            </button>
+                            <button class="action-btn edit-btn" title="编辑">
+                                <i class="bi bi-pencil-fill"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="collection-item leaf collapsed" data-level="3">
+                        <span class="tree-toggle">
+                            <span class="tree-spacer"></span>
+                        </span>
+                        <span class="item-icon">
+                            <i class="bi bi-record-circle"></i>
+                        </span>
+                        <span class="item-name">point_001</span>
+                        <div class="item-actions">
+                            <button class="action-btn locate-btn" title="定位">
+                                <i class="bi bi-crosshair2"></i>
+                            </button>
+                            <button class="action-btn visibility-btn" title="显示/隐藏" data-visible="true">
+                                <i class="bi bi-eye-fill"></i>
+                            </button>
+                            <button class="action-btn edit-btn" title="编辑">
+                                <i class="bi bi-pencil-fill"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 第一级子节点 - 环境分组 -->
+                    <div class="collection-item group" data-level="1">
+                        <span class="tree-toggle">
+                            <i class="bi bi-chevron-down"></i>
+                        </span>
+                        <span class="item-icon">
+                            <i class="bi bi-folder2"></i>
+                        </span>
+                        <span class="item-name">env_grp</span>
+                        <div class="item-actions">
+                            <button class="action-btn locate-btn" title="定位">
+                                <i class="bi bi-crosshair2"></i>
+                            </button>
+                            <button class="action-btn visibility-btn" title="显示/隐藏" data-visible="true">
+                                <i class="bi bi-eye-fill"></i>
+                            </button>
+                            <button class="action-btn edit-btn" title="编辑">
+                                <i class="bi bi-pencil-fill"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 第二级子节点 - 环境分组下的末端 -->
+                    <div class="collection-item leaf" data-level="2">
+                        <span class="tree-toggle">
+                            <span class="tree-spacer"></span>
+                        </span>
+                        <span class="item-icon">
+                            <i class="bi bi-lightbulb"></i>
+                        </span>
+                        <span class="item-name">light_001</span>
+                        <div class="item-actions">
+                            <button class="action-btn locate-btn" title="定位">
+                                <i class="bi bi-crosshair2"></i>
+                            </button>
+                            <button class="action-btn visibility-btn" title="显示/隐藏" data-visible="true">
+                                <i class="bi bi-eye-fill"></i>
+                            </button>
+                            <button class="action-btn edit-btn" title="编辑">
+                                <i class="bi bi-pencil-fill"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="collection-item leaf" data-level="2">
+                        <span class="tree-toggle">
+                            <span class="tree-spacer"></span>
+                        </span>
+                        <span class="item-icon">
+                            <i class="bi bi-camera"></i>
+                        </span>
+                        <span class="item-name">cam_main</span>
+                        <div class="item-actions">
+                            <button class="action-btn locate-btn" title="定位">
+                                <i class="bi bi-crosshair2"></i>
+                            </button>
+                            <button class="action-btn visibility-btn" title="显示/隐藏" data-visible="true">
+                                <i class="bi bi-eye-fill"></i>
+                            </button>
+                            <button class="action-btn edit-btn" title="编辑">
+                                <i class="bi bi-pencil-fill"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- UI组件示例面板 - 紧跟在结构体信息面板之后 -->
+        <div class="panel-section">
+            <div class="panel-header">
+                <span class="panel-title">UI组件示例</span>
+                <button class="panel-toggle">
+                    <i class="bi bi-caret-down-fill"></i>
+                </button>
+            </div>
+            <div class="panel-content">
+                <div class="component-showcase">
+                    
+                    <!-- 坐标输入组 -->
+                    <div class="component-group">
+                        <div class="group-label">坐标设置</div>
+                        <div class="property-row">
+                            <div class="input-with-label">
+                                <input type="number" value="500.00" step="0.01">
+                                <span class="input-label">X</span>
+                            </div>
+                            <div class="input-with-label">
+                                <input type="number" value="0.00" step="0.01">
+                                <span class="input-label">Y</span>
+                            </div>
+                            <div class="input-with-label">
+                                <input type="number" value="0.00" step="0.01">
+                                <span class="input-label">Z</span>
+                            </div>
+                        </div>
+                        <div class="property-row">
+                            <div class="input-with-label">
+                                <input type="number" value="0.00" step="0.01">
+                                <span class="input-label">RX</span>
+                            </div>
+                            <div class="input-with-label">
+                                <input type="number" value="0.00" step="0.01">
+                                <span class="input-label">RY</span>
+                            </div>
+                            <div class="input-with-label">
+                                <input type="number" value="0.00" step="0.01">
+                                <span class="input-label">RZ</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 复选框与按钮组合 -->
+                    <div class="component-group">
+                        <div class="group-label">复选框与按钮</div>
+                        <div class="checkbox-button-row">
+                            <label class="custom-checkbox">
+                                <input type="checkbox" checked>
+                                <span class="checkmark"></span>
+                                <span class="checkbox-label">拖拽示教</span>
+                            </label>
+                            <button class="panel-secondary-btn">添加目标点</button>
+                        </div>
+                    </div>
+
+                    <!-- 滑块控制组 -->
+                    <div class="component-group">
+                        <div class="group-label">滑块控制</div>
+                        <div class="panel-slider-control">
+                            <span class="panel-slider-label">J1</span>
+                            <div class="panel-slider-container">
+                                <input type="range" class="panel-custom-slider" min="-180" max="180" value="0">
+                            </div>
+                            <input type="number" class="panel-slider-value" value="0.000" step="0.001">
+                        </div>
+                    </div>
+
+                    <!-- 状态按钮组 -->
+                    <div class="component-group">
+                        <div class="group-label">状态按钮</div>
+                        <div class="panel-button-group">
+                            <button class="panel-status-btn">归零</button>
+                            <button class="panel-status-btn">复制</button>
+                            <button class="panel-status-btn">粘贴</button>
+                        </div>
+                    </div>
+
+                    <!-- 范围输入组 -->
+                    <div class="component-group">
+                        <div class="group-label">范围输入</div>  
+                        <div class="range-input-row">
+                            <span class="input-label-left">速度</span>
+                            <input type="number" class="range-input" value="20" min="1" max="100">
+                            <span class="range-hint">1~100</span>
+                        </div>
+                    </div>
+
+                    <!-- 下拉选择组 -->
+                    <div class="component-group">
+                        <div class="group-label">下拉选择</div>
+                        <div class="panel-select-row">
+                            <span class="input-label-left">组件类型</span>
+                            <div class="panel-custom-select">
+                                <select>
+                                    <option value="gripper">电动夹爪</option>
+                                    <option value="sensor">传感器</option>
+                                    <option value="camera">相机</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- 标准输入组 -->
+                    <div class="component-group">
+                        <div class="group-label">文本输入</div>
+                        <div class="input-row">
+                            <span class="input-label-left">产品名称</span>
+                            <input type="text" class="standard-input" value="szlab_efg_01">
+                        </div>
+                        <div class="input-row">
+                            <span class="input-label-left">产品质量</span>
+                            <div class="input-with-unit">
+                                <input type="number" class="standard-input" value="0.1" step="0.1">
+                                <span class="unit-label">kg</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 文件操作组 -->
+                    <div class="component-group">
+                        <div class="group-label">文件操作</div>
+                        <div class="file-operations">
+                            <button class="panel-action-btn-large">
+                                <i class="bi bi-palette"></i>
+                                <span>模型上色</span>
+                            </button>
+                        </div>
+                        <div class="upload-area">
+                            <div class="upload-section">
+                                <span class="input-label-left">组件图</span>
+                                <div class="upload-zone">
+                                    <i class="bi bi-cloud-upload"></i>
+                                    <span>点击上传</span>
+                                </div>
+                            </div>
+                            <div class="preview-section">
+                                <span class="input-label-left">预览</span>
+                                <div class="model-preview">
+                                    <div class="preview-placeholder">
+                                        <i class="bi bi-box"></i>
+                                        <span>3D模型预览</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 操作按钮组 -->
+                    <div class="component-group">
+                        <div class="group-label">操作按钮</div>
+                        <div class="action-buttons">
+                            <button class="panel-primary-btn">确定</button>
+                            <button class="panel-secondary-btn-outline">取消</button>
+                            <button class="panel-action-btn-icon" title="挂载">
+                                <i class="bi bi-usb-symbol"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 属性Tab内容 - 简化版本 -->
+    <div class="panel-tab-content" data-content="properties">
+        <div class="panel-section">
+            <div class="panel-header">
+                <span class="panel-title">对象属性</span>
+                <button class="panel-toggle">
+                    <i class="bi bi-caret-down-fill"></i>
+                </button>
+            </div>
+            <div class="panel-content">
+                <div class="property-content">
+                    <div class="property-group">
+                        <div class="property-row">
+                            <label>世界坐标</label>
+                        </div>
+                        <div class="property-row">
+                            <div class="input-with-label">
+                                <input type="number" value="0.000" step="0.001">
+                                <span class="input-label">X</span>
+                            </div>
+                            <div class="input-with-label">
+                                <input type="number" value="0.000" step="0.001">
+                                <span class="input-label">Y</span>
+                            </div>
+                            <div class="input-with-label">
+                                <input type="number" value="0.000" step="0.001">
+                                <span class="input-label">Z</span>
+                            </div>
+                        </div>
+                        <div class="property-row">
+                            <div class="input-with-label">
+                                <input type="number" value="0.000" step="0.001">
+                                <span class="input-label">RX</span>
+                            </div>
+                            <div class="input-with-label">
+                                <input type="number" value="0.000" step="0.001">
+                                <span class="input-label">RY</span>
+                            </div>
+                            <div class="input-with-label">
+                                <input type="number" value="0.000" step="0.001">
+                                <span class="input-label">RZ</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

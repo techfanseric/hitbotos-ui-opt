@@ -1,0 +1,550 @@
+/* ==================== UI组件库扩展样式 ==================== */
+
+/* 组件展示容器 */
+.component-showcase {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.component-group {
+    display: flex;
+    flex-direction: column;
+    padding: 6px 0;
+    border-bottom: 1px solid #3a3a3a;
+}
+
+.component-group:last-child {
+    border-bottom: none;
+}
+
+.group-label {
+    font-size: 11px;
+    color: #ccc;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+/* 标准输入框样式 */
+.standard-input {
+    flex: 1;
+    background: #2b2b2b;
+    color: #ccc;
+    border: 1px solid #555;
+    border-radius: 3px;
+    padding: 3px 5px;
+    font-size: 10px;
+    box-sizing: border-box;
+}
+
+.standard-input:focus {
+    outline: none;
+    border-color: #BD1C22;
+}
+
+.input-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 3px;
+}
+
+.input-label-left {
+    min-width: 60px;
+    font-size: 10px;
+    color: #bbb;
+    flex-shrink: 0;
+}
+
+/* 带单位的输入框 */
+.input-with-unit {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    position: relative;
+}
+
+.input-with-unit .standard-input {
+    padding-right: 30px;
+}
+
+.unit-label {
+    position: absolute;
+    right: 8px;
+    font-size: 10px;
+    color: #888;
+    pointer-events: none;
+}
+
+/* 自定义复选框 */
+.custom-checkbox {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 10px;
+    color: #ccc;
+    user-select: none;
+}
+
+.custom-checkbox input[type="checkbox"] {
+    display: none;
+}
+
+.checkmark {
+    width: 14px;
+    height: 14px;
+    background: #2b2b2b;
+    border: 1px solid #555;
+    border-radius: 3px;
+    margin-right: 8px;
+    position: relative;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+    left: 4px;
+    top: 1px;
+    width: 4px;
+    height: 8px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.custom-checkbox input[type="checkbox"]:checked ~ .checkmark {
+    background: #BD1C22;
+    border-color: #BD1C22;
+}
+
+.custom-checkbox input[type="checkbox"]:checked ~ .checkmark:after {
+    display: block;
+}
+
+.custom-checkbox:hover .checkmark {
+    border-color: #777;
+}
+
+.checkbox-label {
+    flex: 1;
+}
+
+/* 复选框与按钮组合行 */
+.checkbox-button-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+/* 面板按钮样式系统 */
+.panel-primary-btn {
+    background: #BD1C22;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 14px;
+    font-size: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.panel-primary-btn:hover {
+    background: #a01721;
+}
+
+.panel-secondary-btn {
+    background: #4a4a4a;
+    color: #ccc;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px;
+    font-size: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.panel-secondary-btn:hover {
+    background: #555;
+    color: #fff;
+}
+
+.panel-secondary-btn-outline {
+    background: transparent;
+    color: #ccc;
+    border: 1px solid #555;
+    border-radius: 3px;
+    padding: 5px 14px;
+    font-size: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.panel-secondary-btn-outline:hover {
+    border-color: #777;
+    color: #fff;
+}
+
+.panel-action-btn-large {
+    background: #4a4a4a;
+    color: #ccc;
+    border: none;
+    border-radius: 3px;
+    padding: 6px 14px;
+    font-size: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    margin-bottom: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.panel-action-btn-large:hover {
+    background: #555;
+    color: #fff;
+}
+
+.panel-action-btn-icon {
+    background: #4a4a4a;
+    color: #ccc;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+}
+
+.panel-action-btn-icon i {
+    font-size: 12px;
+}
+
+.panel-action-btn-icon:hover {
+    background: #555;
+    color: #fff;
+}
+
+/* 面板状态按钮组 */
+.panel-button-group {
+    display: flex;
+    gap: 4px;
+}
+
+.panel-status-btn {
+    background: #4a4a4a;
+    color: #ccc;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px;
+    font-size: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex: 1;
+}
+
+.panel-status-btn:hover {
+    background: #555;
+    color: #fff;
+}
+
+.panel-status-btn.active {
+    background: #BD1C22;
+    color: #fff;
+}
+
+/* 面板滑块控制 */
+.panel-slider-control {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+}
+
+.panel-slider-label {
+    min-width: 18px;
+    font-size: 10px;
+    color: #ccc;
+    font-weight: 500;
+}
+
+.panel-slider-container {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.panel-custom-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 4px;
+    background: #555;
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+}
+
+.panel-custom-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #ccc;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.panel-custom-slider::-webkit-slider-thumb:hover {
+    background: #fff;
+    transform: scale(1.1);
+}
+
+.panel-custom-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #ccc;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.panel-custom-slider::-moz-range-thumb:hover {
+    background: #fff;
+    transform: scale(1.1);
+}
+
+.panel-slider-value {
+    min-width: 55px;
+    max-width: 80px;
+    background: #2b2b2b;
+    color: #ccc;
+    border: 1px solid #555;
+    border-radius: 3px;
+    padding: 3px 5px;
+    font-size: 10px;
+    text-align: center;
+}
+
+.panel-slider-value:focus {
+    outline: none;
+    border-color: #BD1C22;
+}
+
+/* 范围输入行 */
+.range-input-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 3px;
+}
+
+.range-input {
+    width: 100%;
+    background: #2b2b2b;
+    color: #ccc;
+    border: 1px solid #555;
+    border-radius: 3px;
+    padding: 3px 5px;
+    font-size: 10px;
+    text-align: center;
+}
+
+.range-input:focus {
+    outline: none;
+    border-color: #BD1C22;
+}
+
+.range-hint {
+    font-size: 10px;
+    color: #888;
+    min-width: 40px;
+}
+
+/* 面板自定义下拉选择 */
+.panel-select-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 2px;
+}
+
+.panel-custom-select {
+    flex: 1;
+    position: relative;
+}
+
+.panel-custom-select select {
+    width: 100%;
+    background: #2b2b2b;
+    color: #ccc;
+    border: 1px solid #555;
+    border-radius: 3px;
+    padding: 3px 5px;
+    font-size: 10px;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23888' viewBox='0 0 16 16'%3e%3cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 5px center;
+    background-size: 10px;
+    padding-right: 20px;
+}
+
+.panel-custom-select select:focus {
+    outline: none;
+    border-color: #BD1C22;
+}
+
+.panel-custom-select select:hover {
+    border-color: #777;
+}
+
+/* 文件操作区域 */
+.file-operations {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 8px;
+}
+
+.upload-area {
+    display: flex;
+    gap: 8px;
+}
+
+.upload-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.upload-section .input-label-left {
+    margin-bottom: 2px;
+}
+
+.upload-zone {
+    border: 2px dashed #555;
+    border-radius: 3px;
+    padding: 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: #2b2b2b;
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    margin-top: 2px;
+}
+
+.upload-zone:hover {
+    border-color: #777;
+    background: #333;
+}
+
+.upload-zone i {
+    font-size: 20px;
+    color: #888;
+    margin-bottom: 4px;
+}
+
+.upload-zone span {
+    font-size: 10px;
+    color: #888;
+}
+
+.preview-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.preview-section .input-label-left {
+    margin-bottom: 2px;
+}
+
+.model-preview {
+    width: 100%;
+    height: 80px;
+    background: #1e1e1e;
+    border: 1px solid #555;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    margin-top: 2px;
+}
+
+.preview-placeholder {
+    text-align: center;
+    color: #666;
+}
+
+.preview-placeholder i {
+    font-size: 24px;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.preview-placeholder span {
+    font-size: 9px;
+}
+
+/* 功能选项 */
+.feature-row {
+    margin-bottom: 6px;
+}
+
+.counter-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.counter-input {
+    width: 60px;
+}
+
+.counter-input input {
+    width: 100%;
+    background: #2b2b2b;
+    color: #ccc;
+    border: 1px solid #555;
+    border-radius: 3px;
+    padding: 3px 5px;
+    font-size: 10px;
+    text-align: center;
+}
+
+.counter-input input:focus {
+    outline: none;
+    border-color: #BD1C22;
+}
+
+/* 操作按钮组 */
+.action-buttons {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 8px;
+} 

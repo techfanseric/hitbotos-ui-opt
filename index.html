@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>仿真面板</title>
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="window.css">
+    <link rel="stylesheet" href="simulator-toolbar.css">
+    <link rel="stylesheet" href="panel-tabs.css">
+    <link rel="stylesheet" href="panel-ui-components.css">
+</head>
+<body>
+    <!-- 主容器 - 外层白色 -->
+    <div class="main-container">
+        <!-- 顶部菜单栏 -->
+        <div class="top-menu-bar">
+            <!-- 左侧区域 -->
+            <div class="menu-left">
+                <button class="menu-hamburger">
+                    <i class="bi bi-list"></i>
+                </button>
+                <div class="brand-logo"></div>
+                
+                <!-- 项目名称下拉菜单 -->
+                <div class="project-dropdown">
+                    <button class="project-dropdown-btn">
+                        <span class="project-name">凯普特</span>
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+                    <div class="project-dropdown-menu">
+                        <div class="project-dropdown-item active">
+                            <span>凯普特</span>
+                            <i class="bi bi-check"></i>
+                        </div>
+                        <div class="project-dropdown-item">智能制造项目</div>
+                        <div class="project-dropdown-item">自动化生产线</div>
+                        <div class="project-dropdown-separator"></div>
+                        <div class="project-dropdown-item">
+                            <i class="bi bi-plus-circle"></i>
+                            <span>新建项目</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧区域 -->
+            <div class="menu-right">
+                <button class="menu-btn" title="刷新">
+                    <i class="bi bi-arrow-clockwise"></i>
+                </button>
+                <button class="menu-btn" title="执行程序">
+                    <i class="bi bi-play-circle-fill"></i>
+                </button>
+                <button class="menu-btn" title="语言切换">
+                    <i class="bi bi-translate"></i>
+                </button>
+                
+                <!-- 模式切换按钮组 -->
+                <div class="mode-switch-group">
+                    <button class="mode-btn">孪生</button>
+                    <button class="mode-btn active">仿真</button>
+                    <button class="mode-btn">真机</button>
+                </div>
+                
+                <span class="user-info">当前用户：admin</span>
+                
+                <button class="menu-btn minimize-btn" title="最小化">
+                    <i class="bi bi-dash"></i>
+                </button>
+                <button class="menu-btn close-btn" title="退出程序">
+                    <i class="bi bi-x"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 工作空间 -->
+        <div class="workspace">
+            <!-- 布局选择区域 -->
+            <div class="layout-selector">
+                <div class="layout-title">选择窗口布局</div>
+                <div class="layout-options">
+                    <div class="layout-option" data-layout="layout1">
+                        <div class="layout-preview layout1">
+                            <div class="preview-grid">
+                                <div class="preview-cell"></div>
+                                <div class="preview-cell"></div>
+                                <div class="preview-cell"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layout-option" data-layout="layout2">
+                        <div class="layout-preview layout2">
+                            <div class="preview-grid">
+                                <div class="preview-cell wide"></div>
+                                <div class="preview-cell"></div>
+                                <div class="preview-cell"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layout-option" data-layout="layout3">
+                        <div class="layout-preview layout3">
+                            <div class="preview-grid">
+                                <div class="preview-cell"></div>
+                                <div class="preview-cell"></div>
+                                <div class="preview-cell"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layout-break"></div>
+                    <div class="layout-option" data-layout="dual-lr-73">
+                        <div class="layout-preview dual-lr-73">
+                            <div class="preview-grid dual-grid">
+                                <div class="preview-cell dual-left-73"></div>
+                                <div class="preview-cell dual-right-27"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layout-option" data-layout="dual-lr-55">
+                        <div class="layout-preview dual-lr-55">
+                            <div class="preview-grid dual-grid">
+                                <div class="preview-cell dual-left-50"></div>
+                                <div class="preview-cell dual-right-50"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layout-option" data-layout="dual-tb-55">
+                        <div class="layout-preview dual-tb-55">
+                            <div class="preview-grid dual-grid-vertical">
+                                <div class="preview-cell dual-top-50"></div>
+                                <div class="preview-cell dual-bottom-50"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 布局容器 -->
+            <div class="layout-container" style="display: none;">
+                <!-- 布局会在这里动态生成 -->
+            </div>
+            
+            <!-- 仿真窗口 -->
+            <div class="window simulation-window" data-window="simulation">
+                <!-- 窗口调整大小区域 -->
+                <div class="resize-handle"></div>
+                <!-- 窗口标题栏 -->
+                <div class="window-header">
+                    <div class="window-title">
+                        <i class="bi bi-box"></i>
+                        <span>3D仿真</span>
+                    </div>
+                    <div class="window-controls">
+                        <div class="window-swap-dropdown" style="display: none;">
+                            <button class="window-control-btn swap-btn" title="交换位置">
+                                <i class="bi bi-window-stack"></i>
+                            </button>
+                            <div class="swap-dropdown-menu">
+                                <!-- 动态生成窗口选项 -->
+                            </div>
+                        </div>
+                        <button class="window-control-btn toggle-btn" title="最小化窗口">
+                            <i class="bi bi-caret-down-square"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 窗口内容区 -->
+                <div class="window-content">
+                    <!-- 原来的workspace内容 -->
+                    <div class="simulation-layout">
+                        <!-- 中心内容区域 -->
+                        <div class="center-content">
+                            <!-- 工具栏组合 -->
+                            <div class="toolbar-group">
+                                <!-- 左侧工具栏 -->
+                                <div class="left-toolbar">
+                                    <button class="left-toolbar-btn" title="工具" data-tool="tools">
+                                        <i class="bi bi-wrench"></i>
+                                        <span>工具</span>
+                                    </button>
+                                    <button class="left-toolbar-btn" title="场景" data-tool="scene">
+                                        <i class="bi bi-globe"></i>
+                                        <span>场景</span>
+                                    </button>
+                                    <button class="left-toolbar-btn" title="设备库" data-tool="devices">
+                                        <i class="bi bi-box-seam"></i>
+                                        <span>设备库</span>
+                                    </button>
+                                    <button class="left-toolbar-btn" title="录屏" data-tool="record">
+                                        <i class="bi bi-record-circle"></i>
+                                        <span>录屏</span>
+                                    </button>
+                                    <button class="left-toolbar-btn" title="绑定" data-tool="bind">
+                                        <i class="bi bi-link"></i>
+                                        <span>绑定</span>
+                                    </button>
+                                </div>
+                                
+                                <!-- 3D工具栏（工具的子级） -->
+                                <div class="viewport-toolbar" id="sub-toolbar">
+                                    <button class="toolbar-btn" title="测量">
+                                        <i class="bi bi-rulers"></i>
+                                        <span>测量</span>
+                                    </button>
+                                    <div class="toolbar-dropdown">
+                                        <button class="toolbar-btn dropdown-toggle" title="对齐">
+                                            <i class="bi bi-distribute-horizontal"></i>
+                                            <div class="btn-text">
+                                                <span>对齐</span>
+                                                <i class="bi bi-chevron-down dropdown-arrow"></i>
+                                            </div>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <div class="dropdown-item">左对齐</div>
+                                            <div class="dropdown-item">居中对齐</div>
+                                            <div class="dropdown-item">右对齐</div>
+                                        </div>
+                                    </div>
+                                    <div class="toolbar-dropdown">
+                                        <button class="toolbar-btn dropdown-toggle disabled" title="捕捉（功能开发中）">
+                                            <i class="bi bi-eyedropper"></i>
+                                            <div class="btn-text">
+                                                <span>捕捉</span>
+                                                <i class="bi bi-chevron-down dropdown-arrow"></i>
+                                            </div>
+                                        </button>
+                                    </div>
+                                    <button class="toolbar-btn" title="挂载">
+                                        <i class="bi bi-usb-symbol"></i>
+                                        <span>挂载</span>
+                                    </button>
+                                    <button class="toolbar-btn" title="复制">
+                                        <i class="bi bi-files"></i>
+                                        <span>复制</span>
+                                    </button>
+                                    <button class="toolbar-btn" title="属性">
+                                        <i class="bi bi-info-circle"></i>
+                                        <span>属性</span>
+                                    </button>
+                                    <button class="toolbar-btn" title="调度">
+                                        <i class="bi bi-bar-chart-steps"></i>
+                                        <span>调度</span>
+                                    </button>
+                                    <button class="toolbar-btn" title="成组">
+                                        <i class="bi bi-collection"></i>
+                                        <span>成组</span>
+                                    </button>
+                                    <button class="toolbar-btn" title="解组">
+                                        <i class="bi bi-grid"></i>
+                                        <span>解组</span>
+                                    </button>
+                                    <button class="toolbar-btn" title="刻度">
+                                        <i class="bi bi-grid-3x3-gap-fill"></i>
+                                        <span>刻度</span>
+                                    </button>
+                                    <button class="toolbar-btn" title="导入">
+                                        <i class="bi bi-download"></i>
+                                        <span>导入</span>
+                                    </button>
+                                    <div class="toolbar-dropdown">
+                                        <button class="toolbar-btn dropdown-toggle disabled" title="碰撞（功能开发中）">
+                                            <i class="bi bi-shield-exclamation"></i>
+                                            <div class="btn-text">
+                                                <span>碰撞</span>
+                                                <i class="bi bi-chevron-down dropdown-arrow"></i>
+                                            </div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 主视口 -->
+                            <div class="main-viewport">
+                                <div class="viewport-3d">
+                                    <!-- 3D视口内容 -->
+                                    <div class="viewport-grid">
+                                        <div class="scene-info">
+                                            <div class="axis-helper">
+                                                <div class="axis-y">Y</div>
+                                                <div class="axis-row">
+                                                    <div class="axis-z">Z</div>
+                                                    <div class="axis-x">X</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 补充行为控制面板 -->
+                            <div class="timeline-panel">
+                                <div class="timeline-header">
+                                    <span class="timeline-title">补充行为控制</span>
+                                    <button class="timeline-toggle">
+                                        <i class="bi bi-caret-up-fill"></i>
+                                    </button>
+                                </div>
+                                <div class="timeline-content">
+                                    <!-- 面板内容待添加 -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 右侧属性面板 -->
+                        <div class="right-panel">
+                            <!-- 垂直Tab栏 -->
+                            <div class="panel-tabs">
+                                <div class="panel-tab" data-tab="structure" title="结构">
+                                    <i class="bi bi-diagram-2"></i>
+                                </div>
+                                <div class="panel-tab" data-tab="properties" title="属性">
+                                    <i class="bi bi-info-circle"></i>
+                                </div>
+                            </div>
+
+                            <!-- Tab内容区域将通过JavaScript动态加载 -->
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 电气拓扑窗口 -->
+            <div class="window electrical-window" data-window="electrical" style="display: none;">
+                <div class="window-header">
+                    <div class="window-title">
+                        <i class="bi bi-diagram-3"></i>
+                        <span>电气拓扑</span>
+                    </div>
+                    <div class="window-controls">
+                        <div class="window-swap-dropdown" style="display: none;">
+                            <button class="window-control-btn swap-btn" title="交换位置">
+                                <i class="bi bi-window-stack"></i>
+                            </button>
+                            <div class="swap-dropdown-menu">
+                                <!-- 动态生成窗口选项 -->
+                            </div>
+                        </div>
+                        <button class="window-control-btn toggle-btn" title="最小化窗口">
+                            <i class="bi bi-caret-down-square"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="window-content">
+                    <div style="padding: 20px; text-align: center; color: #666;">
+                        电气拓扑编辑区域
+                    </div>
+                </div>
+            </div>
+
+            <!-- 动作编辑窗口 -->
+            <div class="window action-window" data-window="action" style="display: none;">
+                <div class="window-header">
+                    <div class="window-title">
+                        <i class="bi bi-code-square"></i>
+                        <span>动作编辑</span>
+                    </div>
+                    <div class="window-controls">
+                        <div class="window-swap-dropdown" style="display: none;">
+                            <button class="window-control-btn swap-btn" title="交换位置">
+                                <i class="bi bi-window-stack"></i>
+                            </button>
+                            <div class="swap-dropdown-menu">
+                                <!-- 动态生成窗口选项 -->
+                            </div>
+                        </div>
+                        <button class="window-control-btn toggle-btn" title="最小化窗口">
+                            <i class="bi bi-caret-down-square"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="window-content">
+                    <div style="padding: 20px; text-align: center; color: #666;">
+                        动作编辑区域
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 状态栏 -->
+        <div class="status-bar">
+            <div class="status-left">
+                <button class="status-btn" title="展开运行日志">
+                    <i class="bi bi-file-text"></i>
+                    <span>运行日志</span>
+                </button>
+                <button class="status-btn error-log" title="展开错误日志">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <span>错误日志</span>
+                    <span class="error-count">3</span>
+                </button>
+            </div>
+            
+            <!-- 中部窗口管理切换 -->
+            <div class="status-center">
+                <div class="window-manager">
+                    <div class="window-item">
+                        <i class="bi bi-diagram-3"></i>
+                        <span>电气拓扑</span>
+                    </div>
+                    <div class="window-item">
+                        <i class="bi bi-box"></i>
+                        <span>3D仿真</span>
+                    </div>
+                    <div class="window-item">
+                        <i class="bi bi-code-square"></i>
+                        <span>动作编辑</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="status-right">
+                <button class="status-btn" title="清除日志">
+                    <i class="bi bi-trash"></i>
+                    <span>清除日志</span>
+                </button>
+                <button class="status-btn" title="导出日志">
+                    <i class="bi bi-download"></i>
+                    <span>导出日志</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="layout-manager.js"></script>
+    <script src="script.js"></script>
+    <script src="panel-loader.js"></script>
+</body>
+</html> 

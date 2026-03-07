@@ -1,0 +1,446 @@
+/* 右侧属性面板样式 */
+.right-panel {
+    width: auto;
+    min-width: 32px; /* tab栏 + gap */
+    max-width: 320px;
+    height: 100%; /* 使用100%高度，由父容器控制 */
+    background: #383838;
+    border-radius: 4px;
+    padding: 4px;
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    transition: width 0.3s ease;
+}
+
+.right-panel.tabs-closed {
+    width: 32px; /* 只显示tab栏的宽度 */
+}
+
+.right-panel.tabs-open {
+    width: 320px; /* 展开时的完整宽度 */
+}
+
+/* 垂直Tab栏样式 */
+.panel-tabs {
+    width: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex-shrink: 0;
+}
+
+.panel-tab {
+    width: 24px;
+    height: 24px;
+    background: #4a4a4a;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ccc;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.panel-tab:hover {
+    background: #555;
+    color: #fff;
+}
+
+.panel-tab.active {
+    background: #252525;
+    color: #fff;
+}
+
+.panel-tab i {
+    font-size: 16px;
+}
+
+/* Tab内容区域 */
+.panel-content-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+.panel-tab-content {
+    display: none;
+    flex-direction: column;
+    gap: 2px;
+    height: 100%;
+}
+
+.panel-tab-content.active {
+    display: flex;
+}
+
+/* 面板区段样式 - 重新定义 */
+.panel-section {
+    background: #282828;
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: flex 0.3s ease; /* 平滑的展开收起动画 */
+    /* 移除高度限制，完全自适应 */
+}
+
+/* 收起状态的面板 - 只显示header高度 */
+.panel-section.collapsed {
+    flex: none; /* 不占用额外空间 */
+}
+
+/* 面板内容区域的滚动设置 */
+.panel-content {
+    padding: 6px;
+    background: #2b2b2b;
+    overflow-y: auto; /* 在每个panel-content内部滚动 */
+    flex: 1; /* 占据header之外的所有空间 */
+    display: none; /* 默认隐藏 */
+}
+
+/* 展开状态显示内容 */
+.panel-section:not(.collapsed) .panel-content {
+    display: block;
+}
+
+/* 自定义滚动条样式 */
+.panel-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.panel-content::-webkit-scrollbar-track {
+    background: #2b2b2b;
+    border-radius: 3px;
+}
+
+.panel-content::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 3px;
+    transition: background 0.2s ease;
+}
+
+.panel-content::-webkit-scrollbar-thumb:hover {
+    background: #666;
+}
+
+/* 面板区段样式已移至上方重新定义 */
+
+.panel-header {
+    height: 28px; /* 固定高度，不受展开收起影响 */
+    background: #252525;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 12px;
+    cursor: pointer;
+    flex-shrink: 0; /* 防止被压缩 */
+    transition: background-color 0.2s ease;
+}
+
+.panel-header:hover {
+    background: #2a2a2a;
+}
+
+.panel-title {
+    color: #ccc;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.panel-toggle {
+    background: transparent;
+    color: #ccc;
+    border: none;
+    cursor: pointer;
+    font-size: 8px;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: color 0.2s ease;
+}
+
+.panel-toggle:hover {
+    color: #fff;
+}
+
+/* 展开收起图标转换 */
+.panel-toggle i {
+    transition: transform 0.3s ease;
+}
+
+.panel-section.collapsed .panel-toggle i {
+    transform: rotate(-90deg); /* 收起状态向右箭头 */
+}
+
+/* .panel-content 样式已移至上方与滚动设置合并 */
+
+/* 结构体信息树样式 */
+.collection-tree {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.collection-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 4px;
+    color: #ccc;
+    cursor: pointer;
+    border-radius: 3px;
+    font-size: 11px;
+    transition: background-color 0.2s ease;
+}
+
+.collection-item:hover {
+    background: #4a4a4a;
+}
+
+.collection-item.selected {
+    background: #404040;
+    color: white;
+}
+
+/* 树状层级缩进 */
+.collection-item[data-level="0"] {
+    padding-left: 4px;
+}
+
+.collection-item[data-level="1"] {
+    padding-left: 20px;
+}
+
+.collection-item[data-level="2"] {
+    padding-left: 36px;
+}
+
+.collection-item[data-level="3"] {
+    padding-left: 52px;
+}
+
+/* 折叠/展开控制 */
+.tree-toggle {
+    width: 12px;
+    height: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #888;
+    transition: color 0.2s ease;
+}
+
+.tree-toggle:hover {
+    color: #ccc;
+}
+
+.tree-toggle i {
+    font-size: 10px;
+    transition: transform 0.2s ease;
+}
+
+/* 折叠状态 */
+.collection-item.group.collapsed .tree-toggle i {
+    transform: rotate(-90deg);
+}
+
+/* 末端节点的空白占位 */
+.tree-spacer {
+    width: 10px;
+    height: 10px;
+}
+
+/* 图标样式 */
+.item-icon {
+    width: 14px;
+    height: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+}
+
+.item-icon i {
+    font-size: 12px;
+}
+
+/* 分组图标颜色 */
+.collection-item.group .item-icon {
+    color: #ffa500;
+}
+
+/* 几何体图标颜色 */
+.collection-item.leaf .item-icon {
+    color: #87ceeb;
+}
+
+/* 特殊图标颜色 */
+.collection-item .item-icon .bi-lightbulb {
+    color: #ffeb3b;
+}
+
+.collection-item .item-icon .bi-camera {
+    color: #90caf9;
+}
+
+.item-name {
+    flex: 1;
+    user-select: none;
+}
+
+/* 操作按钮组 */
+.item-actions {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin-left: 4px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.collection-item:hover .item-actions {
+    opacity: 1;
+}
+
+.action-btn {
+    width: 16px;
+    height: 16px;
+    background: transparent;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    color: #888;
+}
+
+.action-btn:hover {
+    background: #555;
+    color: #fff;
+}
+
+.action-btn i {
+    font-size: 10px;
+}
+
+/* 特定操作按钮样式 */
+.locate-btn:hover {
+    color: #ffeb3b;
+}
+
+.visibility-btn:hover {
+    color: #4caf50;
+}
+
+.visibility-btn[data-visible="false"] {
+    color: #666;
+}
+
+.visibility-btn[data-visible="false"]:hover {
+    color: #f44336;
+}
+
+.edit-btn:hover {
+    color: #2196f3;
+}
+
+/* 折叠状态下隐藏子节点 */
+.collection-item.collapsed {
+    display: none;
+}
+
+
+
+/* 属性编辑器样式 */
+.property-content {
+    color: #ccc;
+}
+
+.property-group h4 {
+    color: #fff;
+    font-size: 12px;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.property-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 4px;
+}
+
+.property-row label {
+    width: 60px;
+    font-size: 10px;
+    color: #bbb;
+}
+
+.property-row input {
+    flex: 1;
+    background: #2b2b2b;
+    color: #ccc;
+    border: 1px solid #555;
+    border-radius: 3px;
+    padding: 3px 5px;
+    font-size: 10px;
+}
+
+.property-row input:focus {
+    outline: none;
+    border-color: #BD1C22;
+}
+
+/* 输入框与标签组合 */
+.input-with-label {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.input-with-label input {
+    flex: 1;
+    background: #2b2b2b;
+    color: #ccc;
+    border: 1px solid #555;
+    border-radius: 3px;
+    padding-left: 24px;
+    padding-right: 4px;
+    text-align: right;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 10px;
+}
+
+.input-with-label input:focus {
+    outline: none;
+    border-color: #BD1C22;
+}
+
+.input-label {
+    position: absolute;
+    left: 6px;
+    font-size: 9px;
+    color: #888;
+    pointer-events: none;
+    font-weight: 500;
+    z-index: 1;
+}
+
+/* 注意：面板UI组件样式已分离至 panel-ui-components.css */

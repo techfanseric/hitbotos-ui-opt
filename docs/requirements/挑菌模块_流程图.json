@@ -1,0 +1,5633 @@
+{
+    "flowData": [
+        {
+            "position": {
+                "x": 1200,
+                "y": 120
+            },
+            "size": {
+                "width": 106,
+                "height": 237
+            },
+            "view": "vue-shape-view",
+            "shape": "system-group",
+            "ports": {
+                "groups": {
+                    "groupStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "groupEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "groupStart",
+                        "id": "e93475e8-528f-4856-b292-68af23cdffa3"
+                    },
+                    {
+                        "group": "groupEnd",
+                        "id": "68f1e1d8-b90d-481b-bf43-a8f470b40963"
+                    }
+                ]
+            },
+            "id": "297b876b-d6f7-4c50-ae34-a561d6f66e47",
+            "data": {
+                "blockName": "X轴电缸",
+                "isCollapsed": false
+            },
+            "zIndex": -1,
+            "children": [
+                "237ad54b-615d-427c-afcc-e8780dd0bbad",
+                "fa878e45-500e-42d9-9cc7-abea615cf763"
+            ]
+        },
+        {
+            "position": {
+                "x": 1340,
+                "y": 120
+            },
+            "size": {
+                "width": 106,
+                "height": 350
+            },
+            "view": "vue-shape-view",
+            "shape": "system-group",
+            "ports": {
+                "groups": {
+                    "groupStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "groupEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "groupStart",
+                        "id": "e93475e8-528f-4856-b292-68af23cdffa3"
+                    },
+                    {
+                        "group": "groupEnd",
+                        "id": "68f1e1d8-b90d-481b-bf43-a8f470b40963"
+                    }
+                ]
+            },
+            "id": "580a583d-5ad4-4c0d-a9fa-250fb97d0cd6",
+            "data": {
+                "blockName": "Y轴电缸",
+                "isCollapsed": false
+            },
+            "children": [
+                "3d869fcd-fc6c-45fc-8651-22ae67cdd0af",
+                "50c6c71e-5b7f-4b59-b6f4-6ba198c85d48",
+                "9a91228e-2cfb-4fa4-b397-7fdf816e4d7d",
+                "e26f10e7-7a92-414d-9348-37fea0200b5c"
+            ],
+            "zIndex": -1
+        },
+        {
+            "position": {
+                "x": 1480,
+                "y": 120
+            },
+            "size": {
+                "width": 106,
+                "height": 230
+            },
+            "view": "vue-shape-view",
+            "shape": "system-group",
+            "ports": {
+                "groups": {
+                    "groupStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "groupEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "groupStart",
+                        "id": "e93475e8-528f-4856-b292-68af23cdffa3"
+                    },
+                    {
+                        "group": "groupEnd",
+                        "id": "68f1e1d8-b90d-481b-bf43-a8f470b40963"
+                    }
+                ]
+            },
+            "id": "537df20d-4238-48af-b5b7-c6cbfe642d32",
+            "data": {
+                "blockName": "Z轴电缸",
+                "isCollapsed": false
+            },
+            "children": [
+                "2e688593-7fd4-49df-9b07-d57ad6c7d14e",
+                "1c9d81dc-eed0-4d2d-8fbb-ec8dc996b3d4"
+            ],
+            "zIndex": -1
+        },
+        {
+            "position": {
+                "x": 1622,
+                "y": 130
+            },
+            "size": {
+                "width": 106,
+                "height": 220
+            },
+            "view": "vue-shape-view",
+            "shape": "system-group",
+            "ports": {
+                "groups": {
+                    "groupStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "groupEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "groupStart",
+                        "id": "e93475e8-528f-4856-b292-68af23cdffa3"
+                    },
+                    {
+                        "group": "groupEnd",
+                        "id": "68f1e1d8-b90d-481b-bf43-a8f470b40963"
+                    }
+                ]
+            },
+            "id": "0aad1359-2eaf-471e-a739-50d099852511",
+            "data": {
+                "blockName": "移液枪",
+                "isCollapsed": false
+            },
+            "zIndex": -1,
+            "children": [
+                "6140e745-78ce-4bbb-9cc9-5eb2109fc756",
+                "da4b6dc2-9b7f-4392-a862-6689884e9803"
+            ]
+        },
+        {
+            "position": {
+                "x": 1768,
+                "y": 130
+            },
+            "size": {
+                "width": 106,
+                "height": 227
+            },
+            "view": "vue-shape-view",
+            "shape": "system-group",
+            "ports": {
+                "groups": {
+                    "groupStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "groupEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "groupStart",
+                        "id": "23c1acb7-84a7-44e8-9f14-214b5b4c5c28"
+                    },
+                    {
+                        "group": "groupEnd",
+                        "id": "17d802be-760b-4ad7-b098-93336cfa3c56"
+                    }
+                ]
+            },
+            "id": "25acff34-ea68-4063-a12a-5eb7c947232d",
+            "data": {
+                "blockName": "IO",
+                "isCollapsed": false
+            },
+            "zIndex": -1,
+            "children": [
+                "6a5797db-b805-436c-919f-04127fb34714",
+                "9110ee64-3a6d-4256-8c6f-96cbe7756f54"
+            ]
+        },
+        {
+            "shape": "edge",
+            "attrs": {
+                "line": {
+                    "stroke": "white",
+                    "targetMarker": {
+                        "name": "classic",
+                        "width": 12,
+                        "height": 8
+                    }
+                },
+                "text": {
+                    "fontSize": 10,
+                    "fill": "black"
+                },
+                "rect": {
+                    "fill": "white"
+                }
+            },
+            "id": "3828fd56-e48d-4879-80dd-6b103bfdecae",
+            "zIndex": 0,
+            "source": {
+                "cell": "ca8cb576-a7c3-428c-a5d4-16569cab411c",
+                "port": "5a2e311b-a298-4de6-b46e-f258adb6cf45"
+            },
+            "target": {
+                "cell": "b607736e-f473-4095-b393-ebc87ba840f4",
+                "port": "b6bb3f4f-0bb4-4ef7-874b-ecbae9c2c331"
+            }
+        },
+        {
+            "shape": "edge",
+            "attrs": {
+                "line": {
+                    "stroke": "white",
+                    "targetMarker": {
+                        "name": "classic",
+                        "width": 12,
+                        "height": 8
+                    }
+                },
+                "text": {
+                    "fontSize": 10,
+                    "fill": "black"
+                },
+                "rect": {
+                    "fill": "white"
+                }
+            },
+            "id": "bf83ecdc-f033-40fc-a359-9aede4c19390",
+            "zIndex": 0,
+            "source": {
+                "cell": "143ac10b-b426-480e-9be6-befffa809bc4",
+                "port": "98793e5f-5e57-4a40-8fa7-71f467c46fd7"
+            },
+            "target": {
+                "cell": "50df95c7-0501-4282-9aa6-b197f6dbd020",
+                "port": "2c8233d4-b906-41a9-8142-6659fd172b27"
+            }
+        },
+        {
+            "shape": "edge",
+            "attrs": {
+                "line": {
+                    "stroke": "white",
+                    "targetMarker": {
+                        "name": "classic",
+                        "width": 12,
+                        "height": 8
+                    }
+                },
+                "text": {
+                    "fontSize": 10,
+                    "fill": "black"
+                },
+                "rect": {
+                    "fill": "white"
+                }
+            },
+            "id": "f36fbb1e-2eaf-455d-bdea-74dd5b027211",
+            "zIndex": 0,
+            "source": {
+                "cell": "ffc0dc15-5242-4d7b-b1f3-41a7a62f01bf",
+                "port": "237641dc-6d56-4ebe-a921-9e56ee411104"
+            },
+            "target": {
+                "cell": "bf89edaf-6c44-4529-ab58-66292bc65db1",
+                "port": "45ddbeb9-301c-41e5-bcc9-0f2f952cf63a"
+            }
+        },
+        {
+            "shape": "edge",
+            "attrs": {
+                "line": {
+                    "stroke": "white",
+                    "targetMarker": {
+                        "name": "classic",
+                        "width": 12,
+                        "height": 8
+                    }
+                },
+                "text": {
+                    "fontSize": 10,
+                    "fill": "black"
+                },
+                "rect": {
+                    "fill": "white"
+                }
+            },
+            "id": "d775e4f3-33bf-432d-a64f-19404f4af696",
+            "zIndex": 0,
+            "source": {
+                "cell": "8c0f0522-c233-4d05-bcc3-4700f82070fe",
+                "port": "8119d4bd-9f86-4355-bc21-09a98e7e203c"
+            },
+            "target": {
+                "cell": "2f6e969c-71c9-4a67-ab62-daa72180c1f4",
+                "port": "d2842cf3-3903-4795-821e-7b53ff005aa2"
+            }
+        },
+        {
+            "shape": "edge",
+            "attrs": {
+                "line": {
+                    "stroke": "white",
+                    "targetMarker": {
+                        "name": "classic",
+                        "width": 12,
+                        "height": 8
+                    }
+                },
+                "text": {
+                    "fontSize": 10,
+                    "fill": "black"
+                },
+                "rect": {
+                    "fill": "white"
+                }
+            },
+            "id": "eecdff97-ee32-423c-940d-55f77b0333c3",
+            "zIndex": 0,
+            "source": {
+                "cell": "18cd1e8e-dac6-400d-bc8e-a34c6ea6717e",
+                "port": "98793e5f-5e57-4a40-8fa7-71f467c46fd7"
+            },
+            "target": {
+                "cell": "bdd45291-b0ab-4623-95ab-6e706815acb9",
+                "port": "ccf006e6-2718-41f1-9e2e-01b68392b874"
+            }
+        },
+        {
+            "shape": "edge",
+            "attrs": {
+                "line": {
+                    "stroke": "white",
+                    "targetMarker": {
+                        "name": "classic",
+                        "width": 12,
+                        "height": 8
+                    }
+                },
+                "text": {
+                    "fontSize": 10,
+                    "fill": "black"
+                },
+                "rect": {
+                    "fill": "white"
+                }
+            },
+            "id": "cd802d60-de78-472d-92c1-abae7127a697",
+            "zIndex": 0,
+            "source": {
+                "cell": "ab2afa24-5440-4f64-a37f-7aa0b978c59d",
+                "port": "8119d4bd-9f86-4355-bc21-09a98e7e203c"
+            },
+            "target": {
+                "cell": "143ac10b-b426-480e-9be6-befffa809bc4",
+                "port": "d2842cf3-3903-4795-821e-7b53ff005aa2"
+            }
+        },
+        {
+            "shape": "edge",
+            "attrs": {
+                "line": {
+                    "stroke": "white",
+                    "targetMarker": {
+                        "name": "classic",
+                        "width": 12,
+                        "height": 8
+                    }
+                },
+                "text": {
+                    "fontSize": 10,
+                    "fill": "black"
+                },
+                "rect": {
+                    "fill": "white"
+                }
+            },
+            "id": "dfa80d30-cb02-42ab-8ce2-03cdde76fb1c",
+            "zIndex": 0,
+            "source": {
+                "cell": "4e2cd5a7-d7e9-4841-93b5-39937ae653a5",
+                "port": "237641dc-6d56-4ebe-a921-9e56ee411104"
+            },
+            "target": {
+                "cell": "8b2f0e39-bdd7-4ed5-a107-a51275312135",
+                "port": "2c8233d4-b906-41a9-8142-6659fd172b27"
+            }
+        },
+        {
+            "shape": "edge",
+            "attrs": {
+                "line": {
+                    "stroke": "white",
+                    "targetMarker": {
+                        "name": "classic",
+                        "width": 12,
+                        "height": 8
+                    }
+                },
+                "text": {
+                    "fontSize": 10,
+                    "fill": "black"
+                },
+                "rect": {
+                    "fill": "white"
+                }
+            },
+            "id": "41eed16f-141f-475f-8ea0-122b75d3a62a",
+            "zIndex": 0,
+            "source": {
+                "cell": "10c0f1be-f000-49ec-85fd-b3f163de256d",
+                "port": "8119d4bd-9f86-4355-bc21-09a98e7e203c"
+            },
+            "target": {
+                "cell": "a209b9aa-4ad4-4a92-8dc2-4f4d3374e9f8",
+                "port": "45ddbeb9-301c-41e5-bcc9-0f2f952cf63a"
+            }
+        },
+        {
+            "shape": "edge",
+            "attrs": {
+                "line": {
+                    "stroke": "white",
+                    "targetMarker": {
+                        "name": "classic",
+                        "width": 12,
+                        "height": 8
+                    }
+                },
+                "text": {
+                    "fontSize": 10,
+                    "fill": "black"
+                },
+                "rect": {
+                    "fill": "white"
+                }
+            },
+            "id": "04931fae-dc10-4db8-a022-ce2d77865059",
+            "zIndex": 0,
+            "source": {
+                "cell": "a209b9aa-4ad4-4a92-8dc2-4f4d3374e9f8",
+                "port": "237641dc-6d56-4ebe-a921-9e56ee411104"
+            },
+            "target": {
+                "cell": "d66d3e0b-8251-4973-b9c0-ed72443dcd09",
+                "port": "2c8233d4-b906-41a9-8142-6659fd172b27"
+            }
+        },
+        {
+            "shape": "edge",
+            "attrs": {
+                "line": {
+                    "stroke": "white",
+                    "targetMarker": {
+                        "name": "classic",
+                        "width": 12,
+                        "height": 8
+                    }
+                },
+                "text": {
+                    "fontSize": 10,
+                    "fill": "black"
+                },
+                "rect": {
+                    "fill": "white"
+                }
+            },
+            "id": "d14ec229-8b58-4954-8734-64a200d9f87e",
+            "zIndex": 0,
+            "source": {
+                "cell": "50df95c7-0501-4282-9aa6-b197f6dbd020",
+                "port": "8119d4bd-9f86-4355-bc21-09a98e7e203c"
+            },
+            "target": {
+                "cell": "f26e293b-3617-4044-b57f-65cd776b0e3f",
+                "port": "45ddbeb9-301c-41e5-bcc9-0f2f952cf63a"
+            }
+        },
+        {
+            "shape": "edge",
+            "attrs": {
+                "line": {
+                    "stroke": "white",
+                    "targetMarker": {
+                        "name": "classic",
+                        "width": 12,
+                        "height": 8
+                    }
+                },
+                "text": {
+                    "fontSize": 10,
+                    "fill": "black"
+                },
+                "rect": {
+                    "fill": "white"
+                }
+            },
+            "id": "a46ef7c3-1c31-47dd-947b-d523dfa4495a",
+            "zIndex": 0,
+            "source": {
+                "cell": "f26e293b-3617-4044-b57f-65cd776b0e3f",
+                "port": "237641dc-6d56-4ebe-a921-9e56ee411104"
+            },
+            "target": {
+                "cell": "64ada061-546e-4957-98c1-ac753db9d7fc",
+                "port": "2c8233d4-b906-41a9-8142-6659fd172b27"
+            }
+        },
+        {
+            "shape": "edge",
+            "attrs": {
+                "line": {
+                    "stroke": "white",
+                    "targetMarker": {
+                        "name": "classic",
+                        "width": 12,
+                        "height": 8
+                    }
+                },
+                "text": {
+                    "fontSize": 10,
+                    "fill": "black"
+                },
+                "rect": {
+                    "fill": "white"
+                }
+            },
+            "id": "779bc453-d219-411b-ad83-ed893adfa675",
+            "zIndex": 0,
+            "source": {
+                "cell": "41059e92-b3e5-4c98-b2d7-bbd994d86b14",
+                "port": "d98f3e80-4f2e-4ed0-a61f-636fdf587d09"
+            },
+            "target": {
+                "cell": "6047982e-8db7-475f-8469-ab7b6c4e79de",
+                "port": "45ddbeb9-301c-41e5-bcc9-0f2f952cf63a"
+            }
+        },
+        {
+            "shape": "edge",
+            "attrs": {
+                "line": {
+                    "stroke": "white",
+                    "targetMarker": {
+                        "name": "classic",
+                        "width": 12,
+                        "height": 8
+                    }
+                },
+                "text": {
+                    "fontSize": 10,
+                    "fill": "black"
+                },
+                "rect": {
+                    "fill": "white"
+                }
+            },
+            "id": "2a857944-d662-4dcb-9dd7-219e1c1354e2",
+            "zIndex": 0,
+            "source": {
+                "cell": "4734e27e-135c-4c31-b770-43f94ab8b4f1",
+                "port": "1d24dbe2-b9bb-4755-87f2-62e72338573e"
+            },
+            "target": {
+                "cell": "ab2afa24-5440-4f64-a37f-7aa0b978c59d",
+                "port": "2c8233d4-b906-41a9-8142-6659fd172b27"
+            }
+        },
+        {
+            "shape": "edge",
+            "attrs": {
+                "line": {
+                    "stroke": "white",
+                    "targetMarker": {
+                        "name": "classic",
+                        "width": 12,
+                        "height": 8
+                    }
+                },
+                "text": {
+                    "fontSize": 10,
+                    "fill": "black"
+                },
+                "rect": {
+                    "fill": "white"
+                }
+            },
+            "id": "3074ac99-0494-4cf0-8996-499fff1f4961",
+            "zIndex": 0,
+            "source": {
+                "cell": "bdfef2be-928d-477a-b701-7e7c23e3c6ab",
+                "port": "237641dc-6d56-4ebe-a921-9e56ee411104"
+            },
+            "target": {
+                "cell": "ca8cb576-a7c3-428c-a5d4-16569cab411c",
+                "port": "d3e06ccd-eff1-4a60-918a-ad50e3c4d272"
+            }
+        },
+        {
+            "shape": "edge",
+            "attrs": {
+                "line": {
+                    "stroke": "white",
+                    "targetMarker": {
+                        "name": "classic",
+                        "width": 12,
+                        "height": 8
+                    }
+                },
+                "text": {
+                    "fontSize": 10,
+                    "fill": "black"
+                },
+                "rect": {
+                    "fill": "white"
+                }
+            },
+            "id": "c4a7b027-491a-46b2-acce-e07977d8089c",
+            "zIndex": 0,
+            "source": {
+                "cell": "12947a84-4aa8-431c-8ba1-518d8e729f23",
+                "port": "98793e5f-5e57-4a40-8fa7-71f467c46fd7"
+            },
+            "target": {
+                "cell": "b9f77ebb-a0dc-40e6-aaeb-7058ad08502e",
+                "port": "2c8233d4-b906-41a9-8142-6659fd172b27"
+            }
+        },
+        {
+            "shape": "edge",
+            "attrs": {
+                "line": {
+                    "stroke": "white",
+                    "targetMarker": {
+                        "name": "classic",
+                        "width": 12,
+                        "height": 8
+                    }
+                },
+                "text": {
+                    "fontSize": 10,
+                    "fill": "black"
+                },
+                "rect": {
+                    "fill": "white"
+                }
+            },
+            "id": "82303a7b-0010-41bd-a054-e9ec003d2cca",
+            "zIndex": 0,
+            "source": {
+                "cell": "6047982e-8db7-475f-8469-ab7b6c4e79de",
+                "port": "237641dc-6d56-4ebe-a921-9e56ee411104"
+            },
+            "target": {
+                "cell": "f221de62-664d-4ade-ae2d-ce6aad3ad9ca",
+                "port": "45ddbeb9-301c-41e5-bcc9-0f2f952cf63a"
+            }
+        },
+        {
+            "shape": "edge",
+            "attrs": {
+                "line": {
+                    "stroke": "white",
+                    "targetMarker": {
+                        "name": "classic",
+                        "width": 12,
+                        "height": 8
+                    }
+                },
+                "text": {
+                    "fontSize": 10,
+                    "fill": "black"
+                },
+                "rect": {
+                    "fill": "white"
+                }
+            },
+            "id": "49c3c73c-a355-4f64-a011-aae73a267a89",
+            "zIndex": 0,
+            "source": {
+                "cell": "562cf75e-1657-4735-bbf7-2e974a00fdab",
+                "port": "1d24dbe2-b9bb-4755-87f2-62e72338573e"
+            },
+            "target": {
+                "cell": "b0518a57-13ae-46f5-a28e-192948a5eef4",
+                "port": "2c8233d4-b906-41a9-8142-6659fd172b27"
+            }
+        },
+        {
+            "shape": "edge",
+            "attrs": {
+                "line": {
+                    "stroke": "white",
+                    "targetMarker": {
+                        "name": "classic",
+                        "width": 12,
+                        "height": 8
+                    }
+                },
+                "text": {
+                    "fontSize": 10,
+                    "fill": "black"
+                },
+                "rect": {
+                    "fill": "white"
+                }
+            },
+            "id": "b35a7940-1956-45ff-9f96-2e052066a7b4",
+            "zIndex": 0,
+            "source": {
+                "cell": "f221de62-664d-4ade-ae2d-ce6aad3ad9ca",
+                "port": "237641dc-6d56-4ebe-a921-9e56ee411104"
+            },
+            "target": {
+                "cell": "f0ad25d0-801c-4b57-9614-0c049ca0d736",
+                "port": "45ddbeb9-301c-41e5-bcc9-0f2f952cf63a"
+            }
+        },
+        {
+            "shape": "edge",
+            "attrs": {
+                "line": {
+                    "stroke": "white",
+                    "targetMarker": {
+                        "name": "classic",
+                        "width": 12,
+                        "height": 8
+                    }
+                },
+                "text": {
+                    "fontSize": 10,
+                    "fill": "black"
+                },
+                "rect": {
+                    "fill": "white"
+                }
+            },
+            "id": "1d995c98-4053-43dd-8ba1-94c997800b80",
+            "zIndex": 0,
+            "source": {
+                "cell": "153ae943-3155-443a-8a17-18838b9a3ff9",
+                "port": "5641bada-8e8f-44b8-b986-89d62e7f9600"
+            },
+            "target": {
+                "cell": "d6fa0f7e-0bd4-4034-9a31-a0bc3262485b",
+                "port": "2c8233d4-b906-41a9-8142-6659fd172b27"
+            }
+        },
+        {
+            "shape": "edge",
+            "attrs": {
+                "line": {
+                    "stroke": "white",
+                    "targetMarker": {
+                        "name": "classic",
+                        "width": 12,
+                        "height": 8
+                    }
+                },
+                "text": {
+                    "fontSize": 10,
+                    "fill": "black"
+                },
+                "rect": {
+                    "fill": "white"
+                }
+            },
+            "id": "fc12dd40-c428-4c1d-ae10-aa5d5eba838a",
+            "zIndex": 0,
+            "source": {
+                "cell": "bdd45291-b0ab-4623-95ab-6e706815acb9",
+                "port": "75353417-b728-45e6-8d47-2f7c54639e29"
+            },
+            "target": {
+                "cell": "55834539-1f3c-4fc9-b63b-acab2dc18fdd",
+                "port": "e0e0825e-d17f-4e46-b267-0be024c6f3cd"
+            }
+        },
+        {
+            "shape": "edge",
+            "attrs": {
+                "line": {
+                    "stroke": "white",
+                    "targetMarker": {
+                        "name": "classic",
+                        "width": 12,
+                        "height": 8
+                    }
+                },
+                "text": {
+                    "fontSize": 10,
+                    "fill": "black"
+                },
+                "rect": {
+                    "fill": "white"
+                }
+            },
+            "id": "15b973ec-87dc-4b61-854e-9f1adf42e619",
+            "zIndex": 0,
+            "source": {
+                "cell": "de9ce6d1-347d-4534-9f2d-170ae13a38a3",
+                "port": "1d24dbe2-b9bb-4755-87f2-62e72338573e"
+            },
+            "target": {
+                "cell": "3f52fc9f-1821-419b-b7cd-459165122ffd",
+                "port": "2c8233d4-b906-41a9-8142-6659fd172b27"
+            }
+        },
+        {
+            "shape": "edge",
+            "attrs": {
+                "line": {
+                    "stroke": "white",
+                    "targetMarker": {
+                        "name": "classic",
+                        "width": 12,
+                        "height": 8
+                    }
+                },
+                "text": {
+                    "fontSize": 10,
+                    "fill": "black"
+                },
+                "rect": {
+                    "fill": "white"
+                }
+            },
+            "id": "3fd5c25d-d55d-47e5-b57e-4e9808db90a9",
+            "zIndex": 0,
+            "source": {
+                "cell": "f0ad25d0-801c-4b57-9614-0c049ca0d736",
+                "port": "237641dc-6d56-4ebe-a921-9e56ee411104"
+            },
+            "target": {
+                "cell": "bdfef2be-928d-477a-b701-7e7c23e3c6ab",
+                "port": "45ddbeb9-301c-41e5-bcc9-0f2f952cf63a"
+            }
+        },
+        {
+            "shape": "edge",
+            "attrs": {
+                "line": {
+                    "stroke": "white",
+                    "targetMarker": {
+                        "name": "classic",
+                        "width": 12,
+                        "height": 8
+                    }
+                },
+                "text": {
+                    "fontSize": 10,
+                    "fill": "black"
+                },
+                "rect": {
+                    "fill": "white"
+                }
+            },
+            "id": "16725a74-34ee-4c36-96bc-691e2ed41bff",
+            "zIndex": 0,
+            "source": {
+                "cell": "b62ad68c-fbd3-4614-90a8-fb3838a4831b",
+                "port": "1d24dbe2-b9bb-4755-87f2-62e72338573e"
+            },
+            "target": {
+                "cell": "8c0f0522-c233-4d05-bcc3-4700f82070fe",
+                "port": "2c8233d4-b906-41a9-8142-6659fd172b27"
+            }
+        },
+        {
+            "shape": "edge",
+            "attrs": {
+                "line": {
+                    "stroke": "white",
+                    "targetMarker": {
+                        "name": "classic",
+                        "width": 12,
+                        "height": 8
+                    }
+                },
+                "text": {
+                    "fontSize": 10,
+                    "fill": "black"
+                },
+                "rect": {
+                    "fill": "white"
+                }
+            },
+            "id": "d8bed625-aa6b-4cd6-bfdc-af1f9be226b1",
+            "zIndex": 0,
+            "source": {
+                "cell": "b9f77ebb-a0dc-40e6-aaeb-7058ad08502e",
+                "port": "8119d4bd-9f86-4355-bc21-09a98e7e203c"
+            },
+            "target": {
+                "cell": "a42e9722-e6dc-4f70-8f82-65c507c33a47",
+                "port": "2c8233d4-b906-41a9-8142-6659fd172b27"
+            }
+        },
+        {
+            "shape": "edge",
+            "attrs": {
+                "line": {
+                    "stroke": "white",
+                    "targetMarker": {
+                        "name": "classic",
+                        "width": 12,
+                        "height": 8
+                    }
+                },
+                "text": {
+                    "fontSize": 10,
+                    "fill": "black"
+                },
+                "rect": {
+                    "fill": "white"
+                }
+            },
+            "id": "267cafa3-36fc-4891-a79e-385fa9d90cbc",
+            "zIndex": 0,
+            "source": {
+                "cell": "5c721909-49c7-4578-b252-50a5836ef238",
+                "port": "ce2550fc-ad25-4ece-882c-129a43fbebec"
+            },
+            "target": {
+                "cell": "b0e1ead4-988c-4ca8-90c7-ae08cb47dc0c",
+                "port": "65785d59-fe68-437f-9595-95eec6300f41"
+            }
+        },
+        {
+            "shape": "edge",
+            "attrs": {
+                "line": {
+                    "stroke": "white",
+                    "targetMarker": {
+                        "name": "classic",
+                        "width": 12,
+                        "height": 8
+                    }
+                },
+                "text": {
+                    "fontSize": 10,
+                    "fill": "black"
+                },
+                "rect": {
+                    "fill": "white"
+                }
+            },
+            "id": "82b35083-1a43-4b67-908f-15f6cd0e808d",
+            "zIndex": 0,
+            "source": {
+                "cell": "79486a09-df63-4332-99e9-12384f6a3add",
+                "port": "fb5872f0-bdf1-4f92-82b4-bea9546bb54c"
+            },
+            "target": {
+                "cell": "41059e92-b3e5-4c98-b2d7-bbd994d86b14",
+                "port": "b6bb3f4f-0bb4-4ef7-874b-ecbae9c2c331"
+            }
+        },
+        {
+            "shape": "edge",
+            "attrs": {
+                "line": {
+                    "stroke": "white",
+                    "targetMarker": {
+                        "name": "classic",
+                        "width": 12,
+                        "height": 8
+                    }
+                },
+                "text": {
+                    "fontSize": 10,
+                    "fill": "black"
+                },
+                "rect": {
+                    "fill": "white"
+                }
+            },
+            "id": "a5149c50-fc57-409f-a0b4-ffb18d5717e2",
+            "zIndex": 0,
+            "source": {
+                "cell": "3f52fc9f-1821-419b-b7cd-459165122ffd",
+                "port": "8119d4bd-9f86-4355-bc21-09a98e7e203c"
+            },
+            "target": {
+                "cell": "38b97f2c-44fe-4e14-8299-51039db124e9",
+                "port": "d2842cf3-3903-4795-821e-7b53ff005aa2"
+            }
+        },
+        {
+            "shape": "edge",
+            "attrs": {
+                "line": {
+                    "stroke": "white",
+                    "targetMarker": {
+                        "name": "classic",
+                        "width": 12,
+                        "height": 8
+                    }
+                },
+                "text": {
+                    "fontSize": 10,
+                    "fill": "black"
+                },
+                "rect": {
+                    "fill": "white"
+                }
+            },
+            "id": "0ecf4e23-5d6a-4982-ab64-895b3d206757",
+            "zIndex": 0,
+            "source": {
+                "cell": "bf89edaf-6c44-4529-ab58-66292bc65db1",
+                "port": "237641dc-6d56-4ebe-a921-9e56ee411104"
+            },
+            "target": {
+                "cell": "4e2cd5a7-d7e9-4841-93b5-39937ae653a5",
+                "port": "45ddbeb9-301c-41e5-bcc9-0f2f952cf63a"
+            }
+        },
+        {
+            "shape": "edge",
+            "attrs": {
+                "line": {
+                    "stroke": "white",
+                    "targetMarker": {
+                        "name": "classic",
+                        "width": 12,
+                        "height": 8
+                    }
+                },
+                "text": {
+                    "fontSize": 10,
+                    "fill": "black"
+                },
+                "rect": {
+                    "fill": "white"
+                }
+            },
+            "id": "b309cc36-4cec-429c-9134-f202513cc31d",
+            "zIndex": 0,
+            "source": {
+                "cell": "55834539-1f3c-4fc9-b63b-acab2dc18fdd",
+                "port": "a35c6ccd-f3a8-483e-9d5a-337d440eb6a9"
+            },
+            "target": {
+                "cell": "a2541e16-9510-4aeb-8f13-f5073aaf58e0",
+                "port": "ccf006e6-2718-41f1-9e2e-01b68392b874"
+            }
+        },
+        {
+            "shape": "edge",
+            "attrs": {
+                "line": {
+                    "stroke": "white",
+                    "targetMarker": {
+                        "name": "classic",
+                        "width": 12,
+                        "height": 8
+                    }
+                },
+                "text": {
+                    "fontSize": 10,
+                    "fill": "black"
+                },
+                "rect": {
+                    "fill": "white"
+                }
+            },
+            "id": "580df205-1358-464a-b518-3c30cc5b9131",
+            "zIndex": 0,
+            "source": {
+                "cell": "2f6e969c-71c9-4a67-ab62-daa72180c1f4",
+                "port": "98793e5f-5e57-4a40-8fa7-71f467c46fd7"
+            },
+            "target": {
+                "cell": "10c0f1be-f000-49ec-85fd-b3f163de256d",
+                "port": "2c8233d4-b906-41a9-8142-6659fd172b27"
+            }
+        },
+        {
+            "shape": "edge",
+            "attrs": {
+                "line": {
+                    "stroke": "white",
+                    "targetMarker": {
+                        "name": "classic",
+                        "width": 12,
+                        "height": 8
+                    }
+                },
+                "text": {
+                    "fontSize": 10,
+                    "fill": "black"
+                },
+                "rect": {
+                    "fill": "white"
+                }
+            },
+            "id": "f2b4be5d-8a33-4cb1-9ed6-980db8b6c542",
+            "zIndex": 0,
+            "source": {
+                "cell": "38b97f2c-44fe-4e14-8299-51039db124e9",
+                "port": "98793e5f-5e57-4a40-8fa7-71f467c46fd7"
+            },
+            "target": {
+                "cell": "ffc0dc15-5242-4d7b-b1f3-41a7a62f01bf",
+                "port": "45ddbeb9-301c-41e5-bcc9-0f2f952cf63a"
+            }
+        },
+        {
+            "shape": "edge",
+            "attrs": {
+                "line": {
+                    "stroke": "white",
+                    "targetMarker": {
+                        "name": "classic",
+                        "width": 12,
+                        "height": 8
+                    }
+                },
+                "text": {
+                    "fontSize": 10,
+                    "fill": "black"
+                },
+                "rect": {
+                    "fill": "white"
+                }
+            },
+            "id": "bddc0237-6056-4c47-a441-0025e8f30f72",
+            "zIndex": 0,
+            "source": {
+                "cell": "f1a2d7e6-708d-4377-bfde-42217d178412",
+                "port": "9b2f6100-b561-44e7-af77-8636b3cdd49d"
+            },
+            "target": {
+                "cell": "5c721909-49c7-4578-b252-50a5836ef238",
+                "port": "65785d59-fe68-437f-9595-95eec6300f41"
+            }
+        },
+        {
+            "shape": "edge",
+            "attrs": {
+                "line": {
+                    "stroke": "white",
+                    "targetMarker": {
+                        "name": "classic",
+                        "width": 12,
+                        "height": 8
+                    }
+                },
+                "text": {
+                    "fontSize": 10,
+                    "fill": "black"
+                },
+                "rect": {
+                    "fill": "white"
+                }
+            },
+            "id": "35da567d-546b-4a86-a2b3-fa2c0e10a5d6",
+            "zIndex": 0,
+            "source": {
+                "cell": "d6fa0f7e-0bd4-4034-9a31-a0bc3262485b",
+                "port": "8119d4bd-9f86-4355-bc21-09a98e7e203c"
+            },
+            "target": {
+                "cell": "18cd1e8e-dac6-400d-bc8e-a34c6ea6717e",
+                "port": "d2842cf3-3903-4795-821e-7b53ff005aa2"
+            }
+        },
+        {
+            "shape": "edge",
+            "attrs": {
+                "line": {
+                    "stroke": "white",
+                    "targetMarker": {
+                        "name": "classic",
+                        "width": 12,
+                        "height": 8
+                    }
+                },
+                "text": {
+                    "fontSize": 10,
+                    "fill": "black"
+                },
+                "rect": {
+                    "fill": "white"
+                }
+            },
+            "id": "e27534b7-ade0-4871-8b73-7779f9a950ba",
+            "zIndex": 0,
+            "source": {
+                "cell": "b0518a57-13ae-46f5-a28e-192948a5eef4",
+                "port": "8119d4bd-9f86-4355-bc21-09a98e7e203c"
+            },
+            "target": {
+                "cell": "12947a84-4aa8-431c-8ba1-518d8e729f23",
+                "port": "d2842cf3-3903-4795-821e-7b53ff005aa2"
+            }
+        },
+        {
+            "position": {
+                "x": 1414,
+                "y": -20
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-start",
+            "ports": {
+                "groups": {
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeEnd",
+                        "id": "0c68b3e2-c082-4d7e-bfa4-7b88174f0cb8"
+                    }
+                ]
+            },
+            "id": "e9c8d924-d6ef-4ef6-a745-e4370f23df7f",
+            "data": {
+                "type": "start",
+                "blockName": "开始",
+                "actions": []
+            },
+            "zIndex": 1
+        },
+        {
+            "position": {
+                "x": 180,
+                "y": 200
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "user-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "65785d59-fe68-437f-9595-95eec6300f41"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "ce2550fc-ad25-4ece-882c-129a43fbebec"
+                    }
+                ]
+            },
+            "id": "5c721909-49c7-4578-b252-50a5836ef238",
+            "data": {
+                "type": "function",
+                "blockName": "主站启动挑菌站",
+                "expression": "async def calculate_well_positions(left_top,left_bottom,right_top,rows = 8,columns = 12):\r\n\r\n    # 提取坐标分量\r\n    lt_x, lt_y = left_top\r\n    lb_x, lb_y = left_bottom\r\n    rt_x, rt_y = right_top\r\n\r\n    # 计算行间距（垂直方向）\r\n    if rows > 1:\r\n        row_spacing_x = (lt_x - lb_x) / (rows - 1)\r\n        row_spacing_y = (lt_y - lb_y) / (rows - 1)\r\n    else:\r\n        row_spacing_x = 0.0\r\n        row_spacing_y = 0.0\r\n    \r\n    # 计算列间距（水平方向）\r\n    if columns > 1:\r\n        col_spacing_x = (rt_x - lt_x) / (columns - 1)\r\n        col_spacing_y = (rt_y - lt_y) / (columns - 1)\r\n    else:\r\n        col_spacing_x = 0.0\r\n        col_spacing_y = 0.0\r\n    \r\n    # 创建坐标矩阵\r\n    coordinate_matrix = []\r\n    \r\n    for col in range(columns):  # 外层循环：列\r\n        for row in range(rows):  # 内层循环：行\r\n            # 计算该列的起点（最上方的孔）\r\n            # 从左上角开始，向右移动 col 个列间距\r\n            col_start_x = lt_x + col_spacing_x * col\r\n            col_start_y = lt_y + col_spacing_y * col\r\n            \r\n            # 从列起点向下移动 row 个行间距\r\n            x = col_start_x - row_spacing_x * row\r\n            y = col_start_y - row_spacing_y * row\r\n            \r\n            coordinate_matrix.append([round(x, 1), round(y, 1)])\r\n    \r\n    return coordinate_matrix\r\n\r\nfn.calculate_well_positions = calculate_well_positions\r\n\r\n\r\n\r\n\r\n\r\n"
+            },
+            "zIndex": 2
+        },
+        {
+            "position": {
+                "x": 180,
+                "y": 285
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "user-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "65785d59-fe68-437f-9595-95eec6300f41"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "ce2550fc-ad25-4ece-882c-129a43fbebec"
+                    }
+                ]
+            },
+            "id": "b0e1ead4-988c-4ca8-90c7-ae08cb47dc0c",
+            "data": {
+                "type": "function",
+                "blockName": "取tip头吸吐开光源",
+                "expression": "$tiprack_point_list = await fn.calculate_well_positions(\r\n    $tiptrack_left_top,\r\n    $tiptrack_left_bottom,\r\n    $tiptrack_right_top\r\n)\r\n$wellplate_point_list = await fn.calculate_well_positions(\r\n    $S96Well_left_top,\r\n    $S96Well_left_bottom,\r\n    $S96Well_right_top\r\n)\r\nprint($tiprack_point_list)\r\nprint($wellplate_point_list)\r\n\r\n#开始遍历6孔板中每个孔模拟出来的菌落的位置，逐一挑选\r\nindex = 0\r\ncolony_coords = []\r\n\r\nfor key, value in $S6孔板各个孔位的菌落模拟位置.items():\r\n    for coord in value:\r\n        colony_coords.append(coord)\r\n\r\nawait fn.flow.execute(\"摄像头拍摄\", {})\r\nfor coord in colony_coords:\r\n    # 获取tip头索引\r\n    get_tip_count=fn.store.get(\"TIP索引号ID\")\r\n    if get_tip_count==\"\":\r\n        get_tip_count=0\r\n\r\n    fn.store.set(\"TIP索引号ID\" , get_tip_count + 1)\r\n    if get_tip_count >= 95:\r\n        fn.store.set(\"TIP索引号ID\" , 0)\r\n\r\n    $当前枪头盒取枪头孔位坐标 = $tiprack_point_list[get_tip_count]\r\n    await fn.flow.execute(\"取枪头流程\", {\"当前枪头盒取枪头孔位坐标\" : $当前枪头盒取枪头孔位坐标})\r\n    $当前6孔板挑菌坐标 = coord\r\n    await fn.flow.execute(\"6孔板挑菌流程\", {\"当前6孔板挑菌坐标\" : $当前6孔板挑菌坐标})\r\n    $当前96孔板吐液孔位坐标 = $wellplate_point_list[index]\r\n    await fn.flow.execute(\"吐液流程\", {\"当前96孔板吐液孔位坐标\" : $当前96孔板吐液孔位坐标})\r\n    await fn.flow.execute(\"退枪头流程\")\r\n    index = index + 1\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n"
+            },
+            "zIndex": 3
+        },
+        {
+            "position": {
+                "x": 512,
+                "y": 100
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "user-start",
+            "ports": {
+                "groups": {
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeEnd",
+                        "id": "1d24dbe2-b9bb-4755-87f2-62e72338573e"
+                    }
+                ]
+            },
+            "id": "4734e27e-135c-4c31-b770-43f94ab8b4f1",
+            "data": {
+                "type": "trigger",
+                "blockName": "6孔板挑菌流程",
+                "inParam": [],
+                "expose": false
+            },
+            "zIndex": 4
+        },
+        {
+            "position": {
+                "x": 512,
+                "y": 200
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "2c8233d4-b906-41a9-8142-6659fd172b27"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "8119d4bd-9f86-4355-bc21-09a98e7e203c"
+                    }
+                ]
+            },
+            "id": "ab2afa24-5440-4f64-a37f-7aa0b978c59d",
+            "data": {
+                "type": "set",
+                "blockName": "Z轴安全高度",
+                "actions": [
+                    {
+                        "DeviceID": "13007",
+                        "Function": "SlideMove",
+                        "Set": {
+                            "P_pos": "$Z轴安全高度",
+                            "P_vel": "$speed",
+                            "Acc": "$acc",
+                            "Dec": "$dcc",
+                            "P_mode": "1"
+                        }
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 5
+        },
+        {
+            "position": {
+                "x": 512,
+                "y": 295
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "d2842cf3-3903-4795-821e-7b53ff005aa2"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "98793e5f-5e57-4a40-8fa7-71f467c46fd7"
+                    }
+                ]
+            },
+            "id": "143ac10b-b426-480e-9be6-befffa809bc4",
+            "data": {
+                "type": "set",
+                "blockName": "XY移动",
+                "actions": [
+                    {
+                        "DeviceID": "13005",
+                        "Function": "SlideMove",
+                        "Set": {
+                            "P_pos": "$当前6孔板挑菌坐标[0]",
+                            "P_vel": "$speed",
+                            "Acc": "$acc",
+                            "Dec": "$dcc",
+                            "P_mode": "1"
+                        }
+                    },
+                    {
+                        "DeviceID": "13006",
+                        "Function": "SlideMove",
+                        "Set": {
+                            "P_pos": "$当前6孔板挑菌坐标[1]",
+                            "P_vel": "$Y轴_speed",
+                            "Acc": "$acc",
+                            "Dec": "$dcc",
+                            "P_mode": "1"
+                        }
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 6
+        },
+        {
+            "position": {
+                "x": -40,
+                "y": 127
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "45ddbeb9-301c-41e5-bcc9-0f2f952cf63a"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "237641dc-6d56-4ebe-a921-9e56ee411104"
+                    }
+                ]
+            },
+            "id": "6047982e-8db7-475f-8469-ab7b6c4e79de",
+            "data": {
+                "type": "set",
+                "blockName": "边缘控制器初始化",
+                "actions": [
+                    {
+                        "DeviceID": "96001",
+                        "Function": "Initial",
+                        "Set": {}
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 8
+        },
+        {
+            "position": {
+                "x": 1220,
+                "y": 190
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-read",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "2a6844ce-26fa-4dba-bfb3-4a15b1c5208f"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "cbc6b9be-ebf5-41e3-90b2-5aa4e0c9b840"
+                    }
+                ]
+            },
+            "id": "237ad54b-615d-427c-afcc-e8780dd0bbad",
+            "data": {
+                "type": "action",
+                "blockName": "读取",
+                "action": {
+                    "DeviceID": "13005",
+                    "Function": "GetPosition",
+                    "Set": {}
+                },
+                "accept": "$test",
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 9,
+            "parent": "297b876b-d6f7-4c50-ae34-a561d6f66e47"
+        },
+        {
+            "position": {
+                "x": 1220,
+                "y": 267
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "45ddbeb9-301c-41e5-bcc9-0f2f952cf63a"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "237641dc-6d56-4ebe-a921-9e56ee411104"
+                    }
+                ]
+            },
+            "id": "fa878e45-500e-42d9-9cc7-abea615cf763",
+            "data": {
+                "type": "set",
+                "blockName": "移动",
+                "actions": [
+                    {
+                        "DeviceID": "13005",
+                        "Function": "SlideMove",
+                        "Set": {
+                            "P_vel": "$speed",
+                            "Acc": "$acc",
+                            "Dec": "$dcc",
+                            "P_mode": "1",
+                            "P_pos": "12"
+                        }
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 10,
+            "parent": "297b876b-d6f7-4c50-ae34-a561d6f66e47"
+        },
+        {
+            "position": {
+                "x": 1360,
+                "y": 190
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-read",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "2a6844ce-26fa-4dba-bfb3-4a15b1c5208f"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "cbc6b9be-ebf5-41e3-90b2-5aa4e0c9b840"
+                    }
+                ]
+            },
+            "id": "3d869fcd-fc6c-45fc-8651-22ae67cdd0af",
+            "data": {
+                "type": "action",
+                "blockName": "读取",
+                "action": {
+                    "DeviceID": "13006",
+                    "Function": "GetPosition",
+                    "Set": {}
+                },
+                "accept": "$test",
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "parent": "580a583d-5ad4-4c0d-a9fa-250fb97d0cd6",
+            "zIndex": 11
+        },
+        {
+            "position": {
+                "x": 1360,
+                "y": 275
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "45ddbeb9-301c-41e5-bcc9-0f2f952cf63a"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "237641dc-6d56-4ebe-a921-9e56ee411104"
+                    }
+                ]
+            },
+            "id": "50c6c71e-5b7f-4b59-b6f4-6ba198c85d48",
+            "data": {
+                "type": "set",
+                "blockName": "移动",
+                "actions": [
+                    {
+                        "DeviceID": "13006",
+                        "Function": "SlideMove",
+                        "Set": {
+                            "P_pos": "15",
+                            "P_vel": "$speed",
+                            "Acc": "$acc",
+                            "Dec": "$dcc",
+                            "P_mode": "1"
+                        }
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "parent": "580a583d-5ad4-4c0d-a9fa-250fb97d0cd6",
+            "zIndex": 12
+        },
+        {
+            "position": {
+                "x": 1500,
+                "y": 190
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-read",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "2a6844ce-26fa-4dba-bfb3-4a15b1c5208f"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "cbc6b9be-ebf5-41e3-90b2-5aa4e0c9b840"
+                    }
+                ]
+            },
+            "id": "2e688593-7fd4-49df-9b07-d57ad6c7d14e",
+            "data": {
+                "type": "action",
+                "blockName": "读取",
+                "action": {
+                    "DeviceID": "13007",
+                    "Function": "GetPosition",
+                    "Set": {}
+                },
+                "accept": "$test",
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "parent": "537df20d-4238-48af-b5b7-c6cbfe642d32",
+            "zIndex": 13
+        },
+        {
+            "position": {
+                "x": 1500,
+                "y": 260
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "45ddbeb9-301c-41e5-bcc9-0f2f952cf63a"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "237641dc-6d56-4ebe-a921-9e56ee411104"
+                    }
+                ]
+            },
+            "id": "1c9d81dc-eed0-4d2d-8fbb-ec8dc996b3d4",
+            "data": {
+                "type": "set",
+                "blockName": "移动",
+                "actions": [
+                    {
+                        "DeviceID": "13007",
+                        "Function": "SlideMove",
+                        "Set": {
+                            "P_vel": "$speed",
+                            "Acc": "$acc",
+                            "Dec": "$dcc",
+                            "P_mode": "1",
+                            "P_pos": "0"
+                        }
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "parent": "537df20d-4238-48af-b5b7-c6cbfe642d32",
+            "zIndex": 14
+        },
+        {
+            "position": {
+                "x": 1642,
+                "y": 200
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-read",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "2a6844ce-26fa-4dba-bfb3-4a15b1c5208f"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "cbc6b9be-ebf5-41e3-90b2-5aa4e0c9b840"
+                    }
+                ]
+            },
+            "id": "6140e745-78ce-4bbb-9cc9-5eb2109fc756",
+            "data": {
+                "type": "action",
+                "blockName": "读取",
+                "action": {
+                    "DeviceID": "16002",
+                    "Function": "CheckTip",
+                    "Set": {}
+                },
+                "accept": "$test",
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 15,
+            "parent": "0aad1359-2eaf-471e-a739-50d099852511"
+        },
+        {
+            "position": {
+                "x": 512,
+                "y": 395
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "2c8233d4-b906-41a9-8142-6659fd172b27"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "8119d4bd-9f86-4355-bc21-09a98e7e203c"
+                    }
+                ]
+            },
+            "id": "50df95c7-0501-4282-9aa6-b197f6dbd020",
+            "data": {
+                "type": "set",
+                "blockName": "下降",
+                "actions": [
+                    {
+                        "DeviceID": "13007",
+                        "Function": "SlideMove",
+                        "Set": {
+                            "P_pos": "$S6孔板挑菌高度",
+                            "P_vel": "$speed",
+                            "Acc": "$acc",
+                            "Dec": "$dcc",
+                            "P_mode": "1"
+                        }
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 16
+        },
+        {
+            "position": {
+                "x": 1642,
+                "y": 260
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "45ddbeb9-301c-41e5-bcc9-0f2f952cf63a"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "237641dc-6d56-4ebe-a921-9e56ee411104"
+                    }
+                ]
+            },
+            "id": "da4b6dc2-9b7f-4392-a862-6689884e9803",
+            "data": {
+                "type": "set",
+                "blockName": "退枪头",
+                "actions": [
+                    {
+                        "DeviceID": "16002",
+                        "Function": "RemoveTip",
+                        "Set": {}
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 17,
+            "parent": "0aad1359-2eaf-471e-a739-50d099852511"
+        },
+        {
+            "position": {
+                "x": 512,
+                "y": 607
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "2c8233d4-b906-41a9-8142-6659fd172b27"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "8119d4bd-9f86-4355-bc21-09a98e7e203c"
+                    }
+                ]
+            },
+            "id": "64ada061-546e-4957-98c1-ac753db9d7fc",
+            "data": {
+                "type": "set",
+                "blockName": "Z轴安全高度",
+                "actions": [
+                    {
+                        "DeviceID": "13007",
+                        "Function": "SlideMove",
+                        "Set": {
+                            "P_pos": "$Z轴安全高度",
+                            "P_vel": "$speed",
+                            "Acc": "$acc",
+                            "Dec": "$dcc",
+                            "P_mode": "1"
+                        }
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 18
+        },
+        {
+            "position": {
+                "x": 412,
+                "y": 100
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "user-start",
+            "ports": {
+                "groups": {
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeEnd",
+                        "id": "1d24dbe2-b9bb-4755-87f2-62e72338573e"
+                    }
+                ]
+            },
+            "id": "562cf75e-1657-4735-bbf7-2e974a00fdab",
+            "data": {
+                "type": "trigger",
+                "blockName": "取枪头流程",
+                "inParam": [],
+                "expose": false
+            },
+            "zIndex": 19
+        },
+        {
+            "position": {
+                "x": 412,
+                "y": 200
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "2c8233d4-b906-41a9-8142-6659fd172b27"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "8119d4bd-9f86-4355-bc21-09a98e7e203c"
+                    }
+                ]
+            },
+            "id": "b0518a57-13ae-46f5-a28e-192948a5eef4",
+            "data": {
+                "type": "set",
+                "blockName": "Z轴安全高度",
+                "actions": [
+                    {
+                        "DeviceID": "13007",
+                        "Function": "SlideMove",
+                        "Set": {
+                            "P_pos": "$Z轴安全高度",
+                            "P_vel": "$speed",
+                            "Acc": "$acc",
+                            "Dec": "$dcc",
+                            "P_mode": "1"
+                        }
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 20
+        },
+        {
+            "position": {
+                "x": 412,
+                "y": 295
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "d2842cf3-3903-4795-821e-7b53ff005aa2"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "98793e5f-5e57-4a40-8fa7-71f467c46fd7"
+                    }
+                ]
+            },
+            "id": "12947a84-4aa8-431c-8ba1-518d8e729f23",
+            "data": {
+                "type": "set",
+                "blockName": "XY移动",
+                "actions": [
+                    {
+                        "DeviceID": "13005",
+                        "Function": "SlideMove",
+                        "Set": {
+                            "P_pos": "$当前枪头盒取枪头孔位坐标[0]",
+                            "P_vel": "$speed",
+                            "Acc": "$acc",
+                            "Dec": "$dcc",
+                            "P_mode": "1"
+                        }
+                    },
+                    {
+                        "DeviceID": "13006",
+                        "Function": "SlideMove",
+                        "Set": {
+                            "P_pos": "$当前枪头盒取枪头孔位坐标[1]",
+                            "P_vel": "$Y轴_speed",
+                            "Acc": "$acc",
+                            "Dec": "$dcc",
+                            "P_mode": "1"
+                        }
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 21
+        },
+        {
+            "position": {
+                "x": 412,
+                "y": 395
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "2c8233d4-b906-41a9-8142-6659fd172b27"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "8119d4bd-9f86-4355-bc21-09a98e7e203c"
+                    }
+                ]
+            },
+            "id": "b9f77ebb-a0dc-40e6-aaeb-7058ad08502e",
+            "data": {
+                "type": "set",
+                "blockName": "下降",
+                "actions": [
+                    {
+                        "DeviceID": "13007",
+                        "Function": "SlideMove",
+                        "Set": {
+                            "P_pos": "$tiptrack_取枪头高度",
+                            "P_vel": "$speed",
+                            "Acc": "$acc",
+                            "Dec": "$dcc",
+                            "P_mode": "1"
+                        }
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 22
+        },
+        {
+            "position": {
+                "x": 412,
+                "y": 480
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "2c8233d4-b906-41a9-8142-6659fd172b27"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "8119d4bd-9f86-4355-bc21-09a98e7e203c"
+                    }
+                ]
+            },
+            "id": "a42e9722-e6dc-4f70-8f82-65c507c33a47",
+            "data": {
+                "type": "set",
+                "blockName": "Z轴安全高度",
+                "actions": [
+                    {
+                        "DeviceID": "13007",
+                        "Function": "SlideMove",
+                        "Set": {
+                            "P_pos": "$Z轴安全高度",
+                            "P_vel": "$speed",
+                            "Acc": "$acc",
+                            "Dec": "$dcc",
+                            "P_mode": "1"
+                        }
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 23
+        },
+        {
+            "position": {
+                "x": 632,
+                "y": 100
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "user-start",
+            "ports": {
+                "groups": {
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeEnd",
+                        "id": "1d24dbe2-b9bb-4755-87f2-62e72338573e"
+                    }
+                ]
+            },
+            "id": "b62ad68c-fbd3-4614-90a8-fb3838a4831b",
+            "data": {
+                "type": "trigger",
+                "blockName": "吐液流程",
+                "inParam": [],
+                "expose": false
+            },
+            "zIndex": 24
+        },
+        {
+            "position": {
+                "x": 632,
+                "y": 200
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "2c8233d4-b906-41a9-8142-6659fd172b27"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "8119d4bd-9f86-4355-bc21-09a98e7e203c"
+                    }
+                ]
+            },
+            "id": "8c0f0522-c233-4d05-bcc3-4700f82070fe",
+            "data": {
+                "type": "set",
+                "blockName": "Z轴安全高度",
+                "actions": [
+                    {
+                        "DeviceID": "13007",
+                        "Function": "SlideMove",
+                        "Set": {
+                            "P_pos": "$Z轴安全高度",
+                            "P_vel": "$speed",
+                            "Acc": "$acc",
+                            "Dec": "$dcc",
+                            "P_mode": "1"
+                        }
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 25
+        },
+        {
+            "position": {
+                "x": 632,
+                "y": 295
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "d2842cf3-3903-4795-821e-7b53ff005aa2"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "98793e5f-5e57-4a40-8fa7-71f467c46fd7"
+                    }
+                ]
+            },
+            "id": "2f6e969c-71c9-4a67-ab62-daa72180c1f4",
+            "data": {
+                "type": "set",
+                "blockName": "XY移动",
+                "actions": [
+                    {
+                        "DeviceID": "13005",
+                        "Function": "SlideMove",
+                        "Set": {
+                            "P_pos": "$当前96孔板吐液孔位坐标[0]",
+                            "P_vel": "$speed",
+                            "Acc": "$acc",
+                            "Dec": "$dcc",
+                            "P_mode": "1"
+                        }
+                    },
+                    {
+                        "DeviceID": "13006",
+                        "Function": "SlideMove",
+                        "Set": {
+                            "P_pos": "$当前96孔板吐液孔位坐标[1]",
+                            "P_vel": "$Y轴_speed",
+                            "Acc": "$acc",
+                            "Dec": "$dcc",
+                            "P_mode": "1"
+                        }
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 26
+        },
+        {
+            "position": {
+                "x": 632,
+                "y": 395
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "2c8233d4-b906-41a9-8142-6659fd172b27"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "8119d4bd-9f86-4355-bc21-09a98e7e203c"
+                    }
+                ]
+            },
+            "id": "10c0f1be-f000-49ec-85fd-b3f163de256d",
+            "data": {
+                "type": "set",
+                "blockName": "下降",
+                "actions": [
+                    {
+                        "DeviceID": "13007",
+                        "Function": "SlideMove",
+                        "Set": {
+                            "P_pos": "$S96孔板吐液高度",
+                            "P_vel": "$speed",
+                            "Acc": "$acc",
+                            "Dec": "$dcc",
+                            "P_mode": "1"
+                        }
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 27
+        },
+        {
+            "position": {
+                "x": 632,
+                "y": 620
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "2c8233d4-b906-41a9-8142-6659fd172b27"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "8119d4bd-9f86-4355-bc21-09a98e7e203c"
+                    }
+                ]
+            },
+            "id": "d66d3e0b-8251-4973-b9c0-ed72443dcd09",
+            "data": {
+                "type": "set",
+                "blockName": "Z轴安全高度",
+                "actions": [
+                    {
+                        "DeviceID": "13007",
+                        "Function": "SlideMove",
+                        "Set": {
+                            "P_pos": "$Z轴安全高度",
+                            "P_vel": "$speed",
+                            "Acc": "$acc",
+                            "Dec": "$dcc",
+                            "P_mode": "1"
+                        }
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 28
+        },
+        {
+            "position": {
+                "x": 832,
+                "y": 100
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "user-start",
+            "ports": {
+                "groups": {
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeEnd",
+                        "id": "1d24dbe2-b9bb-4755-87f2-62e72338573e"
+                    }
+                ]
+            },
+            "id": "de9ce6d1-347d-4534-9f2d-170ae13a38a3",
+            "data": {
+                "type": "trigger",
+                "blockName": "退枪头流程",
+                "inParam": [],
+                "expose": false
+            },
+            "zIndex": 29
+        },
+        {
+            "position": {
+                "x": 832,
+                "y": 200
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "2c8233d4-b906-41a9-8142-6659fd172b27"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "8119d4bd-9f86-4355-bc21-09a98e7e203c"
+                    }
+                ]
+            },
+            "id": "3f52fc9f-1821-419b-b7cd-459165122ffd",
+            "data": {
+                "type": "set",
+                "blockName": "Z轴安全高度",
+                "actions": [
+                    {
+                        "DeviceID": "13007",
+                        "Function": "SlideMove",
+                        "Set": {
+                            "P_pos": "$Z轴安全高度",
+                            "P_vel": "$speed",
+                            "Acc": "$acc",
+                            "Dec": "$dcc",
+                            "P_mode": "1"
+                        }
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 30
+        },
+        {
+            "position": {
+                "x": 832,
+                "y": 295
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "d2842cf3-3903-4795-821e-7b53ff005aa2"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "98793e5f-5e57-4a40-8fa7-71f467c46fd7"
+                    }
+                ]
+            },
+            "id": "38b97f2c-44fe-4e14-8299-51039db124e9",
+            "data": {
+                "type": "set",
+                "blockName": "Y移动",
+                "actions": [
+                    {
+                        "DeviceID": "13006",
+                        "Function": "SlideMove",
+                        "Set": {
+                            "P_pos": "$退枪头Y坐标",
+                            "P_vel": "$Y轴_speed",
+                            "Acc": "$acc",
+                            "Dec": "$dcc",
+                            "P_mode": "1"
+                        }
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 31
+        },
+        {
+            "position": {
+                "x": 832,
+                "y": 395
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "45ddbeb9-301c-41e5-bcc9-0f2f952cf63a"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "237641dc-6d56-4ebe-a921-9e56ee411104"
+                    }
+                ]
+            },
+            "id": "ffc0dc15-5242-4d7b-b1f3-41a7a62f01bf",
+            "data": {
+                "type": "set",
+                "blockName": "X移动",
+                "actions": [
+                    {
+                        "DeviceID": "13005",
+                        "Function": "SlideMove",
+                        "Set": {
+                            "P_vel": "$speed",
+                            "Acc": "$acc",
+                            "Dec": "$dcc",
+                            "P_mode": "1",
+                            "P_pos": "$退枪头X坐标"
+                        }
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 32
+        },
+        {
+            "position": {
+                "x": 832,
+                "y": 580
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "45ddbeb9-301c-41e5-bcc9-0f2f952cf63a"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "237641dc-6d56-4ebe-a921-9e56ee411104"
+                    }
+                ]
+            },
+            "id": "4e2cd5a7-d7e9-4841-93b5-39937ae653a5",
+            "data": {
+                "type": "set",
+                "blockName": "退枪头",
+                "actions": [
+                    {
+                        "DeviceID": "16002",
+                        "Function": "RemoveTip",
+                        "Set": {}
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 33
+        },
+        {
+            "position": {
+                "x": 832,
+                "y": 680
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "2c8233d4-b906-41a9-8142-6659fd172b27"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "8119d4bd-9f86-4355-bc21-09a98e7e203c"
+                    }
+                ]
+            },
+            "id": "8b2f0e39-bdd7-4ed5-a107-a51275312135",
+            "data": {
+                "type": "set",
+                "blockName": "Z轴安全高度",
+                "actions": [
+                    {
+                        "DeviceID": "13007",
+                        "Function": "SlideMove",
+                        "Set": {
+                            "P_pos": "$Z轴安全高度",
+                            "P_vel": "$speed",
+                            "Acc": "$acc",
+                            "Dec": "$dcc",
+                            "P_mode": "1"
+                        }
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 34
+        },
+        {
+            "position": {
+                "x": 832,
+                "y": 480
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "45ddbeb9-301c-41e5-bcc9-0f2f952cf63a"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "237641dc-6d56-4ebe-a921-9e56ee411104"
+                    }
+                ]
+            },
+            "id": "bf89edaf-6c44-4529-ab58-66292bc65db1",
+            "data": {
+                "type": "set",
+                "blockName": "Z移动",
+                "actions": [
+                    {
+                        "DeviceID": "13007",
+                        "Function": "SlideMove",
+                        "Set": {
+                            "P_vel": "$speed",
+                            "Acc": "$acc",
+                            "Dec": "$dcc",
+                            "P_mode": "1",
+                            "P_pos": "$退枪头Z坐标"
+                        }
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 35
+        },
+        {
+            "position": {
+                "x": 1788,
+                "y": 200
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "ccf006e6-2718-41f1-9e2e-01b68392b874"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "75353417-b728-45e6-8d47-2f7c54639e29"
+                    }
+                ]
+            },
+            "id": "6a5797db-b805-436c-919f-04127fb34714",
+            "data": {
+                "type": "set",
+                "blockName": "开灯",
+                "actions": [
+                    {
+                        "DeviceID": "96001",
+                        "Function": "SetDo",
+                        "Set": {
+                            "io_number": "1",
+                            "io_value": "1"
+                        }
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 36,
+            "parent": "25acff34-ea68-4063-a12a-5eb7c947232d"
+        },
+        {
+            "position": {
+                "x": 1788,
+                "y": 267
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "ccf006e6-2718-41f1-9e2e-01b68392b874"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "75353417-b728-45e6-8d47-2f7c54639e29"
+                    }
+                ]
+            },
+            "id": "9110ee64-3a6d-4256-8c6f-96cbe7756f54",
+            "data": {
+                "type": "set",
+                "blockName": "关灯",
+                "actions": [
+                    {
+                        "DeviceID": "96001",
+                        "Function": "SetDo",
+                        "Set": {
+                            "io_number": "1",
+                            "io_value": "0"
+                        }
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 37,
+            "parent": "25acff34-ea68-4063-a12a-5eb7c947232d"
+        },
+        {
+            "position": {
+                "x": 300,
+                "y": 100
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "user-start",
+            "ports": {
+                "groups": {
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeEnd",
+                        "id": "5641bada-8e8f-44b8-b986-89d62e7f9600"
+                    }
+                ]
+            },
+            "id": "153ae943-3155-443a-8a17-18838b9a3ff9",
+            "data": {
+                "type": "trigger",
+                "blockName": "摄像头拍摄",
+                "inParam": [],
+                "expose": false
+            },
+            "zIndex": 38
+        },
+        {
+            "position": {
+                "x": 300,
+                "y": 200
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "2c8233d4-b906-41a9-8142-6659fd172b27"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "8119d4bd-9f86-4355-bc21-09a98e7e203c"
+                    }
+                ]
+            },
+            "id": "d6fa0f7e-0bd4-4034-9a31-a0bc3262485b",
+            "data": {
+                "type": "set",
+                "blockName": "Z轴安全高度",
+                "actions": [
+                    {
+                        "DeviceID": "13007",
+                        "Function": "SlideMove",
+                        "Set": {
+                            "P_pos": "$Z轴安全高度",
+                            "P_vel": "$speed",
+                            "Acc": "$acc",
+                            "Dec": "$dcc",
+                            "P_mode": "1"
+                        }
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 39
+        },
+        {
+            "position": {
+                "x": 300,
+                "y": 295
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "d2842cf3-3903-4795-821e-7b53ff005aa2"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "98793e5f-5e57-4a40-8fa7-71f467c46fd7"
+                    }
+                ]
+            },
+            "id": "18cd1e8e-dac6-400d-bc8e-a34c6ea6717e",
+            "data": {
+                "type": "set",
+                "blockName": "XY移动",
+                "actions": [
+                    {
+                        "DeviceID": "13005",
+                        "Function": "SlideMove",
+                        "Set": {
+                            "P_pos": "70",
+                            "P_vel": "$speed",
+                            "Acc": "$acc",
+                            "Dec": "$dcc",
+                            "P_mode": "1"
+                        }
+                    },
+                    {
+                        "DeviceID": "13006",
+                        "Function": "SlideMove",
+                        "Set": {
+                            "P_pos": "60",
+                            "P_vel": "$Y轴_speed",
+                            "Acc": "$acc",
+                            "Dec": "$dcc",
+                            "P_mode": "1"
+                        }
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 40
+        },
+        {
+            "position": {
+                "x": 300,
+                "y": 395
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "ccf006e6-2718-41f1-9e2e-01b68392b874"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "75353417-b728-45e6-8d47-2f7c54639e29"
+                    }
+                ]
+            },
+            "id": "bdd45291-b0ab-4623-95ab-6e706815acb9",
+            "data": {
+                "type": "set",
+                "blockName": "开灯",
+                "actions": [
+                    {
+                        "DeviceID": "96001",
+                        "Function": "SetDo",
+                        "Set": {
+                            "io_number": "1",
+                            "io_value": "1"
+                        }
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 41
+        },
+        {
+            "position": {
+                "x": 300,
+                "y": 480
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-pause",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "e0e0825e-d17f-4e46-b267-0be024c6f3cd"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "a35c6ccd-f3a8-483e-9d5a-337d440eb6a9"
+                    }
+                ]
+            },
+            "id": "55834539-1f3c-4fc9-b63b-acab2dc18fdd",
+            "data": {
+                "type": "pause",
+                "blockName": "暂停5秒",
+                "delay": "5"
+            },
+            "zIndex": 42
+        },
+        {
+            "position": {
+                "x": 300,
+                "y": 567
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "ccf006e6-2718-41f1-9e2e-01b68392b874"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "75353417-b728-45e6-8d47-2f7c54639e29"
+                    }
+                ]
+            },
+            "id": "a2541e16-9510-4aeb-8f13-f5073aaf58e0",
+            "data": {
+                "type": "set",
+                "blockName": "关灯",
+                "actions": [
+                    {
+                        "DeviceID": "96001",
+                        "Function": "SetDo",
+                        "Set": {
+                            "io_number": "1",
+                            "io_value": "0"
+                        }
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 43
+        },
+        {
+            "position": {
+                "x": -360,
+                "y": 360
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "user-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "587f64bb-99ac-4c31-8d89-565ca7707c7d"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "ad8b9e00-10a0-4ccb-826c-4052dce9827f"
+                    }
+                ]
+            },
+            "id": "572e84eb-ea28-437d-9e20-a2500ad6c396",
+            "data": {
+                "type": "function",
+                "blockName": "接收主控变量",
+                "expression": "print($test)"
+            },
+            "zIndex": 44
+        },
+        {
+            "position": {
+                "x": -360,
+                "y": 267
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "user-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "9eadb1e1-4e81-47ae-ae15-f6de7a5b0a74"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "0453c78b-f461-40f0-b508-9b97011df82a"
+                    }
+                ]
+            },
+            "id": "212547d8-6a21-43cd-a3e7-9189feb6b1db",
+            "data": {
+                "type": "function",
+                "blockName": "普通函数",
+                "expression": "await fn.http.post(\"http://192.168.16.104:8182/flow_work_section\", \r\n{\r\n  \"flow_id\" : \"85\",\r\n  \"name\" : \"接收主控变量\",\r\n  \"external_request\" : {\r\n    \"set\" : {\r\n      \"test\" : \"yyddddy\"\r\n    }\r\n  }\r\n}, \"json\")"
+            },
+            "zIndex": 45
+        },
+        {
+            "position": {
+                "x": -40,
+                "y": 217
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "45ddbeb9-301c-41e5-bcc9-0f2f952cf63a"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "237641dc-6d56-4ebe-a921-9e56ee411104"
+                    }
+                ]
+            },
+            "id": "f221de62-664d-4ade-ae2d-ce6aad3ad9ca",
+            "data": {
+                "type": "set",
+                "blockName": "Z轴电缸移动",
+                "actions": [
+                    {
+                        "DeviceID": "13007",
+                        "Function": "SlideMove",
+                        "Set": {
+                            "P_vel": "$speed",
+                            "Acc": "$acc",
+                            "Dec": "$dcc",
+                            "P_mode": "1",
+                            "P_pos": "0"
+                        }
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 46
+        },
+        {
+            "position": {
+                "x": -40,
+                "y": 295
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "45ddbeb9-301c-41e5-bcc9-0f2f952cf63a"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "237641dc-6d56-4ebe-a921-9e56ee411104"
+                    }
+                ]
+            },
+            "id": "f0ad25d0-801c-4b57-9614-0c049ca0d736",
+            "data": {
+                "type": "set",
+                "blockName": "X轴电缸移动",
+                "actions": [
+                    {
+                        "DeviceID": "13005",
+                        "Function": "SlideMove",
+                        "Set": {
+                            "P_vel": "$speed",
+                            "Acc": "$acc",
+                            "Dec": "$dcc",
+                            "P_mode": "1",
+                            "P_pos": "1"
+                        }
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 47
+        },
+        {
+            "position": {
+                "x": -40,
+                "y": 380
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "45ddbeb9-301c-41e5-bcc9-0f2f952cf63a"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "237641dc-6d56-4ebe-a921-9e56ee411104"
+                    }
+                ]
+            },
+            "id": "bdfef2be-928d-477a-b701-7e7c23e3c6ab",
+            "data": {
+                "type": "set",
+                "blockName": "Y轴电缸移动",
+                "actions": [
+                    {
+                        "DeviceID": "13006",
+                        "Function": "SlideMove",
+                        "Set": {
+                            "P_pos": "15",
+                            "P_vel": "$Y轴_speed",
+                            "Acc": "$acc",
+                            "Dec": "$dcc",
+                            "P_mode": "1"
+                        }
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 48
+        },
+        {
+            "position": {
+                "x": -40,
+                "y": 567
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "user-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "b6bb3f4f-0bb4-4ef7-874b-ecbae9c2c331"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "d98f3e80-4f2e-4ed0-a61f-636fdf587d09"
+                    }
+                ]
+            },
+            "id": "b607736e-f473-4095-b393-ebc87ba840f4",
+            "data": {
+                "type": "function",
+                "blockName": "设置初始化状态",
+                "expression": "$挑菌站设备状态={\"6孔板1号位\":\"空闲\",\"安全状态\":\"TRUE\",\"初始化状态\":\"已初始化\",\"运行状态\":\"未启动\"}\r\nfn.store.set(\"挑菌站设备状态\",$挑菌站设备状态)"
+            },
+            "zIndex": 49
+        },
+        {
+            "position": {
+                "x": -360,
+                "y": 140
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "user-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "a0425c41-5824-4acc-83f1-6debaa916180"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "9b2f6100-b561-44e7-af77-8636b3cdd49d"
+                    }
+                ]
+            },
+            "id": "39afcde5-dfc9-4877-989f-363f546e760e",
+            "data": {
+                "type": "function",
+                "blockName": "自定义状态变量",
+                "expression": "fn.stop = True\r\nfn.running=False"
+            },
+            "zIndex": 50
+        },
+        {
+            "position": {
+                "x": 180,
+                "y": 90
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "user-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "a0425c41-5824-4acc-83f1-6debaa916180"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "9b2f6100-b561-44e7-af77-8636b3cdd49d"
+                    }
+                ]
+            },
+            "id": "f1a2d7e6-708d-4377-bfde-42217d178412",
+            "data": {
+                "type": "function",
+                "blockName": "主控启动挑菌站流程",
+                "expression": "fn.stop = True\r\n# await asyncio.sleep(2)\r\n# if fn.running==False:\r\n#     await fn.flow.execute(\"主站启动挑菌站\", {})\r\n# else:\r\n#     print(\"挑菌站模块反馈给主控，还在忙碌中-----\")\r\n#     print(\"也可以进入挑菌站模块，主页面流程右上角，点击停止按钮。可以立即中断已执行的流程\")"
+            },
+            "zIndex": 51
+        },
+        {
+            "position": {
+                "x": -40,
+                "y": 480
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "d3e06ccd-eff1-4a60-918a-ad50e3c4d272"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "5a2e311b-a298-4de6-b46e-f258adb6cf45"
+                    }
+                ]
+            },
+            "id": "ca8cb576-a7c3-428c-a5d4-16569cab411c",
+            "data": {
+                "type": "set",
+                "blockName": "移液枪初始化",
+                "actions": [
+                    {
+                        "DeviceID": "16002",
+                        "Function": "Initial",
+                        "Set": {}
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 52
+        },
+        {
+            "position": {
+                "x": 1360,
+                "y": 325
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "45ddbeb9-301c-41e5-bcc9-0f2f952cf63a"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "237641dc-6d56-4ebe-a921-9e56ee411104"
+                    }
+                ]
+            },
+            "id": "9a91228e-2cfb-4fa4-b397-7fdf816e4d7d",
+            "data": {
+                "type": "set",
+                "blockName": "移动",
+                "actions": [
+                    {
+                        "DeviceID": "13006",
+                        "Function": "LinearEnable",
+                        "Set": {
+                            "enableTag": "1"
+                        }
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 53,
+            "parent": "580a583d-5ad4-4c0d-a9fa-250fb97d0cd6"
+        },
+        {
+            "position": {
+                "x": -40,
+                "y": -50
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "user-start",
+            "ports": {
+                "groups": {
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeEnd",
+                        "id": "fb5872f0-bdf1-4f92-82b4-bea9546bb54c"
+                    }
+                ]
+            },
+            "id": "79486a09-df63-4332-99e9-12384f6a3add",
+            "data": {
+                "type": "trigger",
+                "blockName": "主控启动挑菌站初始化",
+                "inParam": [],
+                "expose": false
+            },
+            "zIndex": 54
+        },
+        {
+            "position": {
+                "x": -40,
+                "y": 40
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "user-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "b6bb3f4f-0bb4-4ef7-874b-ecbae9c2c331"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "d98f3e80-4f2e-4ed0-a61f-636fdf587d09"
+                    }
+                ]
+            },
+            "id": "41059e92-b3e5-4c98-b2d7-bbd994d86b14",
+            "data": {
+                "type": "function",
+                "blockName": "设置初始化状态",
+                "expression": "$挑菌站设备状态={\"6孔板1号位\":\"要6孔板\",\"安全状态\":\"TRUE\",\"初始化状态\":\"未初始化\",\"运行状态\":\"未启动\"}\r\nfn.store.set(\"挑菌站设备状态\",$挑菌站设备状态)"
+            },
+            "zIndex": 55
+        },
+        {
+            "position": {
+                "x": 1360,
+                "y": 380
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "45ddbeb9-301c-41e5-bcc9-0f2f952cf63a"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "237641dc-6d56-4ebe-a921-9e56ee411104"
+                    }
+                ]
+            },
+            "id": "e26f10e7-7a92-414d-9348-37fea0200b5c",
+            "data": {
+                "type": "set",
+                "blockName": "移动",
+                "actions": [
+                    {
+                        "DeviceID": "13006",
+                        "Function": "ClearAlarm",
+                        "Set": {}
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 56,
+            "parent": "580a583d-5ad4-4c0d-a9fa-250fb97d0cd6"
+        },
+        {
+            "position": {
+                "x": 620,
+                "y": 500
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "45ddbeb9-301c-41e5-bcc9-0f2f952cf63a"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "237641dc-6d56-4ebe-a921-9e56ee411104"
+                    }
+                ]
+            },
+            "id": "a209b9aa-4ad4-4a92-8dc2-4f4d3374e9f8",
+            "data": {
+                "type": "set",
+                "blockName": "吐液",
+                "actions": [
+                    {
+                        "DeviceID": "16002",
+                        "Function": "ZDispense",
+                        "Set": {
+                            "Volume": "200",
+                            "BackVolume": "0",
+                            "ZSpeed": "500"
+                        }
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 57
+        },
+        {
+            "position": {
+                "x": 512,
+                "y": 500
+            },
+            "size": {
+                "width": 66,
+                "height": 40
+            },
+            "view": "vue-shape-view",
+            "shape": "system-func",
+            "ports": {
+                "groups": {
+                    "nodeStart": {
+                        "position": "top",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    },
+                    "nodeEnd": {
+                        "position": "bottom",
+                        "attrs": {
+                            "circle": {
+                                "r": 5,
+                                "magnet": true,
+                                "stroke": "#5F95FF",
+                                "strokeWidth": 1,
+                                "fill": "#fff",
+                                "style": {
+                                    "visibility": "hidden"
+                                }
+                            }
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "group": "nodeStart",
+                        "id": "45ddbeb9-301c-41e5-bcc9-0f2f952cf63a"
+                    },
+                    {
+                        "group": "nodeEnd",
+                        "id": "237641dc-6d56-4ebe-a921-9e56ee411104"
+                    }
+                ]
+            },
+            "id": "f26e293b-3617-4044-b57f-65cd776b0e3f",
+            "data": {
+                "type": "set",
+                "blockName": "吸液",
+                "actions": [
+                    {
+                        "DeviceID": "16002",
+                        "Function": "Aspirate",
+                        "Set": {
+                            "Volume": "200",
+                            "Speed": "200"
+                        }
+                    }
+                ],
+                "before": "",
+                "after": "",
+                "pasuse": "",
+                "resume": ""
+            },
+            "zIndex": 58
+        }
+    ],
+    "varList": [
+        {
+            "id": "744038d2-f938-4fbd-9541-a7016e33eae9",
+            "name": "S6孔板挑菌高度",
+            "default": "136"
+        },
+        {
+            "id": "a85042f2-37e7-41ca-81ef-42cd7849d8a5",
+            "name": "S6孔板各个孔位的菌落模拟位置",
+            "default": "{\r\n    \"1\" : [\r\n        [158, 40]\r\n    ],\r\n    \"2\" : [\r\n        [158, 70]\r\n    ],\r\n    \"3\" : [\r\n        [158, 110]\r\n    ],\r\n    \"4\" : [\r\n        [198, 40]\r\n    ],\r\n    \"5\" : [\r\n        [198, 70]\r\n    ],\r\n    \"6\" : [\r\n        [198, 110]\r\n    ]\r\n}"
+        },
+        {
+            "id": "b490ff94-2886-42ba-8dc7-bc49cb3f8a9d",
+            "name": "tiptrack_left_top",
+            "default": "[32.6,19.3]"
+        },
+        {
+            "id": "22f81111-69fa-4011-b5b2-c56ebe4feb4b",
+            "name": "tiptrack_left_bottom",
+            "default": "[95.3,19.3]"
+        },
+        {
+            "id": "1da88bc3-7ff6-4ff5-8454-e3b07fdad222",
+            "name": "tiptrack_right_top",
+            "default": "[32.6,118.6]"
+        },
+        {
+            "id": "68ba3440-dd0e-40b0-b0b0-e43c3b42fe64",
+            "name": "S96Well_left_top",
+            "default": "[252.4,19.3]"
+        },
+        {
+            "id": "34d2ae68-6e86-430c-92fb-2c40ac465770",
+            "name": "S96Well_left_bottom",
+            "default": "[315.2,19.3]"
+        },
+        {
+            "id": "b54df001-9d3a-400a-b9cb-0dd232e1f1f3",
+            "name": "S96Well_right_top",
+            "default": "[252.4,117.9]"
+        },
+        {
+            "id": "e261917f-7c1e-4183-b593-c8ca51da2c78",
+            "name": "tiprack_point_list",
+            "default": "[]"
+        },
+        {
+            "id": "7893b3fe-44d9-47d3-bc9e-c8a63623423e",
+            "name": "wellplate_point_list",
+            "default": "[]"
+        },
+        {
+            "id": "06889285-5990-4ad0-85c6-1cc4da468307",
+            "name": "Z轴安全高度",
+            "default": "20"
+        },
+        {
+            "id": "8196875d-be3d-4856-933b-698bdb9eeac1",
+            "name": "当前6孔板挑菌坐标",
+            "default": "0"
+        },
+        {
+            "id": "0a2e382c-0489-4ef7-b1d2-70b1876e1ad2",
+            "name": "当前枪头盒取枪头孔位坐标",
+            "default": "0"
+        },
+        {
+            "id": "9a6cc8ac-0311-4ee7-85f9-898b1d44f24a",
+            "name": "当前96孔板吐液孔位坐标",
+            "default": "0"
+        },
+        {
+            "id": "9c25adf9-0b09-43fb-9434-9908564e2b67",
+            "name": "speed",
+            "default": "50"
+        },
+        {
+            "id": "7a6fb39a-564c-490b-bcb7-08ba3a4e4282",
+            "name": "acc",
+            "default": "0.1"
+        },
+        {
+            "id": "fa070c73-bdaa-42a9-bf06-d070a916bccb",
+            "name": "dcc",
+            "default": "0.1"
+        },
+        {
+            "id": "5bad35cd-c3a1-47e5-b4d3-9f67e9b0aae0",
+            "name": "S96孔板吐液高度",
+            "default": "120"
+        },
+        {
+            "id": "50245159-78ae-45fd-8b0e-5eefa4bc7460",
+            "name": "tiptrack_取枪头高度",
+            "default": "138"
+        },
+        {
+            "id": "4f91f056-c584-48e7-bbf1-5868c2f75a93",
+            "name": "退枪头X坐标",
+            "default": "36"
+        },
+        {
+            "id": "73b636e6-972f-4133-a3b1-59c09fd0c589",
+            "name": "退枪头Y坐标",
+            "default": "180"
+        },
+        {
+            "id": "a8c55852-855b-4e16-b1c7-13d333d10391",
+            "name": "退枪头Z坐标",
+            "default": "110"
+        },
+        {
+            "id": "af8e33ae-32df-4fe1-93c2-02dad2a52a53",
+            "name": "test",
+            "default": "0"
+        },
+        {
+            "id": "c1da8797-037c-4975-8627-268f62ac46dc",
+            "name": "挑菌站设备状态",
+            "default": "{\"6孔板1号位\":\"空闲\",\"96孔板1号位\":\"空闲\",\"安全状态\":\"False\",\"初始化状态\":\"未初始化\"}\r\n"
+        },
+        {
+            "id": "788592f0-3e6f-4aeb-972b-2b0c21be5bff",
+            "name": "Y轴_speed",
+            "default": "20"
+        }
+    ],
+    "varGroups": [
+        {
+            "name": "S6孔板相关变量",
+            "id": "1766203259490",
+            "vars": [
+                "744038d2-f938-4fbd-9541-a7016e33eae9",
+                "a85042f2-37e7-41ca-81ef-42cd7849d8a5"
+            ]
+        },
+        {
+            "name": "STipTrack相关变量",
+            "id": "1766209404384",
+            "vars": [
+                "b490ff94-2886-42ba-8dc7-bc49cb3f8a9d",
+                "22f81111-69fa-4011-b5b2-c56ebe4feb4b",
+                "1da88bc3-7ff6-4ff5-8454-e3b07fdad222",
+                "50245159-78ae-45fd-8b0e-5eefa4bc7460"
+            ]
+        },
+        {
+            "name": "S96孔板相关变量",
+            "id": "1766209686948",
+            "vars": [
+                "68ba3440-dd0e-40b0-b0b0-e43c3b42fe64",
+                "34d2ae68-6e86-430c-92fb-2c40ac465770",
+                "b54df001-9d3a-400a-b9cb-0dd232e1f1f3",
+                "5bad35cd-c3a1-47e5-b4d3-9f67e9b0aae0"
+            ]
+        },
+        {
+            "name": "全局变量",
+            "id": "1766209963355",
+            "vars": [
+                "e261917f-7c1e-4183-b593-c8ca51da2c78",
+                "7893b3fe-44d9-47d3-bc9e-c8a63623423e",
+                "06889285-5990-4ad0-85c6-1cc4da468307",
+                "9c25adf9-0b09-43fb-9434-9908564e2b67",
+                "7a6fb39a-564c-490b-bcb7-08ba3a4e4282",
+                "fa070c73-bdaa-42a9-bf06-d070a916bccb",
+                "c1da8797-037c-4975-8627-268f62ac46dc",
+                "788592f0-3e6f-4aeb-972b-2b0c21be5bff"
+            ]
+        },
+        {
+            "name": "退枪头相关变量",
+            "id": "1766217363640",
+            "vars": [
+                "4f91f056-c584-48e7-bbf1-5868c2f75a93",
+                "73b636e6-972f-4133-a3b1-59c09fd0c589",
+                "a8c55852-855b-4e16-b1c7-13d333d10391"
+            ]
+        }
+    ]
+}
