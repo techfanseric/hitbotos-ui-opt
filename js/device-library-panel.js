@@ -17,8 +17,16 @@ class DeviceLibraryPanel {
     init() {
         this.createPanel();
         this.setupEventListeners();
+        this.initCollapsedCategories();
         this.renderDevices();
         this.setInitialPosition();
+    }
+
+    // 初始化所有分类为收起状态
+    initCollapsedCategories() {
+        DEVICE_DATA.forEach(category => {
+            this.collapsedCategories.add(category.category);
+        });
     }
 
     // 创建面板 DOM
