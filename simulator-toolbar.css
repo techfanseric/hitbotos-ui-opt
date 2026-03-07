@@ -258,4 +258,35 @@
     pointer-events: auto;
     border-radius: 6px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* 隐藏工具切换按钮（大屏幕默认不显示） */
+.tools-toggle-btn {
+    display: none;
+}
+
+/* 小屏幕响应式：当画布宽度不足时，恢复开关隐藏方案 */
+@media (max-width: 900px) {
+    /* 显示工具切换按钮 */
+    .tools-toggle-btn {
+        display: flex;
+    }
+
+    /* 子工具栏恢复到左侧位置，默认隐藏 */
+    .viewport-toolbar.permanent {
+        left: 56px;
+        transform: none;
+        border-radius: 0 4px 4px 0;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    /* 工具按钮激活时显示子工具栏 */
+    .viewport-toolbar.permanent.show {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+    }
 } 

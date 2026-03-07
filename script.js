@@ -121,15 +121,22 @@ function setupToolbarControls() {
             const toolType = this.getAttribute('data-tool');
 
             if (toolType === 'tools') {
-                // 工具按钮：切换激活状态
+                // 工具按钮：切换激活状态和子工具栏显示
                 const isActive = this.classList.contains('active');
+                const subToolbar = document.getElementById('sub-toolbar');
 
                 if (isActive) {
                     // 当前激活，点击取消激活
                     this.classList.remove('active');
+                    if (subToolbar) {
+                        subToolbar.classList.remove('show');
+                    }
                 } else {
                     // 当前未激活，点击激活
                     this.classList.add('active');
+                    if (subToolbar) {
+                        subToolbar.classList.add('show');
+                    }
                     // 联动激活右侧属性面板的结构tab
                     activateStructureTab();
                 }
