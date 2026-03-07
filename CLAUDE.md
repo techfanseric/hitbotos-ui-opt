@@ -91,3 +91,32 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 2. **状态持久化**：布局状态保存到 localStorage，支持刷新后恢复
 3. **回调机制**：布局管理器通过回调函数通知 UI 更新
 4. **异步加载**：面板内容按需加载，减少初始页面大小
+
+## 部署
+
+项目部署在 GitHub Pages 上：
+- 仓库地址：`https://github.com/techfanseric/hithotos-ui-opt`
+- 网站地址：`https://techfanseric.github.io/hithotos-ui-opt/`
+- 部署配置：从 main 分支的 / (root) 目录自动部署
+- 推送到 main 分支后会自动触发重新构建
+
+### Git 命令
+
+```bash
+# 查看状态
+git status
+
+# 添加并提交更改
+git add .
+git commit -m "描述信息"
+
+# 推送到远程仓库
+git push origin main
+
+# 拉取最新更改
+git pull origin main
+```
+
+## 文件大小限制
+
+注意：GitHub 有 100MB 单文件限制。大文件（如视频、大型 PPTX）不应提交到仓库。

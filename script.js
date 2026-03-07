@@ -115,25 +115,21 @@ function initializeWindowStates() {
 // 工具栏按钮切换逻辑
 function setupToolbarControls() {
     const leftToolbarBtns = document.querySelectorAll('.left-toolbar-btn');
-    const subToolbar = document.getElementById('sub-toolbar');
-    const toolsBtn = document.querySelector('[data-tool="tools"]');
-    
+
     leftToolbarBtns.forEach(btn => {
         btn.addEventListener('click', function() {
             const toolType = this.getAttribute('data-tool');
-            
+
             if (toolType === 'tools') {
-                // 工具按钮：开关逻辑
+                // 工具按钮：切换激活状态
                 const isActive = this.classList.contains('active');
-                
+
                 if (isActive) {
                     // 当前激活，点击取消激活
                     this.classList.remove('active');
-                    subToolbar.classList.remove('show');
                 } else {
                     // 当前未激活，点击激活
                     this.classList.add('active');
-                    subToolbar.classList.add('show');
                     // 联动激活右侧属性面板的结构tab
                     activateStructureTab();
                 }
@@ -143,13 +139,6 @@ function setupToolbarControls() {
             }
         });
     });
-    
-    // 初始化：根据工具按钮状态设置子工具栏显示
-    if (toolsBtn && toolsBtn.classList.contains('active')) {
-        subToolbar.classList.add('show');
-    } else {
-        subToolbar.classList.remove('show');
-    }
 }
 
 // 设置窗口控制功能
