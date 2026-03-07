@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupWindowControls();
     setupTimelineToggle();
     setupToolbarControls();
+    setupToolbarResponsive();
     setupWindowSwapControls();
     initializeWindowStates();
     setupPanelTabs();
@@ -146,6 +147,49 @@ function setupToolbarControls() {
             }
         });
     });
+}
+
+// 检测画布空间并切换响应式模式
+function setupToolbarResponsive() {
+    const centerContent = document.querySelector('.center-content');
+    if (!centerContent) return;
+
+    // 子工具栏宽度约595px，需要足够空间居中显示
+    // 使用650px作为阈值（工具栏宽度+边距）
+    const MIN_WIDTH_FOR_CENTERED = 650;
+
+    function checkSpace() {
+        const containerWidth = centerContent.offsetWidth;
+        const subToolbar = document.getElementById('sub-toolbar');
+        const toolbarWidth = subToolbar ? subToolbar.offsetWidth : 595;
+
+        // 判断是否有足够空间居中显示
+        // 需要：容器宽度 >= 工具栏宽度 + 左侧工具栏宽度(60px) + 边距(50px)
+        const hasEnoughSpace = containerWidth >= (toolbarWidth + 110);
+
+        if (hasEnoughSpace) {
+            centerContent.classList.remove('space-constrained');
+        } else {
+            centerContent.classList.add('space-constrained');
+        }
+    }
+
+    // 初始检查
+    checkSpace();
+
+    // 使用ResizeObserver监听容器大小变化
+    if (typeof ResizeObserver !== 'undefined') {
+        const resizeObserver = new ResizeObserver(() => {
+            checkSpace();
+        });
+        resizeObserver.observe(centerContent);
+
+        // 保存observer引用以便后续清理
+        window.toolbarResizeObserver = resizeObserver;
+    } else {
+        // 降级方案：监听窗口resize事件
+        window.addEventListener('resize', checkSpace);
+    }
 }
 
 // 设置窗口控制功能
