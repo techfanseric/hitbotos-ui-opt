@@ -52,7 +52,7 @@
 ### 3.1 文件结构
 
 ```
-hithotos-ui-opt/
+hitbotos-ui-opt/
 ├── css/
 │   └── device-library-panel.css    # 面板样式
 ├── js/

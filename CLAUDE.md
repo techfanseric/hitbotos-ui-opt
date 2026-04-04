@@ -95,8 +95,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## 部署
 
 项目部署在 GitHub Pages 上：
-- 仓库地址：`https://github.com/techfanseric/hithotos-ui-opt`
-- 网站地址：`https://techfanseric.github.io/hithotos-ui-opt/`
+- 仓库地址：`https://github.com/techfanseric/hitbotos-ui-opt`
+- 网站地址：`https://techfanseric.github.io/hitbotos-ui-opt/`
 - 部署配置：从 main 分支的 / (root) 目录自动部署
 - 推送到 main 分支后会自动触发重新构建
 
