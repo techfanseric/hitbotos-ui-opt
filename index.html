@@ -12,6 +12,17 @@
     <link rel="stylesheet" href="panel-tabs.css">
     <link rel="stylesheet" href="panel-ui-components.css">
     <link rel="stylesheet" href="css/device-library-panel.css">
+    <link rel="stylesheet" href="css/action-editor.css">
+    <!-- Blockly -->
+    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+    <script src="https://unpkg.com/blockly/python_compressed.js"></script>
+    <!-- JointJS -->
+    <script src="https://unpkg.com/@joint/core/dist/joint.js"></script>
+    <!-- CodeMirror -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
 </head>
 <body>
     <!-- 主容器 - 外层白色 -->
@@ -373,9 +384,56 @@
                         </button>
                     </div>
                 </div>
-                <div class="window-content">
-                    <div style="padding: 20px; text-align: center; color: #666;">
-                        动作编辑区域
+                <div class="window-content action-editor-content">
+                    <!-- 编辑器工具栏 -->
+                    <div class="ae-toolbar">
+                        <div class="ae-toolbar-left">
+                            <div class="ae-mode-switch">
+                                <button class="ae-mode-btn active" data-mode="blockly">
+                                    <i class="bi bi-puzzle"></i> Blockly
+                                </button>
+                                <button class="ae-mode-btn" data-mode="flowchart">
+                                    <i class="bi bi-diagram-2"></i> 流程图
+                                </button>
+                                <button class="ae-mode-btn" data-mode="code">
+                                    <i class="bi bi-code-slash"></i> 代码
+                                </button>
+                            </div>
+                        </div>
+                        <div class="ae-toolbar-right">
+                            <div class="ae-tools ae-tools-blockly">
+                                <button class="ae-tool-btn" data-action="undo" title="撤销"><i class="bi bi-arrow-counterclockwise"></i></button>
+                                <button class="ae-tool-btn" data-action="redo" title="重做"><i class="bi bi-arrow-clockwise"></i></button>
+                                <button class="ae-tool-btn" data-action="clear" title="清空"><i class="bi bi-trash3"></i></button>
+                            </div>
+                            <div class="ae-tools ae-tools-flowchart" style="display:none">
+                                <button class="ae-tool-btn" data-action="auto-layout" title="自动布局"><i class="bi bi-grid-3x3"></i></button>
+                                <button class="ae-tool-btn" data-action="zoom-in" title="放大"><i class="bi bi-zoom-in"></i></button>
+                                <button class="ae-tool-btn" data-action="zoom-out" title="缩小"><i class="bi bi-zoom-out"></i></button>
+                                <button class="ae-tool-btn" data-action="clear" title="清空"><i class="bi bi-trash3"></i></button>
+                            </div>
+                            <div class="ae-tools ae-tools-code" style="display:none">
+                                <button class="ae-tool-btn" data-action="copy" title="复制代码"><i class="bi bi-clipboard"></i></button>
+                                <button class="ae-tool-btn" data-action="run" title="运行"><i class="bi bi-play-fill"></i></button>
+                            </div>
+                            <button class="ae-tool-btn ae-generate-btn" data-action="generate-code" title="生成代码"><i class="bi bi-arrow-right"></i> 生成代码</button>
+                        </div>
+                    </div>
+                    <!-- 编辑器容器 -->
+                    <div class="ae-container">
+                        <div id="blockly-editor" class="ae-panel"></div>
+                        <div id="flowchart-editor" class="ae-panel" style="display:none">
+                            <div class="ae-stencil-panel">
+                                <div class="ae-stencil-item" data-shape="start">开始</div>
+                                <div class="ae-stencil-item" data-shape="end">结束</div>
+                                <div class="ae-stencil-item" data-shape="action">动作指令</div>
+                                <div class="ae-stencil-item" data-shape="decision">判断</div>
+                            </div>
+                            <div id="flowchart-canvas"></div>
+                        </div>
+                        <div id="code-editor" class="ae-panel" style="display:none">
+                            <textarea id="python-code"></textarea>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -29,6 +29,16 @@ document.addEventListener('DOMContentLoaded', function() {
         window.getDeviceLibraryPanel = module.getDeviceLibraryPanel;
         window.initDeviceLibraryPanel();
     });
+
+    // 初始化动作编辑器
+    import('./js/action-editor.js').then(module => {
+        const actionWindow = document.querySelector('.action-window');
+        if (actionWindow) {
+            const actionEditor = new module.ActionEditor(actionWindow);
+            actionEditor.init();
+            window.actionEditor = actionEditor;
+        }
+    });
     
     // 确保所有窗口控制状态正确
     updateAllWindowControls();
