@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupWindowSwapControls();
     initializeWindowStates();
     setupPanelTabs();
+    window.initActionEditorShell?.();
 
     // 初始化设备库面板
     import('./js/device-library-panel.js').then(module => {
@@ -557,6 +558,5 @@ function setupProjectDropdown() {
         console.error('项目下拉菜单元素未找到');
     }
 } 
-
 
 

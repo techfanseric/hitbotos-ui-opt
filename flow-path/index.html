@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>self["MonacoEnvironment"] = (function (paths) {
+          return {
+            globalAPI: false,
+            getWorkerUrl : function (moduleId, label) {
+              var result =  paths[label];
+              if (/^((http:)|(https:)|(file:)|(\/\/))/.test(result)) {
+                var currentUrl = String(window.location);
+                var currentOrigin = currentUrl.substr(0, currentUrl.length - window.location.hash.length - window.location.search.length - window.location.pathname.length);
+                if (result.substring(0, currentOrigin.length) !== currentOrigin) {
+                  var js = '/*' + label + '*/importScripts("' + result + '");';
+                  var blob = new Blob([js], { type: 'application/javascript' });
+                  return URL.createObjectURL(blob);
+                }
+              }
+              return result;
+            }
+          };
+        })({
+  "editorWorkerService": "./monacoeditorwork/editor.worker.bundle.js",
+  "json": "./monacoeditorwork/json.worker.bundle.js"
+});</script>
+
+    <meta charset="UTF-8">
+    <link rel="icon" href="./favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>flow-path</title>
+    <script src="./mock-runtime.js"></script>
+    <script type="module" crossorigin src="./assets/index-bc09c6b8.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/arco-f635eb81.js">
+    <link rel="modulepreload" crossorigin href="./assets/vue-f35f6f6e.js">
+    <link rel="modulepreload" crossorigin href="./assets/monaco-460e39ca.js">
+    <link rel="stylesheet" href="./assets/monaco-1ee17760.css">
+    <link rel="stylesheet" href="./assets/index-2efbb402.css">
+  </head>
+  <body arco-theme="dark">
+    <div id="app"></div>
+    
+  </body>
+</html>

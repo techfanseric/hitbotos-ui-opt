@@ -1,0 +1,42 @@
+[
+    {
+        "label" : "flow.execute(name, params, wait_for_success)",
+        "description" : "(async)执行一个流程,并等待返回结果\n\n参数:\n    name: 流程实例的名称\n    params: 执行参数\n    wait_for_success: 是否等待流程执行成功才返回结果(默认值False)\n\n返回:\n    返回结果"
+    },
+    {
+        "label" : "flow.execute_async(name, params)",
+        "description" : "执行一个流程,无需等待返回结果\n\n参数:\n    name: 流程实例的名称\n    params: 执行参数\n\n返回:\n    无返回结果"
+    },
+    {
+        "label" : "flow.send_message(topic, payload)",
+        "description" : "(async)发送mqtt消息\n\n参数:\n    topic: 发送目标主题\n    payload: 发送参数\n"
+    },
+    {
+        "label" : "flow.cancel_all_flow()",
+        "description" : "(async)取消所有正在执行的流程\n\n"
+    },
+    {
+        "label" : "flow.cancel_flow(section)",
+        "description" : "(async)取消指定的流程\n\n参数:\n    section: 流程名称\n"
+    },
+    {
+        "label" : "store.set(key, value)",
+        "description" : "持久化存储数据\n\n参数:\n    key: 键\n    value: 值\n"
+    },
+    {
+        "label" : "store.get(key)",
+        "description" : "获取持久化存储数据\n\n参数:\n    key: 键\n\n返回:\n    数据值"
+    },
+    {
+        "label" : "http.get(url)",
+        "description" : "(async)发送Get请求\n\n参数:\n    url: 目标网址\n\n返回:\n    响应数据"
+    },
+    {
+        "label" : "http.post(url, data, format)",
+        "description" : "(async)发送Post请求\n\n参数:\n    url: 目标网址\n    data: 发送参数\n    format: 数据格式 form(默认值) | json\n\n返回:\n    响应数据"
+    },
+    {
+        "label" : "tcp.connect(host, port)",
+        "description" : "(async)建立tcp连接\n\n参数:\n    host: ip地址\n    port: 端口号\n\n返回:\n    TCP连接对象,用于后续的读写操作"
+    }
+]

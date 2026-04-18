@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>动作编辑器</title>
+    <script src="js/vendor/blockly.min.js"></script>
+    <link rel="stylesheet" href="css/action-editor.css">
+    <link rel="stylesheet" href="css/blockly-mock.css">
+</head>
+<body>
+    <div class="action-editor" data-active-menu="program" data-active-area="transport" data-active-bottom-tab="log" data-python-open="false" data-run-state="stopped" data-bottom-open="false">
+        <aside class="editor-sidebar">
+            <nav class="editor-primary-menu" aria-label="动作编辑主菜单">
+                <button class="editor-menu-item is-active" type="button" data-menu="program" aria-label="程序">
+                    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="4" stroke-linecap="butt" stroke-linejoin="miter" aria-hidden="true">
+                        <path d="M15 21.5 6.704 19M15 21.5l4.683 5.152a1 1 0 0 1 .25.814L18 40.976l10.918-16.117a1 1 0 0 0-.298-1.409L21.5 19 15 21.5Zm0 0 6.062-6.995a1 1 0 0 0 .138-1.103L18 7.024M42 24c0 9.941-8.059 18-18 18S6 33.941 6 24 14.059 6 24 6s18 8.059 18 18Z"></path>
+                    </svg>
+                </button>
+                <button class="editor-menu-item" type="button" data-menu="devices" aria-label="设备">
+                    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="4" stroke-linecap="butt" stroke-linejoin="miter" aria-hidden="true">
+                        <path d="M18 26h1v1h-1v-1ZM29 26h1v1h-1v-1Z" fill="currentColor" stroke="none"></path>
+                        <path d="M24 7v6m0-6h5m-5 0h-5M3 21v11m36 8H9V13h30v29m6-21v11m-27-6h1v1h-1v-1Zm11 0h1v1h-1v-1Z"></path>
+                    </svg>
+                </button>
+                <button class="editor-menu-item" type="button" data-menu="modules" aria-label="模块">
+                    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="4" stroke-linecap="butt" stroke-linejoin="miter" aria-hidden="true">
+                        <path d="M24 23 7.652 14.345M24 23l16.366-8.664M24 23v19.438M7 14v20l17 9 17-9V14L24 5 7 14Z"></path>
+                    </svg>
+                </button>
+                <button class="editor-menu-item" type="button" data-menu="variables" aria-label="变量">
+                    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="4" stroke-linecap="butt" stroke-linejoin="miter" aria-hidden="true">
+                        <path d="M19.714 14C15.204 15.784 12 20.302 12 25.593c0 1.142.15 2.247.429 3.298m16.285-14.712C32.998 16.073 36 20.471 36 25.593c0 1.07-.131 2.11-.378 3.102m-18.32 7.194a11.676 11.676 0 0 0 13.556-.112"></path>
+                        <path d="M24 19a6 6 0 1 0 0-12 6 6 0 0 0 0 12ZM36 40a6 6 0 1 0 0-12 6 6 0 0 0 0 12ZM12 40a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z"></path>
+                    </svg>
+                </button>
+                <div class="editor-menu-spacer"></div>
+                <button class="editor-menu-item" type="button" data-menu="flows" aria-label="动作流程">
+                    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="4" stroke-linecap="butt" stroke-linejoin="miter" aria-hidden="true">
+                        <path d="M19 10a4 4 0 1 1-8 0 4 4 0 0 1 8 0ZM38 10a4 4 0 1 1-8 0 4 4 0 0 1 8 0ZM19 38a4 4 0 1 1-8 0 4 4 0 0 1 8 0ZM15 15v15m0 3.5V30m0 0c0-5 19-7 19-15"></path>
+                    </svg>
+                </button>
+                <button class="editor-menu-item" type="button" data-menu="tasks" aria-label="任务管理">
+                    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="4" stroke-linecap="butt" stroke-linejoin="miter" aria-hidden="true">
+                        <path d="M40 8H10a1 1 0 0 0-1 1v.546a1 1 0 0 0 .341.753L24.17 23.273a1 1 0 0 1 .026 1.482l-.195.183L9.343 37.7a1 1 0 0 0-.343.754V39a1 1 0 0 0 1 1h30"></path>
+                    </svg>
+                </button>
+            </nav>
+
+            <section class="editor-library-card">
+                <header class="editor-library-header">
+                    <h2 class="editor-library-title" data-library-title>程序</h2>
+                </header>
+
+                <div class="editor-library-panel is-active" data-panel="program">
+                    <button class="editor-library-item is-active" type="button" data-area-tab="transport">搬运区(380)</button>
+                    <button class="editor-library-item" type="button" data-area-tab="main">主区域(379)</button>
+                </div>
+
+                <div class="editor-library-panel" data-panel="devices">
+                    <button class="editor-library-item is-active" type="button">设备列表</button>
+                    <button class="editor-library-item" type="button">旋转夹爪</button>
+                    <button class="editor-library-item" type="button">中央控制器</button>
+                    <button class="editor-library-item" type="button">一体式电缸(RS485)</button>
+                </div>
+
+                <div class="editor-library-panel" data-panel="modules">
+                    <button class="editor-library-item is-active" type="button">逻辑</button>
+                    <button class="editor-library-item" type="button">循环</button>
+                    <button class="editor-library-item" type="button">数学</button>
+                    <button class="editor-library-item" type="button">文本</button>
+                    <button class="editor-library-item" type="button">列表</button>
+                    <button class="editor-library-item" type="button">对象</button>
+                    <button class="editor-library-item" type="button">错误</button>
+                    <button class="editor-library-item" type="button">函数</button>
+                    <button class="editor-library-item" type="button">消息</button>
+                    <button class="editor-library-item" type="button">公共</button>
+                    <button class="editor-library-item" type="button">modbus</button>
+                    <button class="editor-library-item" type="button">睿科</button>
+                </div>
+
+                <div class="editor-library-panel" data-panel="variables">
+                    <button class="editor-library-item is-active" type="button">X坐标</button>
+                    <button class="editor-library-item" type="button">X轴</button>
+                    <button class="editor-library-item" type="button">超时时间</button>
+                    <button class="editor-library-item" type="button">Y坐标</button>
+                    <button class="editor-library-item" type="button">Y轴</button>
+                    <button class="editor-library-item" type="button">Z坐标</button>
+                    <button class="editor-library-item" type="button">Z轴</button>
+                    <button class="editor-library-item" type="button">加速度</button>
+                    <button class="editor-library-item" type="button">速度</button>
+                    <button class="editor-library-item" type="button">减速度</button>
+                    <button class="editor-library-item" type="button">req</button>
+                    <button class="editor-library-item" type="button">来源点位</button>
+                    <button class="editor-library-item" type="button">终点点位</button>
+                    <button class="editor-library-item" type="button">夹爪</button>
+                    <button class="editor-library-item" type="button">夹爪关闭位置</button>
+                    <button class="editor-library-item" type="button">夹爪打开位置</button>
+                    <button class="editor-library-item" type="button">移动点位</button>
+                </div>
+
+                <div class="editor-library-panel" data-panel="flows">
+                </div>
+
+                <div class="editor-library-panel" data-panel="tasks">
+                </div>
+            </section>
+        </aside>
+
+        <main class="editor-main">
+            <section class="editor-workspace-shell is-active" data-view="workspace">
+                <div class="editor-stage-header">
+                    <div class="editor-area-tabs" role="tablist" aria-label="区域选择">
+                        <button class="editor-area-tab is-active" type="button" data-area="transport">
+                            <span>搬运区(380)</span>
+                            <em>(只读)</em>
+                        </button>
+                        <button class="editor-area-tab" type="button" data-area="main">
+                            <span>主区域(379)</span>
+                        </button>
+                    </div>
+
+                    <div class="editor-stage-controls">
+                        <span class="editor-run-tag is-stopped" data-run-tag>stopped</span>
+                        <button class="editor-switch" type="button" aria-pressed="false" title="自动启动">
+                            <span class="editor-switch-knob"></span>
+                        </button>
+                        <button class="editor-icon-btn is-disabled" type="button" title="撤销" disabled>
+                            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="4" stroke-linecap="butt" stroke-linejoin="miter" aria-hidden="true">
+                                <path d="m15.322 23.78-7.778-7.778 7.778-7.778M8.81 16H29.5C35.851 16 41 21.15 41 27.5 41 33.852 35.851 39 29.5 39H17"></path>
+                            </svg>
+                        </button>
+                        <button class="editor-icon-btn is-disabled" type="button" title="保存" disabled>
+                            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="4" stroke-linecap="butt" stroke-linejoin="miter" aria-hidden="true">
+                                <path d="M21 13v9m18 20H9a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h22.55a1 1 0 0 1 .748.336l7.45 8.38a1 1 0 0 1 .252.664V41a1 1 0 0 1-1 1ZM14 6h14v15a1 1 0 0 1-1 1H15a1 1 0 0 1-1-1V6Z"></path>
+                            </svg>
+                        </button>
+                        <button class="editor-icon-btn" type="button" title="运行" data-run-action="run">
+                            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="4" stroke-linecap="butt" stroke-linejoin="miter" aria-hidden="true">
+                                <path d="M24 42c9.941 0 18-8.059 18-18S33.941 6 24 6 6 14.059 6 24s8.059 18 18 18Z"></path>
+                                <path d="M19 17v14l12-7-12-7Z"></path>
+                            </svg>
+                        </button>
+                        <button class="editor-icon-btn" type="button" title="代码预览" data-python-toggle>
+                            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="4" stroke-linecap="butt" stroke-linejoin="miter" aria-hidden="true">
+                                <path d="M16.734 12.686 5.42 24l11.314 11.314m14.521-22.628L42.57 24 31.255 35.314M27.2 6.28l-6.251 35.453"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="editor-stage">
+                    <section class="blockly-mock" aria-label="Blockly Workspace">
+                        <div id="blockly-workspace" class="blockly-workspace-host"></div>
+
+                        <xml id="action-editor-toolbox" style="display: none;">
+                            <category name="程序" colour="#5B6472">
+                                <block type="hitbot_poll_start"></block>
+                                <block type="hitbot_define_move_x"></block>
+                                <block type="hitbot_define_move_y"></block>
+                                <block type="hitbot_define_move_z"></block>
+                            </category>
+                            <category name="设备" colour="#4F78B7">
+                                <block type="hitbot_gripper_config"></block>
+                            </category>
+                            <category name="模块" colour="#4A95A4">
+                                <block type="hitbot_parallel_run"></block>
+                            </category>
+                            <category name="变量" colour="#7A6B4C">
+                                <block type="hitbot_assign_value"></block>
+                            </category>
+                            <category name="动作流程" colour="#7E59B8">
+                                <block type="hitbot_define_message"></block>
+                            </category>
+                        </xml>
+
+                        <xml id="action-editor-workspace-xml" style="display: none;">
+                            <block type="hitbot_poll_start" x="30" y="24"></block>
+                            <block type="hitbot_define_move_x" x="78" y="92"></block>
+                            <block type="hitbot_define_move_y" x="78" y="288"></block>
+                            <block type="hitbot_define_move_z" x="78" y="484"></block>
+                            <block type="hitbot_assign_value" x="468" y="700">
+                                <field name="LABEL">夹爪关闭位置</field>
+                            </block>
+                            <block type="hitbot_assign_value" x="468" y="754">
+                                <field name="LABEL">夹爪打开位置</field>
+                            </block>
+                            <block type="hitbot_assign_value" x="468" y="808">
+                                <field name="LABEL">减速度</field>
+                            </block>
+                            <block type="hitbot_assign_value" x="468" y="862">
+                                <field name="LABEL">加速度</field>
+                            </block>
+                            <block type="hitbot_assign_value" x="468" y="916">
+                                <field name="LABEL">速度</field>
+                            </block>
+                            <block type="hitbot_gripper_config" x="806" y="700"></block>
+                            <block type="hitbot_define_message" x="806" y="912"></block>
+                            <block type="hitbot_parallel_run" x="806" y="1158"></block>
+                        </xml>
+                    </section>
+
+                    <aside class="editor-code-drawer">
+                        <button class="editor-code-tab is-active" type="button" data-python-toggle>
+                            <span>Python</span>
+                        </button>
+                        <div class="editor-code-panel" data-python-panel>
+                            <div class="editor-code-header">
+                                <span>Python</span>
+                            </div>
+                            <textarea class="editor-code-textarea" readonly spellcheck="false"># 静态复刻模式下仅展示代码区形态
+def move_x(x_coord, speed=10, acc=10, dec=20, timeout=10):
+    pass
+
+def move_y(y_coord, speed=10, acc=10, dec=20, timeout=10):
+    pass
+
+def move_z(z_coord, speed=10, acc=10, dec=20, timeout=10):
+    pass
+
+def transport_reagent():
+    move_x(test_x)
+    move_y(test_y)
+    move_z(test_z)
+</textarea>
+                        </div>
+                    </aside>
+                </div>
+            </section>
+
+            <section class="editor-task-view" data-view="tasks">
+                <div class="editor-task-table-wrap">
+                    <table class="editor-task-table">
+                        <colgroup>
+                            <col style="width: 100px;">
+                            <col style="width: 120px;">
+                            <col style="width: 120px;">
+                            <col style="width: 100px;">
+                            <col style="width: 300px;">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>程序名</th>
+                                <th>程序Id</th>
+                                <th>运行状态</th>
+                                <th>自动启动</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>搬运区</td>
+                                <td>380</td>
+                                <td><span class="editor-inline-status is-stopped">stopped</span></td>
+                                <td>
+                                    <button class="editor-switch editor-switch-inline" type="button" aria-pressed="false">
+                                        <span class="editor-switch-knob"></span>
+                                    </button>
+                                </td>
+                                <td>
+                                    <div class="editor-task-actions">
+                                        <button class="editor-text-btn" type="button">返回上一版本</button>
+                                        <button class="editor-text-btn is-run" type="button" data-run-action="run">运行</button>
+                                        <button class="editor-text-btn is-stop" type="button" data-run-action="stop">停止</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>主区域</td>
+                                <td>379</td>
+                                <td><span class="editor-inline-status is-stopped">stopped</span></td>
+                                <td>
+                                    <button class="editor-switch editor-switch-inline" type="button" aria-pressed="false">
+                                        <span class="editor-switch-knob"></span>
+                                    </button>
+                                </td>
+                                <td>
+                                    <div class="editor-task-actions">
+                                        <button class="editor-text-btn" type="button">返回上一版本</button>
+                                        <button class="editor-text-btn is-run" type="button" data-run-action="run">运行</button>
+                                        <button class="editor-text-btn is-stop" type="button" data-run-action="stop">停止</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            <footer class="editor-bottom-panel">
+                <div class="editor-bottom-tabs" role="tablist" aria-label="底部信息">
+                    <button class="editor-bottom-tab is-active" type="button" data-bottom-tab="log">
+                        <span>运行日志</span>
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="4" stroke-linecap="butt" stroke-linejoin="miter" aria-hidden="true">
+                            <path d="M6 9h36M6 19h36M6 29h36M6 39h36"></path>
+                        </svg>
+                    </button>
+                    <button class="editor-bottom-tab" type="button" data-bottom-tab="variables">实时变量</button>
+                    <button class="editor-bottom-tab" type="button" data-bottom-tab="result">运行结果</button>
+                </div>
+
+                <div class="editor-bottom-content">
+                    <div class="editor-bottom-pane is-active" data-bottom-pane="log">
+                        <ul class="editor-log-list">
+                            <li>[09:16:20] 程序初始化完成</li>
+                            <li>[09:16:28] transport_reagent 等待触发</li>
+                            <li>[09:16:33] 当前方案状态：stopped</li>
+                        </ul>
+                    </div>
+
+                    <div class="editor-bottom-pane" data-bottom-pane="variables">
+                        <div class="editor-kv-grid">
+                            <div><span>X坐标</span><strong>100</strong></div>
+                            <div><span>Y坐标</span><strong>10</strong></div>
+                            <div><span>Z坐标</span><strong>20</strong></div>
+                            <div><span>速度</span><strong>10</strong></div>
+                        </div>
+                    </div>
+
+                    <div class="editor-bottom-pane" data-bottom-pane="result">
+                        <div class="editor-result-card">
+                            <strong>运行结果</strong>
+                            <p>当前为静态复刻模式，无后端执行，仅还原界面状态与交互反馈。</p>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <script src="js/action-editor.js"></script>
+</body>
+</html>
