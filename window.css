@@ -85,6 +85,10 @@
     gap: 4px;
 }
 
+body.layout-fs_act .action-window .window-controls {
+    display: none;
+}
+
 .window-control-btn {
     width: 18px;
     height: 18px;

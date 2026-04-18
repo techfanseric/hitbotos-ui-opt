@@ -7,6 +7,12 @@ let layoutManager = null;
 let activePanelTab = null;
 
 document.addEventListener('DOMContentLoaded', function() {
+    const pageLayout = new URLSearchParams(window.location.search).get('layout');
+
+    if (pageLayout) {
+        document.body.classList.add(`layout-${pageLayout}`);
+    }
+
     // 初始化布局管理器
     layoutManager = new LayoutManager();
     layoutManager.setCallbacks({
@@ -36,6 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 调试项目下拉菜单
     setupProjectDropdown();
+    setupTopMenuInteractions();
 });
 
 // 更新窗口控制按钮
@@ -531,32 +538,161 @@ function activateStructureTab() {
 // 设置项目下拉菜单功能
 function setupProjectDropdown() {
     const projectDropdown = document.querySelector('.project-dropdown');
+    const projectDropdownBtn = document.querySelector('.project-dropdown-btn');
     const projectDropdownMenu = document.querySelector('.project-dropdown-menu');
     
-    if (projectDropdown && projectDropdownMenu) {
-        console.log('项目下拉菜单元素已找到');
-        
-        // 测试CSS hover是否工作
-        projectDropdown.addEventListener('mouseenter', function() {
-            console.log('鼠标进入项目下拉区域');
-            // 手动显示菜单以测试
-            projectDropdownMenu.style.display = 'block';
-        });
-        
-        projectDropdown.addEventListener('mouseleave', function() {
-            console.log('鼠标离开项目下拉区域');
-            // 手动隐藏菜单
-            projectDropdownMenu.style.display = 'none';
-        });
-        
-        // 检查初始状态
-        const computedStyle = window.getComputedStyle(projectDropdownMenu);
-        console.log('下拉菜单初始display:', computedStyle.display);
-        console.log('下拉菜单z-index:', computedStyle.zIndex);
-        console.log('下拉菜单position:', computedStyle.position);
-    } else {
-        console.error('项目下拉菜单元素未找到');
+    if (!projectDropdown || !projectDropdownMenu) {
+        return;
     }
-} 
 
+    if (projectDropdown.dataset.dropdownBound === 'true') {
+        return;
+    }
 
+    projectDropdown.dataset.dropdownBound = 'true';
+
+    if (projectDropdownBtn) {
+        projectDropdownBtn.addEventListener('click', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            projectDropdown.classList.toggle('open');
+        });
+    }
+
+    projectDropdown.addEventListener('mouseleave', function() {
+        projectDropdown.classList.remove('open');
+    });
+
+    document.addEventListener('click', function(event) {
+        if (!projectDropdown.contains(event.target)) {
+            projectDropdown.classList.remove('open');
+        }
+    });
+}
+
+function setupTopMenuInteractions() {
+    const topMenu = document.querySelector('.top-menu-bar');
+    const tooltipLayer = document.createElement('div');
+
+    if (!topMenu || topMenu.dataset.topMenuBound === 'true') {
+        return;
+    }
+
+    topMenu.dataset.topMenuBound = 'true';
+    tooltipLayer.className = 'top-menu-tooltip-layer';
+    document.body.appendChild(tooltipLayer);
+
+    const showTooltip = (target) => {
+        if (!target.dataset.tooltip) {
+            return;
+        }
+        hideTooltip();
+        target.dataset.tooltipVisible = 'true';
+
+        const rect = target.getBoundingClientRect();
+        tooltipLayer.textContent = target.dataset.tooltip;
+        tooltipLayer.classList.add('visible');
+
+        const layerRect = tooltipLayer.getBoundingClientRect();
+        const left = rect.left + (rect.width / 2) - (layerRect.width / 2);
+        const top = rect.bottom + 10;
+
+        tooltipLayer.style.left = `${Math.max(8, Math.min(left, window.innerWidth - layerRect.width - 8))}px`;
+        tooltipLayer.style.top = `${top}px`;
+    };
+
+    const hideTooltip = () => {
+        topMenu.querySelectorAll('[data-tooltip-visible="true"]').forEach((target) => {
+            delete target.dataset.tooltipVisible;
+        });
+        tooltipLayer.classList.remove('visible');
+    };
+
+    topMenu.addEventListener('mouseover', (event) => {
+        const target = event.target.closest('[data-tooltip]');
+        if (!target || !topMenu.contains(target)) {
+            return;
+        }
+        showTooltip(target);
+    });
+
+    topMenu.addEventListener('mouseout', (event) => {
+        const target = event.target.closest('[data-tooltip]');
+        if (!target || !topMenu.contains(target)) {
+            return;
+        }
+        const nextTarget = event.relatedTarget instanceof Element ? event.relatedTarget.closest('[data-tooltip]') : null;
+        if (nextTarget === target) {
+            return;
+        }
+        hideTooltip();
+    });
+
+    topMenu.querySelectorAll('[data-tooltip]').forEach((target) => {
+        target.addEventListener('mouseenter', () => showTooltip(target));
+        target.addEventListener('mouseleave', hideTooltip);
+        target.addEventListener('focus', () => showTooltip(target));
+        target.addEventListener('blur', hideTooltip);
+    });
+
+    const closeAllDropdowns = () => {
+        topMenu.querySelectorAll('.top-menu-dropdown.open').forEach((dropdown) => {
+            dropdown.classList.remove('open');
+            const trigger = dropdown.querySelector('[aria-expanded="true"]');
+            if (trigger) {
+                trigger.setAttribute('aria-expanded', 'false');
+            }
+        });
+    };
+
+    topMenu.querySelectorAll('.top-menu-dropdown').forEach((dropdown) => {
+        const currentUserInline = dropdown.querySelector('.current-user-inline');
+        const userBtn = dropdown.querySelector('.current-user-btn');
+        const chevronBtn = dropdown.querySelector('.current-user-chevron');
+        const directBtn = dropdown.querySelector('.download-menu-btn');
+
+        const toggleDropdown = (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+
+            const willOpen = !dropdown.classList.contains('open');
+            closeAllDropdowns();
+
+            if (willOpen) {
+                dropdown.classList.add('open');
+                if (userBtn) {
+                    userBtn.setAttribute('aria-expanded', 'true');
+                }
+                if (directBtn) {
+                    directBtn.setAttribute('aria-expanded', 'true');
+                }
+            }
+        };
+
+        if (currentUserInline) {
+            currentUserInline.addEventListener('click', toggleDropdown);
+        }
+
+        if (userBtn) {
+            userBtn.addEventListener('click', toggleDropdown);
+        }
+
+        if (chevronBtn) {
+            chevronBtn.addEventListener('click', toggleDropdown);
+        }
+
+        if (directBtn) {
+            directBtn.addEventListener('click', toggleDropdown);
+        }
+    });
+
+    document.addEventListener('click', (event) => {
+        if (!topMenu.contains(event.target)) {
+            closeAllDropdowns();
+            hideTooltip();
+        }
+    });
+
+    window.addEventListener('scroll', hideTooltip, true);
+    window.addEventListener('resize', hideTooltip);
+}

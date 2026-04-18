@@ -18,62 +18,106 @@
     <div class="main-container">
         <!-- 顶部菜单栏 -->
         <div class="top-menu-bar">
-            <!-- 左侧区域 -->
             <div class="menu-left">
-                <button class="menu-hamburger">
-                    <i class="bi bi-list"></i>
-                </button>
-                <div class="brand-logo"></div>
-                
-                <!-- 项目名称下拉菜单 -->
                 <div class="project-dropdown">
-                    <button class="project-dropdown-btn">
-                        <span class="project-name">凯普特</span>
-                        <i class="bi bi-chevron-down"></i>
+                    <button class="project-dropdown-btn" type="button" aria-label="方案切换">
+                        <span class="hitbot-icon project-icon"></span>
+                        <span class="project-meta">
+                            <span class="project-name">XYZ演示</span>
+                            <span class="project-team">所属团队: 医生化</span>
+                        </span>
+                        <span class="hitbot-icon project-chevron"></span>
                     </button>
                     <div class="project-dropdown-menu">
-                        <div class="project-dropdown-item active">
-                            <span>凯普特</span>
-                            <i class="bi bi-check"></i>
+                        <div class="project-dropdown-toolbar">
+                            <div class="project-team-chip">
+                                <span class="project-team-chip-name">医生化</span>
+                                <span class="hitbot-icon project-team-chip-arrow"></span>
+                            </div>
                         </div>
-                        <div class="project-dropdown-item">智能制造项目</div>
-                        <div class="project-dropdown-item">自动化生产线</div>
-                        <div class="project-dropdown-separator"></div>
+                        <div class="project-dropdown-header">
+                            <span class="project-dropdown-title"><span class="hitbot-icon"></span>方案列表</span>
+                            <div class="project-dropdown-actions">
+                                <span class="project-dropdown-link"><span class="hitbot-icon"></span>新建</span>
+                                <span class="project-dropdown-link"><span class="hitbot-icon"></span>导入</span>
+                            </div>
+                        </div>
+                        <div class="project-dropdown-item active">
+                            <div class="project-dropdown-item-main">
+                                <span class="hitbot-icon"></span>
+                                <div class="project-dropdown-copy">
+                                    <span class="project-dropdown-item-tag">当前</span>
+                                    <span class="project-dropdown-item-name">XYZ演示</span>
+                                    <span class="project-dropdown-item-time">最近编辑：2023-09-07 03:09:30</span>
+                                </div>
+                            </div>
+                            <span class="hitbot-icon project-dropdown-item-more"></span>
+                        </div>
                         <div class="project-dropdown-item">
-                            <i class="bi bi-plus-circle"></i>
-                            <span>新建项目</span>
+                            <div class="project-dropdown-item-main">
+                                <span class="hitbot-icon"></span>
+                                <div class="project-dropdown-copy">
+                                    <span class="project-dropdown-item-name">kj核酸线4-5站</span>
+                                    <span class="project-dropdown-item-time">最近编辑：2024-09-02 03:10:41</span>
+                                </div>
+                            </div>
+                            <span class="hitbot-icon project-dropdown-item-more"></span>
+                        </div>
+                        <div class="project-dropdown-item">
+                            <div class="project-dropdown-item-main">
+                                <span class="hitbot-icon"></span>
+                                <div class="project-dropdown-copy">
+                                    <span class="project-dropdown-item-name">kj核酸线3站</span>
+                                    <span class="project-dropdown-item-time">最近编辑：2024-09-04 02:40:20</span>
+                                </div>
+                            </div>
+                            <span class="hitbot-icon project-dropdown-item-more"></span>
                         </div>
                     </div>
                 </div>
+
+                <div class="platform-badge">
+                    <span class="platform-badge-label">平台版</span>
+                </div>
             </div>
 
-            <!-- 右侧区域 -->
             <div class="menu-right">
-                <button class="menu-btn" title="刷新">
-                    <i class="bi bi-arrow-clockwise"></i>
-                </button>
-                <button class="menu-btn" title="执行程序">
-                    <i class="bi bi-play-circle-fill"></i>
-                </button>
-                <button class="menu-btn" title="语言切换">
-                    <i class="bi bi-translate"></i>
-                </button>
-
-                <!-- 模式切换按钮组 -->
-                <div class="mode-switch-group">
-                    <button class="mode-btn">孪生</button>
-                    <button class="mode-btn active">仿真</button>
-                    <button class="mode-btn">真机</button>
+                <button class="menu-btn top-icon-btn" type="button" data-tooltip="AI"><span class="hitbot-icon"></span></button>
+                <button class="menu-btn top-icon-btn" type="button" data-tooltip="功能引导"><span class="hitbot-icon"></span></button>
+                <button class="menu-btn top-icon-btn" type="button" data-tooltip="机械臂示教"><span class="hitbot-icon"></span></button>
+                <button class="menu-btn top-icon-btn" type="button" data-tooltip="设备监控"><span class="hitbot-icon"></span></button>
+                <button class="menu-btn top-icon-btn" type="button" data-tooltip="日志查看"><span class="hitbot-icon"></span></button>
+                <button class="menu-btn top-icon-btn subdued" type="button" data-tooltip="国际化"><span class="hitbot-icon"></span></button>
+                <button class="menu-btn top-icon-btn" type="button" data-tooltip="后台管理"><span class="hitbot-icon"></span></button>
+                <div class="top-menu-dropdown top-menu-download">
+                    <button class="menu-btn download-menu-btn" type="button" data-tooltip="下载" aria-haspopup="menu" aria-expanded="false">
+                        <span class="download-menu-icon" aria-hidden="true">
+                            <svg viewBox="0 0 1024 1024" focusable="false" aria-hidden="true">
+                                <path d="M160 832h704a32 32 0 1 1 0 64H160a32 32 0 1 1 0-64m384-253.696 236.288-236.352 45.248 45.248L508.8 704 192 387.2l45.248-45.248L480 584.704V128h64z"></path>
+                            </svg>
+                        </span>
+                    </button>
+                    <div class="top-dropdown-menu top-dropdown-menu-compact" role="menu" aria-label="平台调用示例代码">
+                        <button class="top-dropdown-item" type="button" role="menuitem">平台调用示例代码(python)</button>
+                        <button class="top-dropdown-item" type="button" role="menuitem">平台调用示例代码(web)</button>
+                    </div>
                 </div>
-                
-                <span class="user-info">当前用户：admin</span>
-                
-                <button class="menu-btn minimize-btn" title="最小化">
-                    <i class="bi bi-dash"></i>
-                </button>
-                <button class="menu-btn close-btn" title="退出程序">
-                    <i class="bi bi-x"></i>
-                </button>
+                <button class="menu-btn top-icon-btn subdued" type="button" data-tooltip="系统配置"><span class="hitbot-icon"></span></button>
+                <span class="top-menu-divider" aria-hidden="true"></span>
+                <div class="top-menu-dropdown current-user-dropdown">
+                    <div class="current-user-inline" data-tooltip="当前账号">
+                        <button class="current-user-btn" type="button" data-tooltip="当前账号" aria-haspopup="menu" aria-expanded="false">
+                            <span class="current-user-avatar">
+                                <img src="./avatar-ef9183da.png" alt="">
+                            </span>
+                            <span class="current-user-name">严世威</span>
+                        </button>
+                    </div>
+                    <div class="top-dropdown-menu user-dropdown-menu" role="menu" aria-label="当前用户">
+                        <button class="top-dropdown-item" type="button" role="menuitem">修改密码</button>
+                        <button class="top-dropdown-item" type="button" role="menuitem">注销登录</button>
+                    </div>
+                </div>
             </div>
         </div>
 
