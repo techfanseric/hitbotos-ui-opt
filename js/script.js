@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
     window.initActionEditorShell?.();
 
     // 初始化设备库面板
-    import('./js/device-library-panel.js').then(module => {
+    import('./device-library-panel.js').then(module => {
         window.initDeviceLibraryPanel = module.initDeviceLibraryPanel;
         window.getDeviceLibraryPanel = module.getDeviceLibraryPanel;
         window.initDeviceLibraryPanel();
