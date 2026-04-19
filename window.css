@@ -80,6 +80,50 @@
     color: #ccc;
 }
 
+.window-context-badges {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: 10px;
+}
+
+.window-context-badge,
+.window-state-badge {
+    display: inline-flex;
+    align-items: center;
+    height: 18px;
+    padding: 0 8px;
+    border-radius: 999px;
+    font-size: 10px;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.window-context-badge {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.82);
+}
+
+.window-state-badge {
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.72);
+}
+
+.window-state-badge.is-built {
+    background: rgba(42, 114, 197, 0.22);
+    color: #9fc8ff;
+}
+
+.window-state-badge.is-running {
+    background: rgba(29, 156, 98, 0.22);
+    color: #8cf2bd;
+}
+
+.window-state-badge.is-error {
+    background: rgba(189, 28, 34, 0.22);
+    color: #ffb5b7;
+}
+
 .window-controls {
     display: flex;
     gap: 4px;

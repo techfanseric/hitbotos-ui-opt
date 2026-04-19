@@ -6,6 +6,27 @@ let layoutManager = null;
 // 属性面板当前激活的tab
 let activePanelTab = null;
 
+const EXECUTION_CONTEXT_STORAGE_KEY = 'hitbot-execution-context-v3';
+const DEFAULT_EXECUTION_CONTEXT = {
+    machineConnected: false,
+    machineLabel: '真机未连接',
+    activeSource: 'blockly',
+    contexts: {
+        blockly: {
+            targets: [],
+            runState: 'idle',
+            lastAction: 'idle',
+            feedback: '请先勾选真机执行或仿真运行。'
+        },
+        flow: {
+            targets: [],
+            runState: 'idle',
+            lastAction: 'idle',
+            feedback: '请先勾选真机执行或仿真运行。'
+        }
+    }
+};
+
 document.addEventListener('DOMContentLoaded', function() {
     const pageLayout = new URLSearchParams(window.location.search).get('layout');
 
@@ -43,7 +64,676 @@ document.addEventListener('DOMContentLoaded', function() {
     // 调试项目下拉菜单
     setupProjectDropdown();
     setupTopMenuInteractions();
+    setupExecutionEnhancements();
 });
+
+function summarizeExecutionTargets(targets) {
+    const labels = [];
+    if (targets.includes('real')) labels.push('真机');
+    if (targets.includes('simulation')) labels.push('仿真');
+    return labels.length ? labels.join(' + ') : '未选择';
+}
+
+function getExecutionSourceLabel(source) {
+    return source === 'flow' ? '流程图' : 'Blockly';
+}
+
+function getExecutionClusterLabel(source) {
+    return source === 'flow' ? '流程' : '程序';
+}
+
+function normalizeExecutionUnit(rawUnit) {
+    const base = {
+        targets: [],
+        runState: 'idle',
+        lastAction: 'idle',
+        feedback: '请先勾选真机执行或仿真运行。',
+        ...(rawUnit || {})
+    };
+    const validTargets = ['real', 'simulation'];
+    const nextTargets = Array.isArray(base.targets)
+        ? base.targets.filter((target, index, list) => validTargets.includes(target) && list.indexOf(target) === index)
+        : [];
+
+    base.targets = nextTargets;
+    base.runState = ['idle', 'running', 'paused'].includes(base.runState) ? base.runState : 'idle';
+
+    if (typeof base.feedback !== 'string' || !base.feedback.trim()) {
+        base.feedback = '请先勾选真机执行或仿真运行。';
+    }
+
+    return base;
+}
+
+function normalizeExecutionContext(rawContext) {
+    const merged = {
+        ...DEFAULT_EXECUTION_CONTEXT,
+        ...(rawContext || {}),
+        contexts: {
+            ...DEFAULT_EXECUTION_CONTEXT.contexts,
+            ...((rawContext && rawContext.contexts) || {})
+        }
+    };
+
+    merged.activeSource = ['blockly', 'flow'].includes(merged.activeSource) ? merged.activeSource : 'blockly';
+    merged.contexts.blockly = normalizeExecutionUnit(merged.contexts.blockly);
+    merged.contexts.flow = normalizeExecutionUnit(merged.contexts.flow);
+
+    if (!merged.machineConnected) {
+        ['blockly', 'flow'].forEach((source) => {
+            merged.contexts[source].targets = merged.contexts[source].targets.filter((target) => target !== 'real');
+        });
+    }
+
+    return merged;
+}
+
+function loadExecutionContext() {
+    try {
+        const saved = window.localStorage.getItem(EXECUTION_CONTEXT_STORAGE_KEY);
+        return normalizeExecutionContext(saved ? JSON.parse(saved) : null);
+    } catch (error) {
+        console.warn('读取执行配置失败，使用默认值。', error);
+        return normalizeExecutionContext(null);
+    }
+}
+
+function saveExecutionContext(context) {
+    try {
+        window.localStorage.setItem(EXECUTION_CONTEXT_STORAGE_KEY, JSON.stringify(context));
+    } catch (error) {
+        console.warn('保存执行配置失败。', error);
+    }
+}
+
+function getExecutionStateLabel(runState) {
+    if (runState === 'running') return '运行中';
+    if (runState === 'paused') return '已暂停';
+    return '待执行';
+}
+
+function canExecuteTargets(targets) {
+    return Array.isArray(targets) && targets.length > 0;
+}
+
+function setupExecutionEnhancements() {
+    const summaryBadges = [...document.querySelectorAll('[data-run-summary]')];
+    const stateBadges = [...document.querySelectorAll('[data-run-state-badge]')];
+    let context = loadExecutionContext();
+    const listeners = new Set();
+
+    const render = () => {
+        context = normalizeExecutionContext(context);
+        saveExecutionContext(context);
+
+        const activeSource = context.activeSource;
+        const activeUnit = context.contexts[activeSource];
+        const targetSummary = summarizeExecutionTargets(activeUnit.targets);
+        const stateLabel = getExecutionStateLabel(activeUnit.runState);
+
+        document.body.dataset.runTargets = activeUnit.targets.join(',');
+        document.body.dataset.runState = activeUnit.runState;
+        document.body.dataset.runSource = activeSource;
+        window.dispatchEvent(new CustomEvent('hitbot:execution-context-change', { detail: JSON.parse(JSON.stringify(context)) }));
+
+        summaryBadges.forEach((badge) => {
+            badge.textContent = `${getExecutionClusterLabel(activeSource)}：${targetSummary}`;
+        });
+
+        stateBadges.forEach((badge) => {
+            badge.textContent = stateLabel;
+            badge.classList.remove('is-idle', 'is-built', 'is-running', 'is-error');
+            if (activeUnit.runState === 'running') {
+                badge.classList.add('is-running');
+            } else {
+                badge.classList.add('is-idle');
+            }
+        });
+
+        listeners.forEach((listener) => {
+            listener(JSON.parse(JSON.stringify(context)));
+        });
+    };
+
+    const api = {
+        getContext(source) {
+            const nextSource = ['blockly', 'flow'].includes(source) ? source : context.activeSource;
+            return {
+                source: nextSource,
+                machineConnected: context.machineConnected,
+                machineLabel: context.machineLabel,
+                activeSource: context.activeSource,
+                ...JSON.parse(JSON.stringify(context.contexts[nextSource]))
+            };
+        },
+        setActiveSource(source) {
+            if (!['blockly', 'flow'].includes(source) || context.activeSource === source) return;
+            context.activeSource = source;
+            render();
+        },
+        setTargets(source, nextTargets, feedback) {
+            const nextSource = ['blockly', 'flow'].includes(source) ? source : context.activeSource;
+            context.activeSource = nextSource;
+            context.contexts[nextSource].targets = nextTargets;
+            context.contexts[nextSource].runState = 'idle';
+            context.contexts[nextSource].lastAction = 'target-change';
+            context.contexts[nextSource].feedback = feedback || (
+                canExecuteTargets(context.contexts[nextSource].targets)
+                    ? `已勾选 ${summarizeExecutionTargets(context.contexts[nextSource].targets)}。`
+                    : '请先勾选真机执行或仿真运行。'
+            );
+            render();
+        },
+        markRun(source, feedback) {
+            const nextSource = ['blockly', 'flow'].includes(source) ? source : context.activeSource;
+            context.activeSource = nextSource;
+            if (!canExecuteTargets(context.contexts[nextSource].targets)) {
+                context.contexts[nextSource].runState = 'idle';
+                context.contexts[nextSource].lastAction = 'run-blocked';
+                context.contexts[nextSource].feedback = '请先勾选真机执行或仿真运行。';
+                render();
+                return;
+            }
+            context.contexts[nextSource].runState = 'running';
+            context.contexts[nextSource].lastAction = 'run';
+            context.contexts[nextSource].feedback = feedback || `已执行，当前目标：${summarizeExecutionTargets(context.contexts[nextSource].targets)}。`;
+            render();
+        },
+        markPause(source, feedback) {
+            const nextSource = ['blockly', 'flow'].includes(source) ? source : context.activeSource;
+            context.activeSource = nextSource;
+            context.contexts[nextSource].runState = 'paused';
+            context.contexts[nextSource].lastAction = 'pause';
+            context.contexts[nextSource].feedback = feedback || `已暂停执行，当前目标：${summarizeExecutionTargets(context.contexts[nextSource].targets)}。`;
+            render();
+        },
+        markResume(source, feedback) {
+            const nextSource = ['blockly', 'flow'].includes(source) ? source : context.activeSource;
+            context.activeSource = nextSource;
+            if (!canExecuteTargets(context.contexts[nextSource].targets)) {
+                context.contexts[nextSource].runState = 'idle';
+                context.contexts[nextSource].lastAction = 'resume-blocked';
+                context.contexts[nextSource].feedback = '请先勾选真机执行或仿真运行。';
+                render();
+                return;
+            }
+            context.contexts[nextSource].runState = 'running';
+            context.contexts[nextSource].lastAction = 'resume';
+            context.contexts[nextSource].feedback = feedback || `已恢复执行，当前目标：${summarizeExecutionTargets(context.contexts[nextSource].targets)}。`;
+            render();
+        },
+        markStop(source, feedback) {
+            const nextSource = ['blockly', 'flow'].includes(source) ? source : context.activeSource;
+            context.activeSource = nextSource;
+            context.contexts[nextSource].runState = 'idle';
+            context.contexts[nextSource].lastAction = 'stop';
+            context.contexts[nextSource].feedback = feedback || `已停止运行，当前目标：${summarizeExecutionTargets(context.contexts[nextSource].targets)}。`;
+            render();
+        },
+        onChange(listener) {
+            listeners.add(listener);
+            listener(JSON.parse(JSON.stringify(context)));
+            return () => listeners.delete(listener);
+        }
+    };
+
+    window.__hitbotExecutionContext = api;
+    bindActionEditorRunControls(api);
+
+    render();
+}
+
+function createEmbeddedRunControlStyles(doc) {
+    if (!doc || doc.getElementById('host-run-target-style')) return;
+
+    const style = doc.createElement('style');
+    style.id = 'host-run-target-style';
+    style.textContent = `
+        .host-run-target-wrap {
+            display: inline-flex;
+            align-items: center;
+            margin-left: 0;
+            min-width: 0;
+        }
+        .host-run-inline-group {
+            display: inline-flex;
+            align-items: center;
+            min-height: 22px;
+            overflow: visible;
+            margin-left: 8px;
+            padding-left: 8px;
+            gap: 0;
+            position: relative;
+        }
+        .host-run-inline-group::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 1px;
+            height: 14px;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.14);
+        }
+        .host-run-inline-group > .arco-space-item > button[data-host-run-bound="true"],
+        .host-run-inline-group > .arco-space-item > button[data-host-stop-bound="true"] {
+            border: none;
+            border-radius: 0;
+            background: transparent;
+            box-shadow: none;
+            height: 22px;
+            padding: 0;
+            color: #3C7EFF;
+            font-size: 11px;
+        }
+        .host-run-inline-group > .arco-space-item > button[data-host-run-bound="true"]:hover,
+        .host-run-inline-group > .arco-space-item > button[data-host-stop-bound="true"]:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .host-run-cluster-divider {
+            width: 1px;
+            height: 14px;
+            margin: 0 4px;
+            align-self: center;
+            background: rgba(255, 255, 255, 0.12);
+        }
+        .host-run-inline-group.is-disabled {
+            opacity: 0.72;
+        }
+        .host-run-target-group {
+            display: inline-flex;
+            align-items: center;
+            gap: 0;
+        }
+        .host-run-target-item {
+            border: none;
+            border-radius: 0;
+            background: transparent;
+            padding: 0 7px 0 6px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: rgba(255,255,255,0.82);
+            cursor: pointer;
+            font-size: 10px;
+            line-height: 1;
+            transition: background-color 0.16s ease, color 0.16s ease;
+        }
+        .host-run-target-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .host-run-target-item.is-disabled,
+        .host-run-target-item:disabled,
+        .host-run-target-item.is-locked {
+            cursor: not-allowed;
+        }
+        .host-run-target-item.is-disabled:hover,
+        .host-run-target-item:disabled:hover,
+        .host-run-target-item.is-locked:hover {
+            background: transparent;
+        }
+        .host-run-target-item.is-active {
+            background: transparent;
+            color: rgba(255,255,255,0.82);
+        }
+        .host-run-target-check {
+            width: 12px;
+            height: 12px;
+            border: 1px solid rgba(255,255,255,0.28);
+            border-radius: 3px;
+            flex: 0 0 auto;
+            background: transparent;
+            transition: all 0.16s ease;
+            position: relative;
+        }
+        .host-run-target-item.is-active .host-run-target-check::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 6px;
+            height: 6px;
+            background: #3C7EFF;
+            border-radius: 2px;
+            transform: translate(-50%, -50%);
+        }
+        .host-run-target-title {
+            font-size: 10px;
+            line-height: 1;
+            font-weight: 500;
+        }
+        .host-run-hidden {
+            display: none !important;
+        }
+    `;
+    doc.head?.appendChild(style);
+}
+
+function createRunTargetMenu(doc, api, kind) {
+    const wrap = doc.createElement('div');
+    wrap.className = 'host-run-target-wrap';
+    wrap.dataset.hostRunControl = kind;
+    wrap.innerHTML = `
+        <div class="host-run-target-group" role="group" aria-label="执行目标">
+            <button class="host-run-target-item is-disabled" type="button" data-run-target="real" role="checkbox" aria-checked="false" disabled title="真机">
+                <span class="host-run-target-check" aria-hidden="true"></span>
+                <span class="host-run-target-title">真机</span>
+            </button>
+            <button class="host-run-target-item" type="button" data-run-target="simulation" role="checkbox" aria-checked="false" title="仿真">
+                <span class="host-run-target-check" aria-hidden="true"></span>
+                <span class="host-run-target-title">仿真</span>
+            </button>
+        </div>
+    `;
+
+    const items = [...wrap.querySelectorAll('[data-run-target]')];
+
+    items.forEach((item) => {
+        item.addEventListener('click', () => {
+            if (item.disabled || item.classList.contains('is-locked')) {
+                return;
+            }
+
+            const target = item.dataset.runTarget;
+            const current = api.getContext(kind);
+            let nextTargets;
+
+            if (current.targets.includes(target)) {
+                nextTargets = current.targets.filter((entry) => entry !== target);
+            } else {
+                nextTargets = [...current.targets, target];
+            }
+
+            api.setTargets(kind, nextTargets, nextTargets.length
+                ? `已勾选 ${summarizeExecutionTargets(nextTargets)}。`
+                : '请先勾选真机执行或仿真运行。'
+            );
+        });
+    });
+
+    api.onChange((nextContext) => {
+        const unit = nextContext.contexts[kind];
+        items.forEach((item) => {
+            const target = item.dataset.runTarget;
+            const isDisabled = target === 'real' && !nextContext.machineConnected;
+            const isActive = unit.targets.includes(target);
+            const isLocked = unit.runState === 'running';
+            item.disabled = isDisabled;
+            item.classList.toggle('is-disabled', isDisabled);
+            item.classList.toggle('is-locked', isLocked && !isDisabled);
+            item.classList.toggle('is-active', isActive);
+            item.setAttribute('aria-checked', String(isActive));
+            const baseTitle = item.querySelector('.host-run-target-title').textContent;
+            if (isDisabled) {
+                item.title = `${baseTitle}（未连接）`;
+            } else if (isLocked) {
+                item.title = `${baseTitle}（已选中，运行中不可修改）`;
+            } else if (isActive) {
+                item.title = `${baseTitle}（已选中）`;
+            } else {
+                item.title = `${baseTitle}（未选中）`;
+            }
+        });
+    });
+
+    return wrap;
+}
+
+function syncExecuteButtonState(button, kind, api) {
+    if (!button) return;
+    const current = api.getContext(kind);
+    const isRunning = current.runState === 'running';
+    const isPaused = current.runState === 'paused';
+    const canRun = canExecuteTargets(current.targets);
+    const inlineGroup = button.closest('.host-run-inline-group');
+    const stopButton = inlineGroup?.querySelector('button[data-host-stop-bound="true"]');
+
+    if (kind === 'flow') {
+        const icon = button.querySelector('.arco-icon-play-circle, .arco-icon-pause-circle');
+        if (icon) {
+            icon.classList.remove('arco-icon-play-circle', 'arco-icon-pause-circle');
+            icon.classList.add(isRunning ? 'arco-icon-pause-circle' : 'arco-icon-play-circle');
+            icon.innerHTML = isRunning
+                ? '<path d="M42 24c0 9.941-8.059 18-18 18S6 33.941 6 24 14.059 6 24 6s18 8.059 18 18Z"></path><path d="M19 19v10h1V19h-1ZM28 19v10h1V19h-1Z"></path>'
+                : '<path d="M24 42c9.941 0 18-8.059 18-18S33.941 6 24 6 6 14.059 6 24s8.059 18 18 18Z"></path><path d="M19 17v14l12-7-12-7Z"></path>';
+        }
+        button.title = isRunning ? '暂停执行' : (isPaused ? '恢复执行' : (canRun ? '运行' : '请先勾选执行目标'));
+    } else {
+        button.textContent = isRunning ? '暂停' : (isPaused ? '恢复' : '运行');
+        button.title = isRunning ? '暂停执行' : (isPaused ? '恢复执行' : (canRun ? '运行' : '请先勾选执行目标'));
+    }
+
+    button.disabled = !isRunning && !isPaused && !canRun;
+    button.classList.toggle('arco-btn-disabled', !isRunning && !isPaused && !canRun);
+    inlineGroup?.classList.toggle('is-disabled', !canRun && !isRunning);
+    if (stopButton) {
+        stopButton.classList.add('host-run-hidden');
+    }
+}
+
+function findVisibleButton(doc, predicate) {
+    const candidates = [...doc.querySelectorAll('button')].filter((button) => predicate(button));
+    if (!candidates.length) return null;
+
+    const preferred = candidates.find((button) => {
+        const modal = button.closest('.arco-modal, .arco-drawer, .arco-popover, .arco-tooltip, .arco-dropdown');
+        return !modal;
+    });
+
+    return preferred || candidates[0] || null;
+}
+
+function installBlocklyRunContext(doc, api) {
+    if (!doc) return;
+    createEmbeddedRunControlStyles(doc);
+
+    const runButton = findVisibleButton(doc, (button) => button.innerText.trim() === '运行');
+    const stopButton = findVisibleButton(doc, (button) => button.innerText.trim() === '停止');
+    if (!runButton) return;
+
+    const hostItem = runButton.closest('.arco-space-item');
+    const stopItem = stopButton?.closest('.arco-space-item') || null;
+    if (!hostItem) return;
+
+    let menu = hostItem.parentElement?.querySelector('.host-run-target-wrap[data-host-run-control="blockly"]');
+    if (!menu) {
+        menu = createRunTargetMenu(doc, api, 'blockly');
+        if (stopItem && stopItem.parentElement === hostItem.parentElement) {
+            hostItem.parentElement.insertBefore(menu, stopItem);
+        } else {
+            hostItem.insertAdjacentElement('afterend', menu);
+        }
+    }
+
+    const nestedGroups = [...doc.querySelectorAll('.host-run-inline-group[data-host-run-inline="blockly"] .host-run-inline-group[data-host-run-inline="blockly"]')];
+    nestedGroups.forEach((group) => {
+        while (group.firstChild) {
+            group.parentNode.insertBefore(group.firstChild, group);
+        }
+        group.remove();
+    });
+
+    let inlineGroup = hostItem.closest('.host-run-inline-group[data-host-run-inline="blockly"]');
+    if (!inlineGroup) {
+        inlineGroup = doc.createElement('div');
+        inlineGroup.className = 'host-run-inline-group';
+        inlineGroup.dataset.hostRunInline = 'blockly';
+        hostItem.parentElement.insertBefore(inlineGroup, hostItem);
+        inlineGroup.appendChild(menu);
+        inlineGroup.appendChild(hostItem);
+        if (stopItem) inlineGroup.appendChild(stopItem);
+    } else if (!inlineGroup.contains(hostItem)) {
+        inlineGroup.appendChild(hostItem);
+    }
+    if (!inlineGroup.contains(menu)) {
+        inlineGroup.appendChild(menu);
+    }
+    if (stopItem && !inlineGroup.contains(stopItem)) {
+        inlineGroup.appendChild(stopItem);
+    }
+
+    if (runButton.dataset.hostRunBound !== 'true') {
+        runButton.dataset.hostRunBound = 'true';
+        runButton.addEventListener('click', () => {
+            const current = api.getContext('blockly');
+            if (current.runState === 'running') {
+                api.markPause('blockly', `已暂停 Blockly 执行，当前目标：${summarizeExecutionTargets(current.targets)}。`);
+                return;
+            }
+            if (current.runState === 'paused') {
+                api.markResume('blockly', `已恢复 Blockly 执行，当前目标：${summarizeExecutionTargets(current.targets)}。`);
+                return;
+            }
+            api.markRun('blockly', `已通过 Blockly 执行，当前目标：${summarizeExecutionTargets(current.targets)}。`);
+        });
+    }
+
+    if (stopButton && stopButton.dataset.hostStopBound !== 'true') {
+        stopButton.dataset.hostStopBound = 'true';
+        stopButton.addEventListener('click', () => {
+            const current = api.getContext('blockly');
+            api.markStop('blockly', `已停止 Blockly 执行，当前目标：${summarizeExecutionTargets(current.targets)}。`);
+        });
+    }
+
+    syncExecuteButtonState(runButton, 'blockly', api);
+    if (runButton.dataset.hostRunSyncBound !== 'true') {
+        runButton.dataset.hostRunSyncBound = 'true';
+        api.onChange(() => {
+            syncExecuteButtonState(runButton, 'blockly', api);
+        });
+    }
+}
+
+function installFlowPathRunContext(doc, api) {
+    if (!doc) return;
+    createEmbeddedRunControlStyles(doc);
+
+    const runButton = findVisibleButton(doc, (button) => button.querySelector('.arco-icon-play-circle'));
+    const stopButton = findVisibleButton(doc, (button) => {
+        if (button.dataset.hostRunBound) return false;
+        return button.querySelector('.arco-icon-pause-circle, .arco-icon-poweroff');
+    });
+    if (!runButton) return;
+
+    const hostItem = runButton.closest('.arco-space-item');
+    const stopItem = stopButton?.closest('.arco-space-item') || null;
+    if (!hostItem) return;
+
+    let menu = hostItem.parentElement?.querySelector('.host-run-target-wrap[data-host-run-control="flow"]');
+    if (!menu) {
+        menu = createRunTargetMenu(doc, api, 'flow');
+        if (stopItem && stopItem.parentElement === hostItem.parentElement) {
+            hostItem.parentElement.insertBefore(menu, stopItem);
+        } else {
+            hostItem.insertAdjacentElement('afterend', menu);
+        }
+    }
+
+    const nestedGroups = [...doc.querySelectorAll('.host-run-inline-group[data-host-run-inline="flow"] .host-run-inline-group[data-host-run-inline="flow"]')];
+    nestedGroups.forEach((group) => {
+        while (group.firstChild) {
+            group.parentNode.insertBefore(group.firstChild, group);
+        }
+        group.remove();
+    });
+
+    let inlineGroup = hostItem.closest('.host-run-inline-group[data-host-run-inline="flow"]');
+    if (!inlineGroup) {
+        inlineGroup = doc.createElement('div');
+        inlineGroup.className = 'host-run-inline-group';
+        inlineGroup.dataset.hostRunInline = 'flow';
+        hostItem.parentElement.insertBefore(inlineGroup, hostItem);
+        inlineGroup.appendChild(menu);
+        inlineGroup.appendChild(hostItem);
+        if (stopItem) inlineGroup.appendChild(stopItem);
+    } else if (!inlineGroup.contains(hostItem)) {
+        inlineGroup.appendChild(hostItem);
+    }
+    if (!inlineGroup.contains(menu)) {
+        inlineGroup.appendChild(menu);
+    }
+    if (stopItem && !inlineGroup.contains(stopItem)) {
+        inlineGroup.appendChild(stopItem);
+    }
+    if (stopItem) {
+        stopItem.style.marginRight = '';
+    }
+
+    if (runButton.dataset.hostRunBound !== 'true') {
+        runButton.dataset.hostRunBound = 'true';
+        runButton.addEventListener('click', () => {
+            const current = api.getContext('flow');
+            if (current.runState === 'running') {
+                api.markPause('flow', `已暂停流程图执行，当前目标：${summarizeExecutionTargets(current.targets)}。`);
+                return;
+            }
+            if (current.runState === 'paused') {
+                api.markResume('flow', `已恢复流程图执行，当前目标：${summarizeExecutionTargets(current.targets)}。`);
+                return;
+            }
+            api.markRun('flow', `已通过流程图执行，当前目标：${summarizeExecutionTargets(current.targets)}。`);
+        });
+    }
+
+    if (stopButton && stopButton.dataset.hostStopBound !== 'true') {
+        stopButton.dataset.hostStopBound = 'true';
+        stopButton.addEventListener('click', () => {
+            const current = api.getContext('flow');
+            api.markStop('flow', `已停止流程图执行，当前目标：${summarizeExecutionTargets(current.targets)}。`);
+        });
+    }
+
+    syncExecuteButtonState(runButton, 'flow', api);
+    if (runButton.dataset.hostRunSyncBound !== 'true') {
+        runButton.dataset.hostRunSyncBound = 'true';
+        api.onChange(() => {
+            syncExecuteButtonState(runButton, 'flow', api);
+        });
+    }
+}
+
+function bindActionEditorRunControls(api) {
+    const actionFrame = document.getElementById('action-editor-frame');
+    if (!actionFrame) return;
+
+    const install = () => {
+        try {
+            const actionDoc = actionFrame.contentDocument;
+            if (!actionDoc?.body) return;
+
+            installBlocklyRunContext(actionDoc, api);
+
+            const flowFrame = [...actionDoc.querySelectorAll('iframe')].find((frame) => {
+                try {
+                    return frame.contentWindow?.location?.href?.includes('/flow-path/');
+                } catch (error) {
+                    return false;
+                }
+            });
+
+            if (!flowFrame?.contentDocument?.body) return;
+            installFlowPathRunContext(flowFrame.contentDocument, api);
+        } catch (error) {
+            console.warn('绑定动作编辑执行增强失败。', error);
+        }
+    };
+
+    if (actionFrame.__hostRunInterval) {
+        window.clearInterval(actionFrame.__hostRunInterval);
+    }
+
+    actionFrame.addEventListener('load', () => {
+        window.setTimeout(install, 180);
+        window.setTimeout(install, 520);
+    });
+
+    install();
+    window.setTimeout(install, 180);
+    window.setTimeout(install, 520);
+    actionFrame.__hostRunInterval = window.setInterval(install, 900);
+}
 
 // 更新窗口控制按钮
 function updateWindowControlButton(windowElement) {
