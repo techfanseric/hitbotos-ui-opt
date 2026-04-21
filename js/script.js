@@ -157,6 +157,10 @@ function getExecutionStateLabel(runState) {
     return '状态：未运行';
 }
 
+function getExecutionStateShortLabel(runState) {
+    return getExecutionStateLabel(runState).replace(/^状态：/u, '');
+}
+
 function canExecuteTargets(targets) {
     return Array.isArray(targets) && targets.length > 0;
 }
@@ -371,6 +375,16 @@ function createEmbeddedRunControlStyles(doc) {
             transform: translateY(-50%);
             background: rgba(255, 255, 255, 0.14);
         }
+        .host-run-inline-group[data-host-run-inline="blockly"] {
+            margin-left: 4px;
+            padding-left: 8px;
+        }
+        .host-run-inline-group[data-host-run-inline="blockly"]::before {
+            display: none;
+        }
+        .host-run-inline-group[data-host-run-inline="blockly"] + .arco-space-item {
+            margin-left: 4px;
+        }
         .host-run-inline-group > .arco-space-item > button[data-host-run-bound="true"],
         .host-run-inline-group > .arco-space-item > button[data-host-stop-bound="true"] {
             border: none;
@@ -464,6 +478,217 @@ function createEmbeddedRunControlStyles(doc) {
         }
         .host-run-tooltip-popup {
             pointer-events: none;
+        }
+        .arco-layout-header > .arco-tabs .arco-tabs-nav > .arco-tabs-nav-tab {
+            display: none;
+        }
+        .arco-layout-header > .arco-tabs .arco-tabs-nav {
+            display: flex;
+            align-items: center;
+            overflow: visible;
+        }
+        .arco-layout-header > .arco-tabs {
+            overflow: visible;
+        }
+        .arco-layout-header > .arco-tabs .arco-tabs-nav > .arco-tabs-nav-extra {
+            margin-left: auto;
+        }
+        .host-blockly-program-switcher {
+            display: inline-flex;
+            align-items: center;
+            position: relative;
+            flex: 0 0 auto;
+            min-width: 0;
+            margin-right: 12px;
+            gap: 8px;
+        }
+        .host-blockly-program-static-label {
+            color: rgba(255,255,255,0.58);
+            font-size: 12px;
+            line-height: 1;
+            white-space: nowrap;
+        }
+        .host-blockly-program-trigger {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            height: 24px;
+            width: max-content;
+            min-width: 0;
+            max-width: 280px;
+            padding: 0 8px;
+            border: 1px solid rgba(255,255,255,0.10);
+            border-radius: 4px;
+            color: rgba(255,255,255,0.9);
+            background: rgba(255,255,255,0.07);
+            cursor: pointer;
+            font-size: 12px;
+            line-height: 1;
+            transition: background-color 0.16s ease, border-color 0.16s ease;
+        }
+        .host-blockly-program-trigger:hover,
+        .host-blockly-program-switcher.is-open .host-blockly-program-trigger {
+            border-color: rgba(60, 126, 255, 0.48);
+            background: rgba(60, 126, 255, 0.14);
+        }
+        .host-blockly-program-name {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-weight: 600;
+        }
+        .host-blockly-program-caret {
+            width: 0;
+            height: 0;
+            margin-left: auto;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-top: 5px solid rgba(255,255,255,0.56);
+            flex: 0 0 auto;
+        }
+        .host-blockly-program-state {
+            display: inline-flex;
+            align-items: center;
+            height: 16px;
+            padding: 0 5px;
+            border-radius: 4px;
+            color: #ff9a9a;
+            background: rgba(255, 77, 79, 0.14);
+            font-size: 10px;
+            line-height: 1;
+            white-space: nowrap;
+            flex: 0 0 auto;
+        }
+        .host-blockly-program-state.is-running {
+            color: #7BE0A6;
+            background: rgba(35, 195, 112, 0.16);
+        }
+        .host-blockly-program-state.is-compiling,
+        .host-blockly-program-state.is-downloading {
+            color: #ffd37a;
+            background: rgba(255, 183, 77, 0.16);
+        }
+        .host-blockly-program-state.is-paused {
+            color: #8fb8ff;
+            background: rgba(60, 126, 255, 0.16);
+        }
+        .host-blockly-program-menu {
+            display: none;
+            position: absolute;
+            top: 34px;
+            left: 0;
+            z-index: 1002;
+            min-width: 190px;
+            padding: 4px;
+            border: 1px solid rgba(255,255,255,0.10);
+            border-radius: 6px;
+            background: #2f3136;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.28);
+        }
+        .host-blockly-program-switcher.is-open .host-blockly-program-menu {
+            display: block;
+        }
+        .host-blockly-program-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            width: 100%;
+            height: 28px;
+            padding: 0 8px;
+            border: none;
+            border-radius: 4px;
+            color: rgba(255,255,255,0.82);
+            background: transparent;
+            cursor: pointer;
+            font-size: 12px;
+            text-align: left;
+        }
+        .host-blockly-program-option-name {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .host-blockly-program-option-state {
+            display: inline-flex;
+            align-items: center;
+            height: 16px;
+            padding: 0 5px;
+            border-radius: 4px;
+            color: rgba(255,255,255,0.62);
+            background: rgba(255,255,255,0.06);
+            font-size: 10px;
+            line-height: 1;
+            white-space: nowrap;
+            flex: 0 0 auto;
+        }
+        .host-blockly-program-option:hover {
+            background: rgba(255,255,255,0.08);
+        }
+        .host-blockly-program-option.is-active {
+            color: #fff;
+            background: rgba(60, 126, 255, 0.22);
+        }
+        .host-blockly-left-edit {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            height: 28px;
+            padding-left: 10px;
+            border-left: 1px solid rgba(255,255,255,0.12);
+            color: rgba(255,255,255,0.68);
+            font-size: 11px;
+            line-height: 1;
+        }
+        .host-blockly-toolbar-group {
+            display: inline-flex;
+            align-items: center;
+            min-height: 24px;
+            gap: 0;
+            position: relative;
+        }
+        .host-blockly-toolbar-group + .host-blockly-toolbar-group,
+        .host-blockly-toolbar-group + .host-run-inline-group {
+            margin-left: 8px;
+            padding-left: 8px;
+        }
+        .host-blockly-toolbar-group + .host-blockly-toolbar-group::before,
+        .host-blockly-toolbar-group + .host-run-inline-group::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 1px;
+            height: 14px;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.14);
+        }
+        .host-blockly-edit-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            height: 22px;
+            color: rgba(255,255,255,0.68);
+            font-size: 11px;
+            line-height: 1;
+        }
+        .host-blockly-edit-state {
+            display: inline-flex;
+            align-items: center;
+            height: 22px;
+            margin-right: 4px;
+            padding: 0 7px;
+            border-radius: 4px;
+            color: rgba(255,255,255,0.72);
+            background: rgba(255,255,255,0.06);
+            font-size: 11px;
+            line-height: 1;
+        }
+        .host-blockly-edit-state.is-editable {
+            color: #7BE0A6;
+            background: rgba(35, 195, 112, 0.14);
         }
     `;
     doc.head?.appendChild(style);
@@ -622,7 +847,8 @@ function syncExecuteButtonState(button, kind, api) {
     const stopButton = inlineGroup?.querySelector('button[data-host-stop-bound="true"]');
     const actionLabel = isCompiling ? '编译中' : (isDownloading ? '下载中' : (isRunning ? '暂停执行' : (isPaused ? '恢复执行' : (canRun ? '运行' : '请先选择运行模式'))));
 
-    if (kind === 'flow') {
+    const iconButton = button.querySelector('.arco-icon-play-circle, .arco-icon-pause-circle');
+    if (kind === 'flow' || iconButton) {
         const icon = button.querySelector('.arco-icon-play-circle, .arco-icon-pause-circle');
         if (icon) {
             icon.classList.remove('arco-icon-play-circle', 'arco-icon-pause-circle');
@@ -664,11 +890,191 @@ function findVisibleButton(doc, predicate) {
     return preferred || candidates[0] || null;
 }
 
+function getBlocklyProgramTabs(doc) {
+    const ignoreLabels = new Set(['Python', '运行日志', '实时变量', '运行结果']);
+    return [...doc.querySelectorAll('.arco-layout-header .arco-tabs-nav-tab-list > .arco-tabs-tab')]
+        .map((tab) => {
+            const rawLabel = tab.innerText.trim().replace(/\s+/g, ' ');
+            const label = rawLabel.replace(/\(只读\)$/u, '').trim();
+            return {
+                tab,
+                label,
+                isActive: tab.classList.contains('arco-tabs-tab-active')
+            };
+        })
+        .filter((item) => item.label && !ignoreLabels.has(item.label));
+}
+
+function installBlocklyProgramSwitcher(doc) {
+    const nav = doc.querySelector('.arco-layout-header .arco-tabs-nav');
+    const navTab = nav?.querySelector(':scope > .arco-tabs-nav-tab');
+    if (!nav || !navTab) return null;
+
+    let switcher = nav.querySelector(':scope > .host-blockly-program-switcher');
+    if (!switcher) {
+        switcher = doc.createElement('div');
+        switcher.className = 'host-blockly-program-switcher';
+        switcher.innerHTML = `
+            <span class="host-blockly-program-static-label">当前程序</span>
+            <button class="host-blockly-program-trigger" type="button" data-host-tooltip="切换当前程序" aria-haspopup="listbox" aria-expanded="false">
+                <span class="host-blockly-program-name"></span>
+                <span class="host-blockly-program-state is-idle" data-host-tooltip="运行状态：未运行" aria-label="运行状态：未运行">未运行</span>
+                <span class="host-blockly-program-caret" aria-hidden="true"></span>
+            </button>
+            <div class="host-blockly-program-menu" role="listbox"></div>
+        `;
+        nav.insertBefore(switcher, navTab);
+        const trigger = switcher.querySelector('.host-blockly-program-trigger');
+        trigger.addEventListener('click', (event) => {
+            event.stopPropagation();
+            const isOpen = switcher.classList.toggle('is-open');
+            trigger.setAttribute('aria-expanded', String(isOpen));
+        });
+        doc.addEventListener('click', (event) => {
+            if (!switcher.contains(event.target)) {
+                switcher.classList.remove('is-open');
+                trigger.setAttribute('aria-expanded', 'false');
+            }
+        });
+        doc.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                switcher.classList.remove('is-open');
+                trigger.setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
+
+    syncBlocklyProgramSwitcher(doc);
+    return switcher;
+}
+
+function syncBlocklyProgramRunState(doc, unit) {
+    const stateEl = doc.querySelector('.host-blockly-program-state');
+    if (!stateEl) return;
+
+    const runState = unit?.runState || 'idle';
+    const label = getExecutionStateShortLabel(runState);
+    if (stateEl.textContent !== label) {
+        stateEl.textContent = label;
+    }
+    stateEl.classList.remove('is-idle', 'is-compiling', 'is-downloading', 'is-running', 'is-paused');
+    stateEl.classList.add(`is-${runState}`);
+    stateEl.dataset.hostTooltip = `运行状态：${label}`;
+    stateEl.setAttribute('aria-label', `运行状态：${label}`);
+}
+
+function syncBlocklyProgramSwitcher(doc) {
+    const switcher = doc.querySelector('.host-blockly-program-switcher');
+    if (!switcher) return;
+
+    const programs = getBlocklyProgramTabs(doc);
+    const activeProgram = programs.find((item) => item.isActive) || programs[0];
+    const nameEl = switcher.querySelector('.host-blockly-program-name');
+    const trigger = switcher.querySelector('.host-blockly-program-trigger');
+    const menu = switcher.querySelector('.host-blockly-program-menu');
+
+    if (nameEl) {
+        nameEl.textContent = activeProgram?.label || '未选择';
+    }
+    if (trigger) {
+        const label = activeProgram?.label ? `当前程序：${activeProgram.label}` : '当前程序：未选择';
+        trigger.dataset.hostTooltip = '切换当前程序';
+        trigger.setAttribute('aria-label', label);
+    }
+    if (menu) {
+        menu.replaceChildren();
+        programs.forEach((item) => {
+            const option = doc.createElement('button');
+            option.className = 'host-blockly-program-option';
+            option.classList.toggle('is-active', item.isActive);
+            option.type = 'button';
+            option.role = 'option';
+            option.setAttribute('aria-selected', String(item.isActive));
+            const optionName = doc.createElement('span');
+            optionName.className = 'host-blockly-program-option-name';
+            optionName.textContent = item.label;
+            const optionState = doc.createElement('span');
+            optionState.className = 'host-blockly-program-option-state';
+            optionState.textContent = item.isActive
+                ? (doc.querySelector('.host-blockly-program-state')?.textContent.trim() || '未运行')
+                : '未运行';
+            option.append(optionName, optionState);
+            option.addEventListener('click', (event) => {
+                event.stopPropagation();
+                switcher.classList.remove('is-open');
+                trigger?.setAttribute('aria-expanded', 'false');
+                item.tab.click();
+                setTimeout(() => {
+                    syncBlocklyProgramSwitcher(doc);
+                    syncBlocklyHeaderMeta(doc);
+                }, 0);
+            });
+            menu.appendChild(option);
+        });
+    }
+}
+
+function syncBlocklyHeaderMeta(doc) {
+    const editGroup = doc.querySelector('[data-host-blockly-group="edit"]');
+    const switcher = doc.querySelector('.host-blockly-program-switcher');
+    if (!editGroup && !switcher) return;
+
+    const switchEl = switcher?.querySelector('[role="switch"]') || editGroup?.querySelector('[role="switch"]');
+    const editState = editGroup?.querySelector('.host-blockly-edit-state') || switcher?.querySelector('.host-blockly-edit-state');
+    const isEditable = switchEl?.getAttribute('aria-checked') === 'true';
+
+    syncBlocklyProgramSwitcher(doc);
+    if (editState) {
+        const editLabel = isEditable ? '可编辑' : '只读';
+        if (editState.textContent !== editLabel) {
+            editState.textContent = editLabel;
+        }
+        editState.classList.toggle('is-editable', isEditable);
+    }
+    if (switchEl) {
+        const tooltipText = isEditable ? '当前程序可编辑' : '当前程序为只读，开启后可编辑并保存修改';
+        switchEl.dataset.hostTooltip = tooltipText;
+        switchEl.setAttribute('aria-label', isEditable ? '关闭编辑' : '开启编辑');
+    }
+
+    const undoButton = editGroup?.querySelector('#undo');
+    const saveButton = editGroup?.querySelector('#save');
+    const readonlyTooltip = '当前程序为只读，开启编辑后可保存修改';
+    if (undoButton) {
+        undoButton.removeAttribute('title');
+        undoButton.dataset.hostTooltip = isEditable
+            ? (undoButton.disabled ? '暂无可撤销的修改' : '撤销上一步修改')
+            : readonlyTooltip;
+        undoButton.setAttribute('aria-label', '撤销');
+    }
+    if (saveButton) {
+        saveButton.removeAttribute('title');
+        saveButton.dataset.hostTooltip = isEditable
+            ? (saveButton.disabled ? '暂无可保存的修改' : '保存当前程序修改')
+            : readonlyTooltip;
+        saveButton.setAttribute('aria-label', '保存');
+    }
+
+    const viewerButton = doc.querySelector('[data-host-blockly-group="view"] #viewer');
+    if (viewerButton) {
+        viewerButton.removeAttribute('title');
+        viewerButton.dataset.hostTooltip = '查看代码';
+        viewerButton.setAttribute('aria-label', '查看代码');
+    }
+
+}
+
 function installBlocklyRunContext(doc, api) {
     if (!doc) return;
     createEmbeddedRunControlStyles(doc);
+    setupEmbeddedRunTooltip(doc);
 
-    const runButton = findVisibleButton(doc, (button) => button.innerText.trim() === '运行');
+    const runButton = findVisibleButton(doc, (button) => {
+        if (button.dataset.hostRunBound) return false;
+        if (button.innerText.trim() === '运行') return true;
+        if (button.id === 'viewer' || button.id === 'save' || button.id === 'undo') return false;
+        return Boolean(button.querySelector('.arco-icon-play-circle'));
+    });
     const stopButton = findVisibleButton(doc, (button) => button.innerText.trim() === '停止');
     if (!runButton) return;
 
@@ -676,11 +1082,15 @@ function installBlocklyRunContext(doc, api) {
     const stopItem = stopButton?.closest('.arco-space-item') || null;
     if (!hostItem) return;
 
-    let menu = hostItem.parentElement?.querySelector('.host-run-target-wrap[data-host-run-control="blockly"]');
+    const hostSpace = hostItem.parentElement;
+    if (!hostSpace) return;
+    const programSwitcher = installBlocklyProgramSwitcher(doc);
+    syncBlocklyProgramRunState(doc, api.getContext('blockly'));
+    let menu = hostSpace?.querySelector('.host-run-target-wrap[data-host-run-control="blockly"]');
     if (!menu) {
         menu = createRunTargetMenu(doc, api, 'blockly');
-        if (stopItem && stopItem.parentElement === hostItem.parentElement) {
-            hostItem.parentElement.insertBefore(menu, stopItem);
+        if (stopItem && stopItem.parentElement === hostSpace) {
+            hostSpace.insertBefore(menu, stopItem);
         } else {
             hostItem.insertAdjacentElement('afterend', menu);
         }
@@ -699,7 +1109,7 @@ function installBlocklyRunContext(doc, api) {
         inlineGroup = doc.createElement('div');
         inlineGroup.className = 'host-run-inline-group';
         inlineGroup.dataset.hostRunInline = 'blockly';
-        hostItem.parentElement.insertBefore(inlineGroup, hostItem);
+        hostSpace.insertBefore(inlineGroup, hostItem);
         inlineGroup.appendChild(menu);
         inlineGroup.appendChild(hostItem);
         if (stopItem) inlineGroup.appendChild(stopItem);
@@ -711,6 +1121,90 @@ function installBlocklyRunContext(doc, api) {
     }
     if (stopItem && !inlineGroup.contains(stopItem)) {
         inlineGroup.appendChild(stopItem);
+    }
+
+    let editGroup = hostSpace.querySelector('[data-host-blockly-group="edit"]');
+    if (!editGroup) {
+        editGroup = doc.createElement('div');
+        editGroup.className = 'host-blockly-toolbar-group';
+        editGroup.dataset.hostBlocklyGroup = 'edit';
+        hostSpace.insertBefore(editGroup, hostSpace.firstElementChild);
+    }
+
+    let viewGroup = hostSpace.querySelector('[data-host-blockly-group="view"]');
+    if (!viewGroup) {
+        viewGroup = doc.createElement('div');
+        viewGroup.className = 'host-blockly-toolbar-group';
+        viewGroup.dataset.hostBlocklyGroup = 'view';
+        hostSpace.insertBefore(viewGroup, inlineGroup);
+    }
+
+    let runGroup = hostSpace.querySelector('[data-host-blockly-group="run"]');
+    if (!runGroup) {
+        runGroup = doc.createElement('div');
+        runGroup.className = 'host-blockly-toolbar-group';
+        runGroup.dataset.hostBlocklyGroup = 'run';
+        hostSpace.insertBefore(runGroup, inlineGroup);
+    }
+
+    const statusItem = hostSpace.querySelector('.arco-tag')?.closest('.arco-space-item');
+    if (statusItem) {
+        statusItem.classList.add('host-run-hidden');
+    }
+    const switchItem = hostSpace.querySelector('[role="switch"]')?.closest('.arco-space-item');
+    if (switchItem && programSwitcher && !programSwitcher.contains(switchItem)) {
+        let leftEdit = programSwitcher.querySelector('.host-blockly-left-edit');
+        if (!leftEdit) {
+            leftEdit = doc.createElement('span');
+            leftEdit.className = 'host-blockly-left-edit';
+            const editLabel = doc.createElement('span');
+            editLabel.className = 'host-blockly-edit-toggle';
+            editLabel.textContent = '编辑';
+            leftEdit.appendChild(editLabel);
+            programSwitcher.appendChild(leftEdit);
+        }
+        leftEdit.appendChild(switchItem);
+        switchItem.addEventListener('click', () => {
+            setTimeout(() => syncBlocklyHeaderMeta(doc), 0);
+        });
+    }
+    const editState = editGroup.querySelector('.host-blockly-edit-state')
+        || programSwitcher?.querySelector('.host-blockly-edit-state')
+        || doc.createElement('span');
+    editState.className = 'host-blockly-edit-state';
+    if (editState.parentElement !== editGroup) {
+        editGroup.insertBefore(editState, editGroup.firstElementChild);
+    }
+    ['undo', 'save'].forEach((id) => {
+        const item = hostSpace.querySelector(`#${id}`)?.closest('.arco-space-item');
+        if (item && !editGroup.contains(item)) {
+            editGroup.appendChild(item);
+        }
+    });
+    const viewerItem = hostSpace.querySelector('#viewer')?.closest('.arco-space-item');
+    if (viewerItem && !viewGroup.contains(viewerItem)) {
+        viewGroup.appendChild(viewerItem);
+    }
+    if (inlineGroup.parentElement !== runGroup) {
+        runGroup.appendChild(inlineGroup);
+    }
+    syncBlocklyHeaderMeta(doc);
+    if (hostSpace.dataset.hostBlocklyHeaderObserverBound !== 'true') {
+        hostSpace.dataset.hostBlocklyHeaderObserverBound = 'true';
+        const observer = new MutationObserver(() => {
+            doc.defaultView?.requestAnimationFrame(() => syncBlocklyHeaderMeta(doc));
+        });
+        observer.observe(doc.body, {
+            subtree: true,
+            attributes: true,
+            attributeFilter: ['class', 'aria-checked', 'disabled']
+        });
+    }
+    if (programSwitcher && programSwitcher.dataset.hostRunStateSyncBound !== 'true') {
+        programSwitcher.dataset.hostRunStateSyncBound = 'true';
+        api.onChange((nextContext) => {
+            syncBlocklyProgramRunState(doc, nextContext.contexts.blockly);
+        });
     }
 
     if (runButton.dataset.hostRunBound !== 'true') {
