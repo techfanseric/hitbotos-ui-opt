@@ -68,6 +68,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function summarizeExecutionTargets(targets) {
+    if (targets.includes('real') && targets.includes('simulation')) return '孪生';
+
     const labels = [];
     if (targets.includes('real')) labels.push('真机');
     if (targets.includes('simulation')) labels.push('仿真');
@@ -96,7 +98,7 @@ function normalizeExecutionUnit(rawUnit) {
         : [];
 
     base.targets = nextTargets;
-    base.runState = ['idle', 'running', 'paused'].includes(base.runState) ? base.runState : 'idle';
+    base.runState = ['idle', 'compiling', 'downloading', 'running', 'paused'].includes(base.runState) ? base.runState : 'idle';
 
     if (typeof base.feedback !== 'string' || !base.feedback.trim()) {
         base.feedback = '请先勾选真机执行或仿真运行。';
@@ -119,12 +121,6 @@ function normalizeExecutionContext(rawContext) {
     merged.contexts.blockly = normalizeExecutionUnit(merged.contexts.blockly);
     merged.contexts.flow = normalizeExecutionUnit(merged.contexts.flow);
 
-    if (!merged.machineConnected) {
-        ['blockly', 'flow'].forEach((source) => {
-            merged.contexts[source].targets = merged.contexts[source].targets.filter((target) => target !== 'real');
-        });
-    }
-
     return merged;
 }
 
@@ -140,20 +136,33 @@ function loadExecutionContext() {
 
 function saveExecutionContext(context) {
     try {
-        window.localStorage.setItem(EXECUTION_CONTEXT_STORAGE_KEY, JSON.stringify(context));
+        const stableContext = JSON.parse(JSON.stringify(context));
+        Object.values(stableContext.contexts || {}).forEach((unit) => {
+            if (['compiling', 'downloading'].includes(unit.runState)) {
+                unit.runState = 'idle';
+                unit.lastAction = 'idle';
+            }
+        });
+        window.localStorage.setItem(EXECUTION_CONTEXT_STORAGE_KEY, JSON.stringify(stableContext));
     } catch (error) {
         console.warn('保存执行配置失败。', error);
     }
 }
 
 function getExecutionStateLabel(runState) {
-    if (runState === 'running') return '运行中';
-    if (runState === 'paused') return '已暂停';
-    return '待执行';
+    if (runState === 'compiling') return '状态：编译中';
+    if (runState === 'downloading') return '状态：下载中';
+    if (runState === 'running') return '状态：运行中';
+    if (runState === 'paused') return '状态：已暂停';
+    return '状态：未运行';
 }
 
 function canExecuteTargets(targets) {
     return Array.isArray(targets) && targets.length > 0;
+}
+
+function isExecutionBusyState(runState) {
+    return ['compiling', 'downloading', 'running'].includes(runState);
 }
 
 function setupExecutionEnhancements() {
@@ -161,6 +170,41 @@ function setupExecutionEnhancements() {
     const stateBadges = [...document.querySelectorAll('[data-run-state-badge]')];
     let context = loadExecutionContext();
     const listeners = new Set();
+    const runProgressTimers = new Map();
+
+    const clearRunProgress = (source) => {
+        const timers = runProgressTimers.get(source) || [];
+        timers.forEach((timer) => window.clearTimeout(timer));
+        runProgressTimers.delete(source);
+    };
+
+    const queueRunProgress = (source) => {
+        clearRunProgress(source);
+        const unit = context.contexts[source];
+        const hasRealTarget = unit.targets.includes('real');
+        const steps = hasRealTarget
+            ? [
+                { delay: 900, state: 'downloading', action: 'download', feedback: `正在下载到 ${summarizeExecutionTargets(unit.targets)}。` },
+                { delay: 2100, state: 'running', action: 'run', feedback: `已开始运行，当前目标：${summarizeExecutionTargets(unit.targets)}。` }
+            ]
+            : [
+                { delay: 900, state: 'running', action: 'run', feedback: `已开始运行，当前目标：${summarizeExecutionTargets(unit.targets)}。` }
+            ];
+
+        const timers = steps.map((step) => window.setTimeout(() => {
+            const nextUnit = context.contexts[source];
+            if (!nextUnit || !['compiling', 'downloading'].includes(nextUnit.runState)) return;
+            nextUnit.runState = step.state;
+            nextUnit.lastAction = step.action;
+            nextUnit.feedback = step.feedback;
+            render();
+            if (step.state === 'running') {
+                clearRunProgress(source);
+            }
+        }, step.delay));
+
+        runProgressTimers.set(source, timers);
+    };
 
     const render = () => {
         context = normalizeExecutionContext(context);
@@ -177,14 +221,20 @@ function setupExecutionEnhancements() {
         window.dispatchEvent(new CustomEvent('hitbot:execution-context-change', { detail: JSON.parse(JSON.stringify(context)) }));
 
         summaryBadges.forEach((badge) => {
-            badge.textContent = `${getExecutionClusterLabel(activeSource)}：${targetSummary}`;
+            badge.textContent = `运行模式：${targetSummary}`;
         });
 
         stateBadges.forEach((badge) => {
             badge.textContent = stateLabel;
-            badge.classList.remove('is-idle', 'is-built', 'is-running', 'is-error');
+            badge.classList.remove('is-idle', 'is-built', 'is-compiling', 'is-downloading', 'is-running', 'is-paused', 'is-error');
             if (activeUnit.runState === 'running') {
                 badge.classList.add('is-running');
+            } else if (activeUnit.runState === 'compiling') {
+                badge.classList.add('is-compiling');
+            } else if (activeUnit.runState === 'downloading') {
+                badge.classList.add('is-downloading');
+            } else if (activeUnit.runState === 'paused') {
+                badge.classList.add('is-paused');
             } else {
                 badge.classList.add('is-idle');
             }
@@ -213,6 +263,7 @@ function setupExecutionEnhancements() {
         },
         setTargets(source, nextTargets, feedback) {
             const nextSource = ['blockly', 'flow'].includes(source) ? source : context.activeSource;
+            clearRunProgress(nextSource);
             context.activeSource = nextSource;
             context.contexts[nextSource].targets = nextTargets;
             context.contexts[nextSource].runState = 'idle';
@@ -226,6 +277,7 @@ function setupExecutionEnhancements() {
         },
         markRun(source, feedback) {
             const nextSource = ['blockly', 'flow'].includes(source) ? source : context.activeSource;
+            clearRunProgress(nextSource);
             context.activeSource = nextSource;
             if (!canExecuteTargets(context.contexts[nextSource].targets)) {
                 context.contexts[nextSource].runState = 'idle';
@@ -234,13 +286,15 @@ function setupExecutionEnhancements() {
                 render();
                 return;
             }
-            context.contexts[nextSource].runState = 'running';
-            context.contexts[nextSource].lastAction = 'run';
-            context.contexts[nextSource].feedback = feedback || `已执行，当前目标：${summarizeExecutionTargets(context.contexts[nextSource].targets)}。`;
+            context.contexts[nextSource].runState = 'compiling';
+            context.contexts[nextSource].lastAction = 'compile';
+            context.contexts[nextSource].feedback = feedback || `正在编译，当前目标：${summarizeExecutionTargets(context.contexts[nextSource].targets)}。`;
             render();
+            queueRunProgress(nextSource);
         },
         markPause(source, feedback) {
             const nextSource = ['blockly', 'flow'].includes(source) ? source : context.activeSource;
+            clearRunProgress(nextSource);
             context.activeSource = nextSource;
             context.contexts[nextSource].runState = 'paused';
             context.contexts[nextSource].lastAction = 'pause';
@@ -249,6 +303,7 @@ function setupExecutionEnhancements() {
         },
         markResume(source, feedback) {
             const nextSource = ['blockly', 'flow'].includes(source) ? source : context.activeSource;
+            clearRunProgress(nextSource);
             context.activeSource = nextSource;
             if (!canExecuteTargets(context.contexts[nextSource].targets)) {
                 context.contexts[nextSource].runState = 'idle';
@@ -264,6 +319,7 @@ function setupExecutionEnhancements() {
         },
         markStop(source, feedback) {
             const nextSource = ['blockly', 'flow'].includes(source) ? source : context.activeSource;
+            clearRunProgress(nextSource);
             context.activeSource = nextSource;
             context.contexts[nextSource].runState = 'idle';
             context.contexts[nextSource].lastAction = 'stop';
@@ -406,21 +462,93 @@ function createEmbeddedRunControlStyles(doc) {
         .host-run-hidden {
             display: none !important;
         }
+        .host-run-tooltip-popup {
+            pointer-events: none;
+        }
     `;
     doc.head?.appendChild(style);
 }
 
+function setupEmbeddedRunTooltip(doc) {
+    if (!doc || doc.body?.dataset.hostRunTooltipBound === 'true') return;
+
+    const tooltip = doc.createElement('div');
+    tooltip.className = 'arco-trigger-popup arco-trigger-position-bottom arco-tooltip host-run-tooltip-popup';
+    tooltip.style.display = 'none';
+    tooltip.style.zIndex = '1001';
+    tooltip.style.pointerEvents = 'none';
+    tooltip.innerHTML = `
+        <div class="arco-trigger-popup-wrapper" style="transform-origin: 50% 0px;">
+            <div class="arco-trigger-content arco-tooltip-content"></div>
+            <div class="arco-trigger-arrow arco-tooltip-popup-arrow" style="top: 0px; transform: translate(-50%, -50%) rotate(45deg);"></div>
+        </div>
+    `;
+    doc.body.appendChild(tooltip);
+    doc.body.dataset.hostRunTooltipBound = 'true';
+
+    const hideTooltip = () => {
+        tooltip.style.display = 'none';
+    };
+
+    const showTooltip = (target) => {
+        const content = target.dataset.hostTooltip;
+        if (!content) return;
+
+        const contentEl = tooltip.querySelector('.arco-tooltip-content');
+        const arrowEl = tooltip.querySelector('.arco-tooltip-popup-arrow');
+        contentEl.textContent = content;
+        tooltip.style.display = 'block';
+        tooltip.style.visibility = 'hidden';
+        tooltip.style.left = '0px';
+        tooltip.style.top = '0px';
+
+        const targetRect = target.getBoundingClientRect();
+        const tooltipRect = tooltip.getBoundingClientRect();
+        const left = targetRect.left + (targetRect.width - tooltipRect.width) / 2;
+        const nextLeft = Math.max(6, Math.min(left, doc.documentElement.clientWidth - tooltipRect.width - 6));
+        const top = targetRect.bottom + 8;
+        tooltip.style.left = `${nextLeft}px`;
+        tooltip.style.top = `${top}px`;
+        tooltip.style.visibility = 'visible';
+        if (arrowEl) {
+            const arrowLeft = targetRect.left + targetRect.width / 2 - nextLeft;
+            arrowEl.style.left = `${Math.max(8, Math.min(arrowLeft, tooltipRect.width - 8))}px`;
+        }
+    };
+
+    doc.addEventListener('mouseenter', (event) => {
+        const target = event.target.closest?.('[data-host-tooltip]');
+        if (target) showTooltip(target);
+    }, true);
+
+    doc.addEventListener('mouseleave', (event) => {
+        const target = event.target.closest?.('[data-host-tooltip]');
+        if (target) hideTooltip();
+    }, true);
+
+    doc.addEventListener('focusin', (event) => {
+        const target = event.target.closest?.('[data-host-tooltip]');
+        if (target) showTooltip(target);
+    });
+
+    doc.addEventListener('focusout', hideTooltip);
+    doc.addEventListener('scroll', hideTooltip, true);
+    doc.defaultView?.addEventListener('resize', hideTooltip);
+}
+
 function createRunTargetMenu(doc, api, kind) {
+    setupEmbeddedRunTooltip(doc);
+
     const wrap = doc.createElement('div');
     wrap.className = 'host-run-target-wrap';
     wrap.dataset.hostRunControl = kind;
     wrap.innerHTML = `
         <div class="host-run-target-group" role="group" aria-label="执行目标">
-            <button class="host-run-target-item is-disabled" type="button" data-run-target="real" role="checkbox" aria-checked="false" disabled title="真机">
+            <button class="host-run-target-item" type="button" data-run-target="real" role="checkbox" aria-checked="false">
                 <span class="host-run-target-check" aria-hidden="true"></span>
                 <span class="host-run-target-title">真机</span>
             </button>
-            <button class="host-run-target-item" type="button" data-run-target="simulation" role="checkbox" aria-checked="false" title="仿真">
+            <button class="host-run-target-item" type="button" data-run-target="simulation" role="checkbox" aria-checked="false">
                 <span class="host-run-target-check" aria-hidden="true"></span>
                 <span class="host-run-target-title">仿真</span>
             </button>
@@ -456,24 +584,24 @@ function createRunTargetMenu(doc, api, kind) {
         const unit = nextContext.contexts[kind];
         items.forEach((item) => {
             const target = item.dataset.runTarget;
-            const isDisabled = target === 'real' && !nextContext.machineConnected;
             const isActive = unit.targets.includes(target);
-            const isLocked = unit.runState === 'running';
-            item.disabled = isDisabled;
-            item.classList.toggle('is-disabled', isDisabled);
-            item.classList.toggle('is-locked', isLocked && !isDisabled);
+            const isLocked = isExecutionBusyState(unit.runState);
+            item.disabled = false;
+            item.classList.toggle('is-disabled', false);
+            item.classList.toggle('is-locked', isLocked);
             item.classList.toggle('is-active', isActive);
             item.setAttribute('aria-checked', String(isActive));
             const baseTitle = item.querySelector('.host-run-target-title').textContent;
-            if (isDisabled) {
-                item.title = `${baseTitle}（未连接）`;
-            } else if (isLocked) {
-                item.title = `${baseTitle}（已选中，运行中不可修改）`;
+            let tooltipText;
+            if (isLocked) {
+                tooltipText = `${baseTitle}（执行中不可修改）`;
             } else if (isActive) {
-                item.title = `${baseTitle}（已选中）`;
+                tooltipText = `${baseTitle}（已选中）`;
             } else {
-                item.title = `${baseTitle}（未选中）`;
+                tooltipText = `${baseTitle}（未选中）`;
             }
+            item.dataset.hostTooltip = tooltipText;
+            item.setAttribute('aria-label', tooltipText);
         });
     });
 
@@ -484,29 +612,41 @@ function syncExecuteButtonState(button, kind, api) {
     if (!button) return;
     const current = api.getContext(kind);
     const isRunning = current.runState === 'running';
+    const isCompiling = current.runState === 'compiling';
+    const isDownloading = current.runState === 'downloading';
     const isPaused = current.runState === 'paused';
     const canRun = canExecuteTargets(current.targets);
+    const isPreparing = isCompiling || isDownloading;
     const inlineGroup = button.closest('.host-run-inline-group');
+    const hostItem = button.closest('.arco-space-item');
     const stopButton = inlineGroup?.querySelector('button[data-host-stop-bound="true"]');
+    const actionLabel = isCompiling ? '编译中' : (isDownloading ? '下载中' : (isRunning ? '暂停执行' : (isPaused ? '恢复执行' : (canRun ? '运行' : '请先选择运行模式'))));
 
     if (kind === 'flow') {
         const icon = button.querySelector('.arco-icon-play-circle, .arco-icon-pause-circle');
         if (icon) {
             icon.classList.remove('arco-icon-play-circle', 'arco-icon-pause-circle');
-            icon.classList.add(isRunning ? 'arco-icon-pause-circle' : 'arco-icon-play-circle');
-            icon.innerHTML = isRunning
+            icon.classList.add((isRunning || isPreparing) ? 'arco-icon-pause-circle' : 'arco-icon-play-circle');
+            icon.innerHTML = (isRunning || isPreparing)
                 ? '<path d="M42 24c0 9.941-8.059 18-18 18S6 33.941 6 24 14.059 6 24 6s18 8.059 18 18Z"></path><path d="M19 19v10h1V19h-1ZM28 19v10h1V19h-1Z"></path>'
                 : '<path d="M24 42c9.941 0 18-8.059 18-18S33.941 6 24 6 6 14.059 6 24s8.059 18 18 18Z"></path><path d="M19 17v14l12-7-12-7Z"></path>';
         }
-        button.title = isRunning ? '暂停执行' : (isPaused ? '恢复执行' : (canRun ? '运行' : '请先勾选执行目标'));
     } else {
-        button.textContent = isRunning ? '暂停' : (isPaused ? '恢复' : '运行');
-        button.title = isRunning ? '暂停执行' : (isPaused ? '恢复执行' : (canRun ? '运行' : '请先勾选执行目标'));
+        button.textContent = isCompiling ? '编译中' : (isDownloading ? '下载中' : (isRunning ? '暂停' : (isPaused ? '恢复' : '运行')));
+    }
+    button.removeAttribute('title');
+    button.setAttribute('aria-label', actionLabel);
+    if (!canRun && !isRunning && !isPaused && !isPreparing && hostItem) {
+        hostItem.dataset.hostTooltip = actionLabel;
+        hostItem.setAttribute('aria-label', actionLabel);
+    } else if (hostItem) {
+        delete hostItem.dataset.hostTooltip;
+        hostItem.removeAttribute('aria-label');
     }
 
-    button.disabled = !isRunning && !isPaused && !canRun;
-    button.classList.toggle('arco-btn-disabled', !isRunning && !isPaused && !canRun);
-    inlineGroup?.classList.toggle('is-disabled', !canRun && !isRunning);
+    button.disabled = isPreparing || (!isRunning && !isPaused && !canRun);
+    button.classList.toggle('arco-btn-disabled', isPreparing || (!isRunning && !isPaused && !canRun));
+    inlineGroup?.classList.toggle('is-disabled', !canRun && !isRunning && !isPreparing);
     if (stopButton) {
         stopButton.classList.add('host-run-hidden');
     }

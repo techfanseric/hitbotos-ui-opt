@@ -60,8 +60,8 @@
     height: 28px;
     background: #404040;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 10px;
     padding: 0 12px;
     cursor: move;
 }
@@ -73,6 +73,7 @@
     font-size: 12px;
     font-weight: 500;
     color: #e0e0e0;
+    flex: 0 0 auto;
 }
 
 .window-title i {
@@ -81,32 +82,46 @@
 }
 
 .window-context-badges {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     gap: 6px;
-    margin-left: 10px;
+    margin-left: auto;
+    min-width: 0;
 }
 
 .window-context-badge,
 .window-state-badge {
     display: inline-flex;
     align-items: center;
-    height: 18px;
-    padding: 0 8px;
-    border-radius: 999px;
+    height: 20px;
+    padding: 0 9px;
+    border-radius: 4px;
     font-size: 10px;
     line-height: 1;
     white-space: nowrap;
+    letter-spacing: 0;
 }
 
 .window-context-badge {
-    background: rgba(255, 255, 255, 0.1);
-    color: rgba(255, 255, 255, 0.82);
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.86);
+    border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .window-state-badge {
-    background: rgba(255, 255, 255, 0.08);
-    color: rgba(255, 255, 255, 0.72);
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.78);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    font-weight: 600;
+}
+
+.window-state-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-right: 6px;
+    background: rgba(255, 255, 255, 0.45);
 }
 
 .window-state-badge.is-built {
@@ -114,19 +129,67 @@
     color: #9fc8ff;
 }
 
+.window-state-badge.is-compiling {
+    background: rgba(212, 146, 40, 0.22);
+    color: #ffd391;
+    border-color: rgba(255, 211, 145, 0.24);
+}
+
+.window-state-badge.is-compiling::before {
+    background: #f2b84b;
+    box-shadow: 0 0 0 3px rgba(242, 184, 75, 0.14);
+}
+
+.window-state-badge.is-downloading {
+    background: rgba(42, 114, 197, 0.22);
+    color: #9fc8ff;
+    border-color: rgba(159, 200, 255, 0.24);
+}
+
+.window-state-badge.is-downloading::before {
+    background: #6caeff;
+    box-shadow: 0 0 0 3px rgba(108, 174, 255, 0.14);
+}
+
 .window-state-badge.is-running {
     background: rgba(29, 156, 98, 0.22);
     color: #8cf2bd;
+    border-color: rgba(140, 242, 189, 0.24);
+}
+
+.window-state-badge.is-running::before {
+    background: #42d987;
+    box-shadow: 0 0 0 3px rgba(66, 217, 135, 0.16);
 }
 
 .window-state-badge.is-error {
     background: rgba(189, 28, 34, 0.22);
     color: #ffb5b7;
+    border-color: rgba(255, 181, 183, 0.24);
+}
+
+.window-state-badge.is-error::before {
+    background: #ff7478;
+}
+
+.window-state-badge.is-idle::before {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.window-state-badge.is-paused {
+    background: rgba(212, 146, 40, 0.22);
+    color: #ffd391;
+    border-color: rgba(255, 211, 145, 0.24);
+}
+
+.window-state-badge.is-paused::before {
+    background: #f2b84b;
 }
 
 .window-controls {
     display: flex;
     gap: 4px;
+    flex: 0 0 auto;
 }
 
 body.layout-fs_act .action-window .window-controls {
