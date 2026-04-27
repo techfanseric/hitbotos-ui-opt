@@ -1,0 +1,350 @@
+/* 3D视口机械臂属性浮层 */
+.arm-property-panel {
+    position: fixed;
+    top: 14px;
+    right: 12px;
+    z-index: 1200;
+    width: 308px;
+    max-width: calc(100vw - 24px);
+    max-height: calc(100vh - 100px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    color: #dfdfdf;
+    background: #292929;
+    border: 1px solid #3f3f3f;
+    border-radius: 6px;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.34);
+}
+
+.arm-property-panel.hidden {
+    display: none;
+}
+
+.arm-property-panel.dragging {
+    opacity: 0.88;
+    user-select: none;
+}
+
+.arm-panel-header {
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 0 6px 0 12px;
+    background: #303030;
+    border-bottom: 1px solid #3b3b3b;
+    cursor: move;
+}
+
+.arm-panel-title {
+    min-width: 0;
+    overflow: hidden;
+    color: #eeeeee;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.arm-panel-close {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    padding: 0;
+    color: #a8a8a8;
+    background: transparent;
+    border: 0;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.arm-panel-close i {
+    font-size: 18px;
+}
+
+.arm-panel-close:hover {
+    color: #ffffff;
+    background: rgba(189, 28, 34, 0.22);
+}
+
+.arm-panel-body {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    padding: 10px 12px 12px;
+    overflow-y: auto;
+}
+
+.arm-panel-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.arm-panel-body::-webkit-scrollbar-track {
+    background: #262626;
+}
+
+.arm-panel-body::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 3px;
+}
+
+.arm-coordinate-section {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.arm-section-head,
+.arm-joint-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #d2d2d2;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.arm-head-actions {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #a8a8a8;
+    font-size: 12px;
+}
+
+.arm-head-actions .bi-square-fill {
+    color: #ffffff;
+    font-size: 9px;
+}
+
+.arm-coordinate-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+}
+
+.arm-coordinate-grid label {
+    position: relative;
+    min-width: 0;
+}
+
+.arm-coordinate-grid span {
+    position: absolute;
+    left: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #c8c8c8;
+    font-size: 10px;
+    font-weight: 500;
+    pointer-events: none;
+}
+
+.arm-coordinate-grid input,
+.arm-joint-row input[type="number"] {
+    width: 100%;
+    height: 24px;
+    box-sizing: border-box;
+    color: #e4e4e4;
+    background: #3b3b3b;
+    border: 1px solid #454545;
+    border-radius: 4px;
+    font-size: 11px;
+    outline: none;
+}
+
+.arm-coordinate-grid input {
+    padding: 3px 5px 3px 22px;
+    text-align: right;
+}
+
+.arm-coordinate-grid input:focus,
+.arm-joint-row input[type="number"]:focus {
+    border-color: #BD1C22;
+    box-shadow: 0 0 0 2px rgba(189, 28, 34, 0.18);
+}
+
+.arm-teach-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-top: 2px;
+}
+
+.arm-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+    color: #d1d1d1;
+    font-size: 12px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.arm-checkbox input {
+    display: none;
+}
+
+.arm-checkbox span {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    background: #eee9e5;
+    border: 1px solid #dad2ce;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.arm-checkbox input:checked + span {
+    background: #BD1C22;
+    border-color: #BD1C22;
+    box-shadow: inset 0 0 0 4px #f0ebe7;
+}
+
+.arm-secondary-btn,
+.arm-joint-toolbar button,
+.arm-mount-btn {
+    color: #d7d7d7;
+    background: #424242;
+    border: 1px solid #555;
+    border-radius: 4px;
+    box-shadow: none;
+    cursor: pointer;
+}
+
+.arm-secondary-btn {
+    height: 25px;
+    padding: 0 10px;
+    font-size: 12px;
+}
+
+.arm-secondary-btn:hover,
+.arm-joint-toolbar button:hover,
+.arm-mount-btn:hover {
+    color: #ffffff;
+    background: #4e4e4e;
+    border-color: #686868;
+}
+
+.arm-joint-toolbar {
+    gap: 6px;
+    padding-top: 1px;
+}
+
+.arm-joint-toolbar span {
+    flex: 1;
+}
+
+.arm-joint-toolbar button {
+    height: 25px;
+    min-width: 44px;
+    padding: 0 8px;
+    font-size: 12px;
+}
+
+.arm-joint-list {
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+}
+
+.arm-joint-row {
+    display: grid;
+    grid-template-columns: 24px minmax(0, 1fr) 70px;
+    align-items: center;
+    gap: 8px;
+}
+
+.arm-joint-row > span {
+    color: #d6d6d6;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.arm-joint-row input[type="range"] {
+    width: 100%;
+    height: 4px;
+    margin: 0;
+    appearance: none;
+    -webkit-appearance: none;
+    background: #c8c8c8;
+    border-radius: 999px;
+    outline: none;
+}
+
+.arm-joint-row input[type="range"]::-webkit-slider-thumb {
+    width: 18px;
+    height: 18px;
+    appearance: none;
+    -webkit-appearance: none;
+    background: #eeeeee;
+    border: 1px solid #d4d4d4;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+}
+
+.arm-joint-row input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background: #eeeeee;
+    border: 1px solid #d4d4d4;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+}
+
+.arm-joint-row input[type="range"]::-webkit-slider-thumb:hover {
+    border-color: #BD1C22;
+}
+
+.arm-joint-row input[type="number"] {
+    padding: 3px 7px;
+    color: #4c4c4c;
+    background: #eeeeee;
+    border-color: #d4d4d4;
+    text-align: right;
+}
+
+.arm-mount-btn {
+    align-self: flex-start;
+    min-width: 64px;
+    height: 26px;
+    margin-top: 1px;
+    padding: 0 12px;
+    color: #ffffff;
+    background: #BD1C22;
+    border-color: #BD1C22;
+    font-size: 12px;
+}
+
+.arm-mount-btn:hover {
+    background: #a9181d;
+    border-color: #a9181d;
+}
+
+@media (max-width: 760px) {
+    .arm-property-panel {
+        right: 12px;
+        top: 12px;
+    }
+
+    .arm-panel-title {
+        font-size: 15px;
+    }
+
+    .arm-coordinate-grid {
+        gap: 6px;
+    }
+
+    .arm-joint-row {
+        grid-template-columns: 28px minmax(0, 1fr) 74px;
+    }
+}

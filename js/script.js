@@ -46,6 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupTimelineToggle();
     setupToolbarControls();
     setupToolbarResponsive();
+    setupArmPropertyPanel();
     setupWindowSwapControls();
     initializeWindowStates();
     setupPanelTabs();
@@ -1537,6 +1538,125 @@ function setupToolbarResponsive() {
         // 降级方案：监听窗口resize事件
         window.addEventListener('resize', checkSpace);
     }
+}
+
+// 设置3D视口机械臂属性浮层
+function setupArmPropertyPanel() {
+    const panel = document.getElementById('armPropertyPanel');
+    if (!panel) return;
+
+    const viewport = panel.closest('.center-content');
+    const header = panel.querySelector('.arm-panel-header');
+    const closeBtn = panel.querySelector('.arm-panel-close');
+    const openBtns = document.querySelectorAll('[data-arm-panel-toggle]');
+    const jointRows = panel.querySelectorAll('.arm-joint-row');
+    let isDragging = false;
+    let hasCustomPosition = false;
+    let dragOffset = { x: 0, y: 0 };
+
+    function clampPanelPosition(left, top) {
+        const panelRect = panel.getBoundingClientRect();
+        const padding = 12;
+        const maxLeft = Math.max(padding, window.innerWidth - panelRect.width - padding);
+        const maxTop = Math.max(padding, window.innerHeight - 56);
+
+        return {
+            left: Math.max(padding, Math.min(left, maxLeft)),
+            top: Math.max(padding, Math.min(top, maxTop))
+        };
+    }
+
+    function setPanelPosition(left, top) {
+        const nextPosition = clampPanelPosition(left, top);
+        panel.style.left = `${nextPosition.left}px`;
+        panel.style.top = `${nextPosition.top}px`;
+        panel.style.right = 'auto';
+    }
+
+    function setInitialPanelPosition() {
+        if (!viewport || hasCustomPosition || panel.classList.contains('hidden')) return;
+
+        const viewportRect = viewport.getBoundingClientRect();
+        const panelRect = panel.getBoundingClientRect();
+        const padding = 12;
+        const nextLeft = Math.min(
+            viewportRect.right - panelRect.width - padding,
+            window.innerWidth - panelRect.width - padding
+        );
+        const nextTop = viewportRect.top + padding;
+
+        setPanelPosition(Math.max(padding, nextLeft), Math.max(padding, nextTop));
+    }
+
+    function showPanel() {
+        panel.classList.remove('hidden');
+        window.requestAnimationFrame(setInitialPanelPosition);
+    }
+
+    closeBtn?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        panel.classList.add('hidden');
+    });
+
+    openBtns.forEach(btn => {
+        btn.addEventListener('click', showPanel);
+    });
+
+    header?.addEventListener('mousedown', (e) => {
+        if (e.target.closest('.arm-panel-close')) return;
+
+        const panelRect = panel.getBoundingClientRect();
+        isDragging = true;
+        hasCustomPosition = true;
+        panel.classList.add('dragging');
+        dragOffset = {
+            x: e.clientX - panelRect.left,
+            y: e.clientY - panelRect.top
+        };
+        panel.style.left = `${panelRect.left}px`;
+        panel.style.top = `${panelRect.top}px`;
+        panel.style.right = 'auto';
+        e.preventDefault();
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+
+        setPanelPosition(
+            e.clientX - dragOffset.x,
+            e.clientY - dragOffset.y
+        );
+    });
+
+    document.addEventListener('mouseup', () => {
+        if (!isDragging) return;
+        isDragging = false;
+        panel.classList.remove('dragging');
+    });
+
+    jointRows.forEach(row => {
+        const range = row.querySelector('input[type="range"]');
+        const valueInput = row.querySelector('input[type="number"]');
+        if (!range || !valueInput) return;
+
+        range.addEventListener('input', () => {
+            valueInput.value = Number(range.value).toFixed(3);
+        });
+
+        valueInput.addEventListener('input', () => {
+            range.value = valueInput.value;
+        });
+    });
+
+    if (typeof ResizeObserver !== 'undefined' && viewport) {
+        const observer = new ResizeObserver(() => {
+            setInitialPanelPosition();
+        });
+        observer.observe(viewport);
+        window.armPropertyPanelResizeObserver = observer;
+    }
+
+    window.requestAnimationFrame(setInitialPanelPosition);
 }
 
 // 设置窗口控制功能

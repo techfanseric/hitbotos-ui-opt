@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="css/simulator-toolbar.css">
     <link rel="stylesheet" href="css/panel-tabs.css">
     <link rel="stylesheet" href="css/panel-ui-components.css">
+    <link rel="stylesheet" href="css/arm-property-panel.css">
     <link rel="stylesheet" href="css/device-library-panel.css">
 </head>
 <body>
@@ -288,7 +289,7 @@
                                     <i class="bi bi-files"></i>
                                     <span>复制</span>
                                 </button>
-                                <button class="toolbar-btn" title="属性">
+                                <button class="toolbar-btn" title="属性" data-arm-panel-toggle>
                                     <i class="bi bi-info-circle"></i>
                                     <span>属性</span>
                                 </button>
@@ -342,6 +343,101 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                </div>
+                            </div>
+
+                            <div class="arm-property-panel" id="armPropertyPanel" aria-label="机械臂属性面板">
+                                <div class="arm-panel-header">
+                                    <div class="arm-panel-title">Z-Arm S622_1 - 属性面板</div>
+                                    <button class="arm-panel-close" type="button" title="关闭" aria-label="关闭属性面板">
+                                        <i class="bi bi-x"></i>
+                                    </button>
+                                </div>
+                                <div class="arm-panel-body">
+                                    <div class="arm-coordinate-section">
+                                        <div class="arm-section-head">
+                                            <span>世界坐标</span>
+                                            <div class="arm-head-actions" aria-hidden="true">
+                                                <i class="bi bi-copy"></i>
+                                                <i class="bi bi-square-fill"></i>
+                                                <i class="bi bi-arrow-clockwise"></i>
+                                                <i class="bi bi-sliders"></i>
+                                                <i class="bi bi-graph-up"></i>
+                                            </div>
+                                        </div>
+                                        <div class="arm-coordinate-grid">
+                                            <label><span>X</span><input type="number" value="237.985" step="0.001"></label>
+                                            <label><span>Y</span><input type="number" value="525.006" step="0.001"></label>
+                                            <label><span>Z</span><input type="number" value="0.000" step="0.001"></label>
+                                            <label><span>RX</span><input type="number" value="0.000" step="0.001"></label>
+                                            <label><span>RY</span><input type="number" value="0.000" step="0.001"></label>
+                                            <label><span>RZ</span><input type="number" value="0.000" step="0.001"></label>
+                                        </div>
+                                    </div>
+
+                                    <div class="arm-coordinate-section">
+                                        <div class="arm-section-head">笛卡尔设置</div>
+                                        <div class="arm-coordinate-grid">
+                                            <label><span>X</span><input type="number" value="-520.00" step="0.01"></label>
+                                            <label><span>Y</span><input type="number" value="-202.00" step="0.01"></label>
+                                            <label><span>Z</span><input type="number" value="38.00" step="0.01"></label>
+                                            <label><span>RX</span><input type="number" value="90.00" step="0.01"></label>
+                                            <label><span>RY</span><input type="number" value="0.00" step="0.01"></label>
+                                            <label><span>RZ</span><input type="number" value="0.00" step="0.01"></label>
+                                        </div>
+                                    </div>
+
+                                    <div class="arm-teach-row">
+                                        <label class="arm-checkbox">
+                                            <input type="checkbox">
+                                            <span></span>
+                                            拖拽示教
+                                        </label>
+                                        <button class="arm-secondary-btn" type="button">添加目标点</button>
+                                    </div>
+
+                                    <div class="arm-joint-toolbar">
+                                        <span>关节信息</span>
+                                        <button type="button">归零</button>
+                                        <button type="button">复制</button>
+                                        <button type="button">粘贴</button>
+                                    </div>
+
+                                    <div class="arm-joint-list">
+                                        <label class="arm-joint-row">
+                                            <span>J1</span>
+                                            <input type="range" min="-180" max="180" value="0">
+                                            <input type="number" value="0.000" step="0.001">
+                                        </label>
+                                        <label class="arm-joint-row">
+                                            <span>J2</span>
+                                            <input type="range" min="-180" max="180" value="45">
+                                            <input type="number" value="0.000" step="0.001">
+                                        </label>
+                                        <label class="arm-joint-row">
+                                            <span>J3</span>
+                                            <input type="range" min="-180" max="180" value="0">
+                                            <input type="number" value="0.000" step="0.001">
+                                        </label>
+                                        <label class="arm-joint-row">
+                                            <span>J4</span>
+                                            <input type="range" min="-180" max="180" value="45">
+                                            <input type="number" value="0.000" step="0.001">
+                                        </label>
+                                        <label class="arm-joint-row">
+                                            <span>J5</span>
+                                            <input type="range" min="-180" max="180" value="0">
+                                            <input type="number" value="0.000" step="0.001">
+                                        </label>
+                                        <label class="arm-joint-row">
+                                            <span>J6</span>
+                                            <input type="range" min="-180" max="180" value="0">
+                                            <input type="number" value="0.000" step="0.001">
+                                        </label>
+                                    </div>
+
+                                    <button class="arm-mount-btn" type="button">挂载</button>
                                 </div>
                             </div>
 
