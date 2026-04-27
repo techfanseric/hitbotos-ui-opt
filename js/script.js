@@ -58,6 +58,13 @@ document.addEventListener('DOMContentLoaded', function() {
         window.getDeviceLibraryPanel = module.getDeviceLibraryPanel;
         window.initDeviceLibraryPanel();
     });
+
+    // 初始化 3D 绑定弹窗
+    import('./binding-panel.js').then(module => {
+        window.initBindingPanel = module.initBindingPanel;
+        window.getBindingPanel = module.getBindingPanel;
+        window.initBindingPanel();
+    });
     
     // 确保所有窗口控制状态正确
     updateAllWindowControls();
@@ -1487,6 +1494,13 @@ function setupToolbarControls() {
                 if (devicePanel) {
                     devicePanel.toggle();
                     // 切换按钮激活状态
+                    this.classList.toggle('active');
+                }
+            } else if (toolType === 'bind') {
+                // 绑定按钮：打开拓扑模型到 3D 模型的绑定弹窗
+                const bindingPanel = window.getBindingPanel?.();
+                if (bindingPanel) {
+                    bindingPanel.toggle();
                     this.classList.toggle('active');
                 }
             } else {
