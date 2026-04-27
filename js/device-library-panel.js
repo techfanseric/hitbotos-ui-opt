@@ -11,6 +11,9 @@ class DeviceLibraryPanel {
         this.dragOffset = { x: 0, y: 0 };
         this.selectedDevice = null;
         this.collapsedCategories = new Set();
+        this.detailPopup = null;
+        this.hoverTimer = null;
+        this.hoveredCard = null;
     }
 
     // 初始化面板
@@ -57,6 +60,9 @@ class DeviceLibraryPanel {
         // 添加到 body
         document.body.insertAdjacentHTML('beforeend', panelHTML);
         this.panel = document.getElementById('deviceLibraryPanel');
+        this.detailPopup = document.createElement('div');
+        this.detailPopup.className = 'device-detail-popup hidden';
+        document.body.appendChild(this.detailPopup);
     }
 
     // 设置初始位置
@@ -176,9 +182,18 @@ class DeviceLibraryPanel {
                 this.selectDevice(card);
             });
 
+            card.addEventListener('mouseenter', () => {
+                this.queueDeviceDetail(card);
+            });
+
+            card.addEventListener('mouseleave', () => {
+                this.hideDeviceDetail();
+            });
+
             // 拖拽开始
             card.addEventListener('dragstart', (e) => {
                 card.classList.add('dragging');
+                this.hideDeviceDetail();
                 e.dataTransfer.setData('deviceId', card.dataset.deviceId);
                 e.dataTransfer.setData('deviceName', card.dataset.deviceName);
                 e.dataTransfer.effectAllowed = 'copy';
@@ -210,6 +225,109 @@ class DeviceLibraryPanel {
         console.log('选中设备:', this.selectedDevice);
     }
 
+    // 延迟展示设备详情
+    queueDeviceDetail(card) {
+        this.clearHoverTimer();
+        this.hoveredCard = card;
+        this.hoverTimer = window.setTimeout(() => {
+            if (this.hoveredCard === card && card.isConnected) {
+                this.showDeviceDetail(card);
+            }
+        }, 500);
+    }
+
+    // 清除悬停定时器
+    clearHoverTimer() {
+        if (this.hoverTimer) {
+            window.clearTimeout(this.hoverTimer);
+            this.hoverTimer = null;
+        }
+    }
+
+    // 展示设备详情浮层
+    showDeviceDetail(card) {
+        if (!this.detailPopup) return;
+
+        const device = this.getDeviceByCard(card);
+        if (!device) return;
+
+        this.detailPopup.innerHTML = this.createDeviceDetailHTML(device, card.dataset.category);
+        this.detailPopup.classList.remove('hidden');
+        this.positionDeviceDetail(card);
+    }
+
+    // 隐藏设备详情浮层
+    hideDeviceDetail() {
+        this.clearHoverTimer();
+        this.hoveredCard = null;
+
+        if (this.detailPopup) {
+            this.detailPopup.classList.add('hidden');
+            this.detailPopup.innerHTML = '';
+        }
+    }
+
+    // 根据卡片查找设备数据
+    getDeviceByCard(card) {
+        const category = DEVICE_DATA.find(item => item.category === card.dataset.category);
+        return category?.devices.find(device => device.id === card.dataset.deviceId);
+    }
+
+    // 创建设备详情 HTML
+    createDeviceDetailHTML(device, categoryName) {
+        const imageHTML = device.detailImage
+            ? `<img src="${this.escapeHTML(device.detailImage)}" alt="${this.escapeHTML(device.name)}">`
+            : `<div class="device-detail-image-fallback"><i class="bi ${this.escapeHTML(device.icon)}"></i></div>`;
+
+        const parametersHTML = (device.detailParameters || []).map(parameter => {
+            const value = parameter.value ? `：${this.escapeHTML(parameter.value)}` : '';
+            return `<li><span>${this.escapeHTML(parameter.label)}${value}</span></li>`;
+        }).join('');
+
+        return `
+            <div class="device-detail-image">
+                ${imageHTML}
+            </div>
+            <div class="device-detail-content">
+                <div class="device-detail-title">${this.escapeHTML(device.name)}</div>
+                <div class="device-detail-category">${this.escapeHTML(categoryName)}</div>
+                <ul class="device-detail-parameters">
+                    ${parametersHTML}
+                </ul>
+            </div>
+        `;
+    }
+
+    // 定位详情浮层，优先显示在面板右侧
+    positionDeviceDetail(card) {
+        const gap = 12;
+        const cardRect = card.getBoundingClientRect();
+        const popupRect = this.detailPopup.getBoundingClientRect();
+        const viewportPadding = 12;
+
+        let left = cardRect.right + gap;
+        if (left + popupRect.width > window.innerWidth - viewportPadding) {
+            left = cardRect.left - popupRect.width - gap;
+        }
+
+        let top = cardRect.top + (cardRect.height - popupRect.height) / 2;
+        top = Math.max(viewportPadding, Math.min(top, window.innerHeight - popupRect.height - viewportPadding));
+        left = Math.max(viewportPadding, Math.min(left, window.innerWidth - popupRect.width - viewportPadding));
+
+        this.detailPopup.style.left = `${left}px`;
+        this.detailPopup.style.top = `${top}px`;
+    }
+
+    // 基础 HTML 转义，避免设备名称或参数破坏 DOM
+    escapeHTML(value) {
+        return String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
     // 设置事件监听器
     setupEventListeners() {
         // 关闭按钮
@@ -219,6 +337,7 @@ class DeviceLibraryPanel {
         // 搜索输入
         const searchInput = this.panel.querySelector('#deviceSearchInput');
         searchInput.addEventListener('input', (e) => {
+            this.hideDeviceDetail();
             this.renderDevices(e.target.value);
         });
 
@@ -254,6 +373,7 @@ class DeviceLibraryPanel {
             // 只在点击标题栏时拖动（不包括关闭按钮）
             if (e.target.closest('.panel-close-btn')) return;
 
+            this.hideDeviceDetail();
             this.isDragging = true;
             this.panel.classList.add('dragging');
 
@@ -281,6 +401,7 @@ class DeviceLibraryPanel {
 
             this.panel.style.left = newLeft + 'px';
             this.panel.style.top = newTop + 'px';
+            this.hideDeviceDetail();
         });
 
         document.addEventListener('mouseup', () => {
@@ -314,6 +435,7 @@ class DeviceLibraryPanel {
     hide() {
         this.panel.classList.add('hidden');
         this.isVisible = false;
+        this.hideDeviceDetail();
     }
 
     // 获取选中的设备
