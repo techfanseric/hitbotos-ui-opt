@@ -1542,19 +1542,16 @@ function setupToolbarResponsive() {
 
 // 设置3D视口机械臂属性浮层
 function setupArmPropertyPanel() {
-    const panel = document.getElementById('armPropertyPanel');
-    if (!panel) return;
+    const sourcePanel = document.getElementById('armPropertyPanel');
+    if (!sourcePanel) return;
 
-    const viewport = panel.closest('.center-content');
-    const header = panel.querySelector('.arm-panel-header');
-    const closeBtn = panel.querySelector('.arm-panel-close');
+    const viewport = sourcePanel.closest('.center-content');
+    const panels = createArmPropertyPanelVariants(sourcePanel);
     const openBtns = document.querySelectorAll('[data-arm-panel-toggle]');
-    const jointRows = panel.querySelectorAll('.arm-joint-row');
-    let isDragging = false;
-    let hasCustomPosition = false;
-    let dragOffset = { x: 0, y: 0 };
+    const panelStates = new Map();
+    let activeDragState = null;
 
-    function clampPanelPosition(left, top) {
+    function clampPanelPosition(panel, left, top) {
         const panelRect = panel.getBoundingClientRect();
         const padding = 12;
         const maxLeft = Math.max(padding, window.innerWidth - panelRect.width - padding);
@@ -1566,97 +1563,166 @@ function setupArmPropertyPanel() {
         };
     }
 
-    function setPanelPosition(left, top) {
-        const nextPosition = clampPanelPosition(left, top);
+    function setPanelPosition(panel, left, top) {
+        const nextPosition = clampPanelPosition(panel, left, top);
         panel.style.left = `${nextPosition.left}px`;
         panel.style.top = `${nextPosition.top}px`;
         panel.style.right = 'auto';
     }
 
-    function setInitialPanelPosition() {
-        if (!viewport || hasCustomPosition || panel.classList.contains('hidden')) return;
+    function setInitialPanelPositions() {
+        if (!viewport) return;
 
         const viewportRect = viewport.getBoundingClientRect();
-        const panelRect = panel.getBoundingClientRect();
+        const visiblePanels = panels.filter(panel => !panel.classList.contains('hidden'));
         const padding = 12;
-        const nextLeft = Math.min(
-            viewportRect.right - panelRect.width - padding,
-            window.innerWidth - panelRect.width - padding
-        );
-        const nextTop = viewportRect.top + padding;
+        const gap = 12;
+        const availableLeft = Math.max(padding, viewportRect.left + padding);
+        const anchorRight = Math.min(viewportRect.right - padding, window.innerWidth - padding);
+        const totalPanelWidth = visiblePanels.reduce((sum, panel) => sum + panel.getBoundingClientRect().width, 0);
+        const totalWidth = totalPanelWidth + Math.max(0, visiblePanels.length - 1) * gap;
+        const canPlaceSideBySide = anchorRight - totalWidth >= availableLeft;
+        let nextLeft = anchorRight - totalWidth;
 
-        setPanelPosition(Math.max(padding, nextLeft), Math.max(padding, nextTop));
+        visiblePanels.forEach((panel, index) => {
+            const state = panelStates.get(panel);
+            if (state?.hasCustomPosition) return;
+
+            const panelRect = panel.getBoundingClientRect();
+            const sideBySideLeft = nextLeft;
+            const cascadeLeft = index % 2 === 0
+                ? Math.max(padding, anchorRight - panelRect.width - Math.floor(index / 2) * 24)
+                : padding + Math.floor(index / 2) * 24;
+            const nextTop = viewportRect.top + 60 + (canPlaceSideBySide ? 0 : index * 34);
+
+            setPanelPosition(
+                panel,
+                Math.max(padding, canPlaceSideBySide ? sideBySideLeft : cascadeLeft),
+                Math.max(padding, nextTop)
+            );
+            panel.style.zIndex = String(1200 + index);
+            nextLeft += panelRect.width + gap;
+        });
     }
 
-    function showPanel() {
-        panel.classList.remove('hidden');
-        window.requestAnimationFrame(setInitialPanelPosition);
+    function showPanels() {
+        panels.forEach(panel => panel.classList.remove('hidden'));
+        window.requestAnimationFrame(setInitialPanelPositions);
     }
 
-    closeBtn?.addEventListener('click', (e) => {
-        e.stopPropagation();
-        panel.classList.add('hidden');
+    panels.forEach(panel => {
+        const header = panel.querySelector('.arm-panel-header');
+        const closeBtn = panel.querySelector('.arm-panel-close');
+        const jointRows = panel.querySelectorAll('.arm-joint-row');
+        panelStates.set(panel, { hasCustomPosition: false });
+
+        closeBtn?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            panel.classList.add('hidden');
+        });
+
+        header?.addEventListener('mousedown', (e) => {
+            if (e.target.closest('.arm-panel-close')) return;
+
+            const panelRect = panel.getBoundingClientRect();
+            const state = panelStates.get(panel);
+            state.hasCustomPosition = true;
+            activeDragState = {
+                panel,
+                offsetX: e.clientX - panelRect.left,
+                offsetY: e.clientY - panelRect.top
+            };
+
+            panel.classList.add('dragging');
+            panel.style.left = `${panelRect.left}px`;
+            panel.style.top = `${panelRect.top}px`;
+            panel.style.right = 'auto';
+            e.preventDefault();
+        });
+
+        jointRows.forEach(row => {
+            const range = row.querySelector('input[type="range"]');
+            const valueInput = row.querySelector('input[type="number"]');
+            if (!range || !valueInput) return;
+
+            range.addEventListener('input', () => {
+                valueInput.value = Number(range.value).toFixed(3);
+            });
+
+            valueInput.addEventListener('input', () => {
+                range.value = valueInput.value;
+            });
+        });
     });
 
     openBtns.forEach(btn => {
-        btn.addEventListener('click', showPanel);
-    });
-
-    header?.addEventListener('mousedown', (e) => {
-        if (e.target.closest('.arm-panel-close')) return;
-
-        const panelRect = panel.getBoundingClientRect();
-        isDragging = true;
-        hasCustomPosition = true;
-        panel.classList.add('dragging');
-        dragOffset = {
-            x: e.clientX - panelRect.left,
-            y: e.clientY - panelRect.top
-        };
-        panel.style.left = `${panelRect.left}px`;
-        panel.style.top = `${panelRect.top}px`;
-        panel.style.right = 'auto';
-        e.preventDefault();
+        btn.addEventListener('click', showPanels);
     });
 
     document.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
+        if (!activeDragState) return;
 
         setPanelPosition(
-            e.clientX - dragOffset.x,
-            e.clientY - dragOffset.y
+            activeDragState.panel,
+            e.clientX - activeDragState.offsetX,
+            e.clientY - activeDragState.offsetY
         );
     });
 
     document.addEventListener('mouseup', () => {
-        if (!isDragging) return;
-        isDragging = false;
-        panel.classList.remove('dragging');
-    });
-
-    jointRows.forEach(row => {
-        const range = row.querySelector('input[type="range"]');
-        const valueInput = row.querySelector('input[type="number"]');
-        if (!range || !valueInput) return;
-
-        range.addEventListener('input', () => {
-            valueInput.value = Number(range.value).toFixed(3);
-        });
-
-        valueInput.addEventListener('input', () => {
-            range.value = valueInput.value;
-        });
+        if (!activeDragState) return;
+        activeDragState.panel.classList.remove('dragging');
+        activeDragState = null;
     });
 
     if (typeof ResizeObserver !== 'undefined' && viewport) {
         const observer = new ResizeObserver(() => {
-            setInitialPanelPosition();
+            setInitialPanelPositions();
         });
         observer.observe(viewport);
         window.armPropertyPanelResizeObserver = observer;
     }
 
-    window.requestAnimationFrame(setInitialPanelPosition);
+    window.requestAnimationFrame(setInitialPanelPositions);
+}
+
+function createArmPropertyPanelVariants(sourcePanel) {
+    if (document.getElementById('armPropertyPanelReadout')) {
+        return Array.from(document.querySelectorAll('.arm-property-panel'));
+    }
+
+    const variants = [
+        {
+            id: 'armPropertyPanelReadout',
+            className: 'arm-panel-variant-readout',
+            label: '空间坐标舱',
+            status: ['姿态', 'XYZ']
+        },
+        {
+            id: 'armPropertyPanelCompact',
+            className: 'arm-panel-variant-compact',
+            label: '手柄控制器',
+            status: ['手动', 'PAD']
+        }
+    ];
+
+    let insertAfter = sourcePanel;
+    const createdPanels = variants.map(variant => {
+        const panel = sourcePanel.cloneNode(true);
+        panel.id = variant.id;
+        panel.dataset.armPanelVariant = variant.className.replace('arm-panel-variant-', '');
+        panel.classList.remove('arm-panel-variant-flow');
+        panel.classList.add(variant.className);
+        panel.setAttribute('aria-label', `机械臂属性面板 ${variant.label}`);
+        panel.querySelector('.arm-panel-title').textContent = 'Z-Arm S622_1 - 属性面板';
+        panel.querySelector('.arm-panel-status span:first-child').textContent = variant.status[0];
+        panel.querySelector('.arm-panel-status span:last-child').textContent = variant.status[1];
+        insertAfter.insertAdjacentElement('afterend', panel);
+        insertAfter = panel;
+        return panel;
+    });
+
+    return [sourcePanel, ...createdPanels];
 }
 
 // 设置窗口控制功能

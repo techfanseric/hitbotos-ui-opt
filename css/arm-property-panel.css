@@ -1,7 +1,7 @@
 /* 3D视口机械臂属性浮层 */
 .arm-property-panel {
     position: fixed;
-    top: 14px;
+    top: 56px;
     right: 12px;
     z-index: 1200;
     width: 308px;
@@ -15,6 +15,7 @@
     border: 1px solid #3f3f3f;
     border-radius: 6px;
     box-shadow: 0 12px 28px rgba(0, 0, 0, 0.34);
+    transition: box-shadow 0.18s ease, transform 0.18s ease;
 }
 
 .arm-property-panel.hidden {
@@ -27,7 +28,7 @@
 }
 
 .arm-panel-header {
-    height: 34px;
+    min-height: 38px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -36,6 +37,13 @@
     background: #303030;
     border-bottom: 1px solid #3b3b3b;
     cursor: move;
+}
+
+.arm-panel-title-group {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 }
 
 .arm-panel-title {
@@ -47,6 +55,26 @@
     line-height: 1;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.arm-panel-status {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: auto;
+}
+
+.arm-panel-status span {
+    height: 18px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0 6px;
+    color: #d7d7d7;
+    background: #3b3b3b;
+    border: 1px solid #4a4a4a;
+    border-radius: 3px;
+    font-size: 10px;
+    line-height: 1;
 }
 
 .arm-panel-close {
@@ -330,10 +358,335 @@
     border-color: #a9181d;
 }
 
+/* 版本 A：机械仪表盘，强调真实设备读数和调节手感 */
+.arm-panel-variant-flow {
+    background: #282927;
+    border-color: #484848;
+}
+
+.arm-panel-variant-flow .arm-panel-header {
+    background: #30312d;
+}
+
+.arm-panel-variant-flow .arm-panel-status span:first-child {
+    color: #ffffff;
+    background: #3f3f3f;
+    border-color: #555;
+}
+
+.arm-panel-variant-flow .arm-panel-status span:last-child {
+    color: #ffffff;
+    background: #BD1C22;
+    border-color: #BD1C22;
+}
+
+.arm-panel-variant-flow .arm-coordinate-grid {
+    padding: 3px;
+    background: #232323;
+    border: 1px solid #3d3d3d;
+    border-radius: 4px;
+}
+
+.arm-panel-variant-flow .arm-coordinate-grid input {
+    background: #373735;
+    border-color: #494949;
+}
+
+.arm-panel-variant-flow .arm-joint-list {
+    gap: 10px;
+    padding: 2px 0;
+}
+
+.arm-panel-variant-flow .arm-joint-row {
+    grid-template-columns: 24px minmax(0, 1fr) 68px;
+}
+
+.arm-panel-variant-flow .arm-joint-row input[type="range"] {
+    height: 5px;
+    background:
+        repeating-linear-gradient(90deg, transparent 0 16px, rgba(0, 0, 0, 0.22) 16px 17px),
+        linear-gradient(90deg, #8d8d8d 0%, #d2d2d2 50%, #969696 100%);
+}
+
+.arm-panel-variant-flow .arm-joint-row input[type="range"]::-webkit-slider-thumb {
+    width: 17px;
+    height: 17px;
+    border-color: #f1f1f1;
+    box-shadow: 0 0 0 3px rgba(189, 28, 34, 0.12), 0 1px 3px rgba(0, 0, 0, 0.26);
+}
+
+.arm-panel-variant-flow .arm-joint-row input[type="range"]::-moz-range-thumb {
+    width: 17px;
+    height: 17px;
+    border-color: #f1f1f1;
+    box-shadow: 0 0 0 3px rgba(189, 28, 34, 0.12), 0 1px 3px rgba(0, 0, 0, 0.26);
+}
+
+.arm-panel-variant-flow .arm-mount-btn {
+    border-radius: 4px;
+}
+
+/* 版本 B：空间坐标舱，强调位姿和坐标轴的直观关系 */
+.arm-panel-variant-readout {
+    background: #272727;
+    border-color: #4a4a4a;
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.32);
+}
+
+.arm-panel-variant-readout .arm-panel-header {
+    background: #2d2d2d;
+}
+
+.arm-panel-variant-readout .arm-panel-status span {
+    color: #cfcfcf;
+    background: transparent;
+    border-color: #505050;
+}
+
+.arm-panel-variant-readout .arm-panel-status span:last-child {
+    color: #eeeeee;
+    background: #3d3d3d;
+}
+
+.arm-panel-variant-readout .arm-panel-body {
+    gap: 8px;
+}
+
+.arm-panel-variant-readout .arm-coordinate-grid {
+    gap: 1px;
+    padding: 1px;
+    background: #3c3c3c;
+    border: 1px solid #444;
+    border-radius: 4px;
+}
+
+.arm-panel-variant-readout .arm-coordinate-grid input {
+    height: 23px;
+    background: #343434;
+    border-color: transparent;
+    border-radius: 2px;
+}
+
+.arm-panel-variant-readout .arm-coordinate-grid span {
+    color: #bdbdbd;
+}
+
+.arm-panel-variant-readout .arm-coordinate-grid label:nth-child(1) span,
+.arm-panel-variant-readout .arm-coordinate-grid label:nth-child(4) span {
+    color: #efb2b5;
+}
+
+.arm-panel-variant-readout .arm-coordinate-grid label:nth-child(2) span,
+.arm-panel-variant-readout .arm-coordinate-grid label:nth-child(5) span {
+    color: #b8d4a8;
+}
+
+.arm-panel-variant-readout .arm-coordinate-grid label:nth-child(3) span,
+.arm-panel-variant-readout .arm-coordinate-grid label:nth-child(6) span {
+    color: #adc6e6;
+}
+
+.arm-panel-variant-readout .arm-teach-row {
+    padding: 2px 0 0;
+}
+
+.arm-panel-variant-readout .arm-joint-toolbar {
+    padding-top: 0;
+}
+
+.arm-panel-variant-readout .arm-joint-list {
+    gap: 7px;
+    padding: 6px 0;
+    border-top: 1px solid #393939;
+    border-bottom: 1px solid #393939;
+}
+
+.arm-panel-variant-readout .arm-joint-row {
+    grid-template-columns: 22px minmax(0, 1fr) 66px;
+}
+
+.arm-panel-variant-readout .arm-joint-row > span {
+    color: #cfcfcf;
+    font-size: 12px;
+}
+
+.arm-panel-variant-readout .arm-joint-row input[type="range"] {
+    height: 3px;
+    background: #b8b8b8;
+}
+
+.arm-panel-variant-readout .arm-joint-row input[type="range"]::-webkit-slider-thumb {
+    width: 14px;
+    height: 14px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.28);
+}
+
+.arm-panel-variant-readout .arm-joint-row input[type="range"]::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.28);
+}
+
+.arm-panel-variant-readout .arm-joint-row input[type="number"] {
+    height: 23px;
+    color: #dddddd;
+    background: #3a3a3a;
+    border-color: #4d4d4d;
+}
+
+.arm-panel-variant-readout .arm-mount-btn {
+    color: #e8e8e8;
+    background: #414141;
+    border-color: #5a5a5a;
+}
+
+.arm-panel-variant-readout .arm-mount-btn:hover {
+    background: #4c4c4c;
+    border-color: #707070;
+}
+
+/* 版本 C：手柄控制器，强调按压反馈和玩起来的操控感 */
+.arm-panel-variant-compact {
+    width: 292px;
+    background: #282828;
+    border-color: #424242;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.arm-panel-variant-compact .arm-panel-header {
+    min-height: 34px;
+    background: #2f2f2f;
+}
+
+.arm-panel-variant-compact .arm-panel-title {
+    font-size: 12px;
+}
+
+.arm-panel-variant-compact .arm-panel-status span {
+    height: 17px;
+    padding: 0 5px;
+    color: #d8d8d8;
+    background: #393939;
+}
+
+.arm-panel-variant-compact .arm-panel-status span:last-child {
+    color: #ffffff;
+    background: #505050;
+    border-color: #666;
+}
+
+.arm-panel-variant-compact .arm-panel-body {
+    gap: 7px;
+    padding: 8px 10px 10px;
+}
+
+.arm-panel-variant-compact .arm-coordinate-section {
+    gap: 4px;
+}
+
+.arm-panel-variant-compact .arm-section-head,
+.arm-panel-variant-compact .arm-joint-toolbar {
+    font-size: 11px;
+}
+
+.arm-panel-variant-compact .arm-head-actions {
+    gap: 5px;
+    font-size: 11px;
+}
+
+.arm-panel-variant-compact .arm-coordinate-grid {
+    gap: 4px;
+}
+
+.arm-panel-variant-compact .arm-coordinate-grid input {
+    height: 22px;
+    padding-left: 20px;
+    font-size: 10px;
+}
+
+.arm-panel-variant-compact .arm-teach-row {
+    gap: 8px;
+}
+
+.arm-panel-variant-compact .arm-checkbox {
+    gap: 6px;
+    font-size: 11px;
+}
+
+.arm-panel-variant-compact .arm-checkbox span {
+    width: 16px;
+    height: 16px;
+}
+
+.arm-panel-variant-compact .arm-secondary-btn,
+.arm-panel-variant-compact .arm-joint-toolbar button {
+    height: 24px;
+    min-width: 38px;
+    padding: 0 7px;
+    background: #4b4b4b;
+    border-color: #626262;
+    border-radius: 999px;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset, 0 2px 0 rgba(0, 0, 0, 0.28);
+    font-size: 11px;
+}
+
+.arm-panel-variant-compact .arm-secondary-btn:active,
+.arm-panel-variant-compact .arm-joint-toolbar button:active,
+.arm-panel-variant-compact .arm-mount-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2) inset;
+}
+
+.arm-panel-variant-compact .arm-joint-list {
+    gap: 7px;
+}
+
+.arm-panel-variant-compact .arm-joint-row {
+    grid-template-columns: 20px minmax(0, 1fr) 58px;
+    gap: 7px;
+}
+
+.arm-panel-variant-compact .arm-joint-row > span {
+    font-size: 12px;
+}
+
+.arm-panel-variant-compact .arm-joint-row input[type="range"] {
+    height: 6px;
+    background: #bdbdbd;
+}
+
+.arm-panel-variant-compact .arm-joint-row input[type="range"]::-webkit-slider-thumb {
+    width: 14px;
+    height: 14px;
+}
+
+.arm-panel-variant-compact .arm-joint-row input[type="range"]::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+}
+
+.arm-panel-variant-compact .arm-joint-row input[type="number"] {
+    height: 22px;
+    padding: 2px 5px;
+    font-size: 10px;
+}
+
+.arm-panel-variant-compact .arm-mount-btn {
+    min-width: 62px;
+    height: 26px;
+    padding: 0 10px;
+    color: #f1f1f1;
+    background: #BD1C22;
+    border-color: #BD1C22;
+    border-radius: 999px;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.32);
+    font-size: 11px;
+}
+
 @media (max-width: 760px) {
     .arm-property-panel {
         right: 12px;
-        top: 12px;
+        top: 56px;
     }
 
     .arm-panel-title {
