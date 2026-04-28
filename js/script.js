@@ -1579,7 +1579,9 @@ function setupArmPropertyPanel() {
     const panels = createArmPropertyPanelVariants(sourcePanel);
     const openBtns = document.querySelectorAll('[data-arm-panel-toggle]');
     const panelStates = new Map();
+    const userClosedPanels = new Set(); // 追踪用户手动关闭的面板
     let activeDragState = null;
+    let isAnyPanelDragging = false; // 是否有面板正在被拖动
 
     function clampPanelPosition(panel, left, top) {
         const panelRect = panel.getBoundingClientRect();
@@ -1602,6 +1604,8 @@ function setupArmPropertyPanel() {
 
     function setInitialPanelPositions() {
         if (!viewport) return;
+        // 如果有面板正在被拖动，跳过位置设置
+        if (isAnyPanelDragging) return;
 
         const viewportRect = viewport.getBoundingClientRect();
         const visiblePanels = panels.filter(panel => !panel.classList.contains('hidden'));
@@ -1616,7 +1620,9 @@ function setupArmPropertyPanel() {
 
         visiblePanels.forEach((panel, index) => {
             const state = panelStates.get(panel);
+            // 只有在面板没有自定义位置、不在拖动中、且没有在拖动后被放下时才设置初始位置
             if (state?.hasCustomPosition) return;
+            if (activeDragState && activeDragState.panel === panel) return;
 
             const panelRect = panel.getBoundingClientRect();
             const sideBySideLeft = nextLeft;
@@ -1645,7 +1651,11 @@ function setupArmPropertyPanel() {
     // 根据全屏状态更新面板可见性
     function updatePanelVisibility() {
         if (isSimulationFullscreen()) {
-            panels.forEach(panel => panel.classList.remove('hidden'));
+            panels.forEach(panel => {
+                // 如果用户手动关闭了面板，不再自动显示
+                if (userClosedPanels.has(panel)) return;
+                panel.classList.remove('hidden');
+            });
             window.requestAnimationFrame(setInitialPanelPositions);
         } else {
             panels.forEach(panel => panel.classList.add('hidden'));
@@ -1655,6 +1665,8 @@ function setupArmPropertyPanel() {
     function showPanels() {
         // 只有在全屏状态下才允许显示面板
         if (!isSimulationFullscreen()) return;
+        // 用户手动点击打开按钮时，清除关闭状态并显示所有面板
+        userClosedPanels.clear();
         panels.forEach(panel => panel.classList.remove('hidden'));
         window.requestAnimationFrame(setInitialPanelPositions);
     }
@@ -1668,6 +1680,7 @@ function setupArmPropertyPanel() {
         closeBtn?.addEventListener('click', (e) => {
             e.stopPropagation();
             panel.classList.add('hidden');
+            userClosedPanels.add(panel); // 标记用户手动关闭的面板
         });
 
         header?.addEventListener('mousedown', (e) => {
@@ -1681,6 +1694,13 @@ function setupArmPropertyPanel() {
                 offsetX: e.clientX - panelRect.left,
                 offsetY: e.clientY - panelRect.top
             };
+            isAnyPanelDragging = true; // 标记有面板正在被拖动
+
+            // 关键修复：将所有面板标记为已自定义位置，防止拖动期间被 setInitialPanelPositions 重置
+            panels.forEach(p => {
+                const s = panelStates.get(p);
+                if (s) s.hasCustomPosition = true;
+            });
 
             panel.classList.add('dragging');
             panel.style.left = `${panelRect.left}px`;
@@ -1722,6 +1742,7 @@ function setupArmPropertyPanel() {
         if (!activeDragState) return;
         activeDragState.panel.classList.remove('dragging');
         activeDragState = null;
+        isAnyPanelDragging = false; // 清除拖动状态
     });
 
     // 监听窗口大小变化，检测全屏状态变化
