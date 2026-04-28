@@ -1635,7 +1635,26 @@ function setupArmPropertyPanel() {
         });
     }
 
+    // 检查仿真窗口是否处于全屏状态
+    function isSimulationFullscreen() {
+        if (!layoutManager) return false;
+        const state = layoutManager.getState();
+        return state.fullscreenWindow?.classList.contains('simulation-window');
+    }
+
+    // 根据全屏状态更新面板可见性
+    function updatePanelVisibility() {
+        if (isSimulationFullscreen()) {
+            panels.forEach(panel => panel.classList.remove('hidden'));
+            window.requestAnimationFrame(setInitialPanelPositions);
+        } else {
+            panels.forEach(panel => panel.classList.add('hidden'));
+        }
+    }
+
     function showPanels() {
+        // 只有在全屏状态下才允许显示面板
+        if (!isSimulationFullscreen()) return;
         panels.forEach(panel => panel.classList.remove('hidden'));
         window.requestAnimationFrame(setInitialPanelPositions);
     }
@@ -1705,15 +1724,23 @@ function setupArmPropertyPanel() {
         activeDragState = null;
     });
 
+    // 监听窗口大小变化，检测全屏状态变化
     if (typeof ResizeObserver !== 'undefined' && viewport) {
         const observer = new ResizeObserver(() => {
             setInitialPanelPositions();
+            updatePanelVisibility();
         });
         observer.observe(viewport);
         window.armPropertyPanelResizeObserver = observer;
     }
 
-    window.requestAnimationFrame(setInitialPanelPositions);
+    // 监听布局管理器状态变化（通过定时检查）
+    const stateCheckInterval = setInterval(() => {
+        updatePanelVisibility();
+    }, 500);
+
+    // 初始检查（延迟执行确保布局管理器已初始化）
+    setTimeout(updatePanelVisibility, 100);
 }
 
 function createArmPropertyPanelVariants(sourcePanel) {
