@@ -1140,4 +1140,199 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
     background: #666;
+}
+
+/* ========================================
+   3D 视口模型样本（用于绑定测试）
+   ======================================== */
+.scene-objects {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    align-items: center;
+    justify-content: center;
+    width: 400px;
+    max-width: 80%;
+    perspective: 800px;
+    pointer-events: auto;
+}
+
+.scene-object {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.scene-object:hover {
+    transform: scale(1.08);
+    filter: brightness(1.15);
+}
+
+.scene-object:hover .object-label {
+    color: #BD1C22;
+}
+
+.object-label {
+    color: #aaaaaa;
+    font-size: 10px;
+    text-align: center;
+    white-space: nowrap;
+    transition: color 0.2s;
+}
+
+/* 3D 立方体 */
+.object-3d.cube {
+    width: 40px;
+    height: 40px;
+    position: relative;
+    transform-style: preserve-3d;
+    transform: rotateX(-20deg) rotateY(-30deg);
+}
+
+.object-3d.cube .face {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #555;
+    box-sizing: border-box;
+}
+
+.object-3d.cube .front {
+    background: rgba(100, 149, 237, 0.4);
+    transform: translateZ(20px);
+}
+
+.object-3d.cube .back {
+    background: rgba(100, 149, 237, 0.25);
+    transform: translateZ(-20px) rotateY(180deg);
+}
+
+.object-3d.cube .left {
+    background: rgba(100, 149, 237, 0.3);
+    transform: rotateY(-90deg) translateZ(20px);
+}
+
+.object-3d.cube .right {
+    background: rgba(100, 149, 237, 0.3);
+    transform: rotateY(90deg) translateZ(20px);
+}
+
+.object-3d.cube .top {
+    background: rgba(100, 149, 237, 0.5);
+    transform: rotateX(90deg) translateZ(20px);
+}
+
+.object-3d.cube .bottom {
+    background: rgba(100, 149, 237, 0.2);
+    transform: rotateX(-90deg) translateZ(20px);
+}
+
+/* 3D 长方体 */
+.object-3d.box {
+    width: 50px;
+    height: 30px;
+    position: relative;
+    transform-style: preserve-3d;
+    transform: rotateX(-20deg) rotateY(-30deg);
+}
+
+.object-3d.box .face {
+    position: absolute;
+    background: rgba(189, 28, 34, 0.4);
+    border: 1px solid #666;
+}
+
+.object-3d.box .front,
+.object-3d.box .back {
+    width: 50px;
+    height: 30px;
+}
+
+.object-3d.box .front {
+    transform: translateZ(15px);
+}
+
+.object-3d.box .back {
+    transform: translateZ(-15px) rotateY(180deg);
+}
+
+.object-3d.box .left,
+.object-3d.box .right {
+    width: 30px;
+    height: 30px;
+}
+
+.object-3d.box .left {
+    transform: rotateY(-90deg) translateZ(25px);
+}
+
+.object-3d.box .right {
+    transform: rotateY(90deg) translateZ(25px);
+}
+
+.object-3d.box .top,
+.object-3d.box .bottom {
+    width: 50px;
+    height: 30px;
+}
+
+.object-3d.box .top {
+    transform: rotateX(90deg) translateZ(15px);
+}
+
+.object-3d.box .bottom {
+    transform: rotateX(-90deg) translateZ(15px);
+}
+
+/* 3D 圆柱体 */
+.object-3d.cylinder {
+    width: 30px;
+    height: 45px;
+    position: relative;
+    transform-style: preserve-3d;
+    transform: rotateX(-20deg) rotateY(-30deg);
+}
+
+.object-3d.cylinder .cylinder-side {
+    position: absolute;
+    width: 30px;
+    height: 45px;
+    background: rgba(50, 205, 50, 0.4);
+    border: 1px solid #555;
+    border-radius: 50%;
+    transform: rotateX(90deg);
+    top: 0;
+}
+
+.object-3d.cylinder .cylinder-top,
+.object-3d.cylinder .cylinder-bottom {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(50, 205, 50, 0.5);
+    border: 1px solid #555;
+    box-sizing: border-box;
+}
+
+.object-3d.cylinder .cylinder-top {
+    top: -7px;
+    transform: rotateX(90deg) translateZ(7px);
+}
+
+.object-3d.cylinder .cylinder-bottom {
+    bottom: -7px;
+    transform: rotateX(90deg) translateZ(-7px);
+}
+
+/* 绑定模式下的提示 */
+.viewport-3d.binding-pick-mode .scene-object:hover .object-label {
+    color: #ff6b6b;
 } 

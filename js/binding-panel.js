@@ -120,19 +120,19 @@ class BindingPanel {
         setTimeout(() => {
             this.panel.classList.remove('initial-position');
 
-            const bindBtn = document.querySelector('[data-tool="bind"]');
-            if (!bindBtn) return;
+            const leftToolbar = document.querySelector('.left-toolbar');
+            if (!leftToolbar) return;
 
-            const btnRect = bindBtn.getBoundingClientRect();
+            const toolbarRect = leftToolbar.getBoundingClientRect();
             const statusBar = document.querySelector('.status-bar');
             const statusBarTop = statusBar ? statusBar.getBoundingClientRect().top : window.innerHeight;
             const panelWidth = Math.min(680, window.innerWidth - 96);
-            const availableHeight = statusBarTop - btnRect.top;
+            const availableHeight = statusBarTop - toolbarRect.top;
 
             this.panel.style.width = `${panelWidth}px`;
             this.panel.style.maxHeight = `${Math.max(420, availableHeight)}px`;
             this.panel.style.left = '76px';
-            this.panel.style.top = `${btnRect.top}px`;
+            this.panel.style.top = `${toolbarRect.top}px`;
             this.panel.style.transform = 'none';
         }, 100);
     }
@@ -158,8 +158,13 @@ class BindingPanel {
             if (!this.pendingModelId) return;
             if (event.target.closest('#bindingPanel')) return;
 
-            const scene = event.target.closest('.viewport-3d');
-            if (!scene) return;
+            // 只有点击了具体的模型对象才完成绑定
+            const modelEl = event.target.closest('[data-scene-model-name]');
+            if (!modelEl) {
+                // 点击空白区域，取消绑定操作，重新显示绑定窗口
+                this.cancelScenePick();
+                return;
+            }
 
             this.completeScenePick(event);
         });
@@ -225,6 +230,16 @@ class BindingPanel {
     startScenePick() {
         this.pendingModelId = this.selectedModelId;
         document.querySelector('.viewport-3d')?.classList.add('binding-pick-mode');
+        // 临时隐藏绑定窗口，让用户能看清 3D 场景
+        this.panel.classList.add('hidden');
+        this.render();
+    }
+
+    cancelScenePick() {
+        this.pendingModelId = null;
+        document.querySelector('.viewport-3d')?.classList.remove('binding-pick-mode');
+        // 重新显示绑定窗口
+        this.panel.classList.remove('hidden');
         this.render();
     }
 
@@ -237,6 +252,8 @@ class BindingPanel {
         this.pendingModelId = null;
         document.querySelector('.viewport-3d')?.classList.remove('binding-pick-mode');
         this.selectedModelId = model.id;
+        // 重新显示绑定窗口
+        this.panel.classList.remove('hidden');
         this.render();
     }
 

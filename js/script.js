@@ -1467,24 +1467,41 @@ function setupToolbarControls() {
     leftToolbarBtns.forEach(btn => {
         btn.addEventListener('click', function() {
             const toolType = this.getAttribute('data-tool');
+            const isThisActive = this.classList.contains('active');
 
-            if (toolType === 'tools') {
-                // 工具按钮：切换激活状态和子工具栏显示
-                const isActive = this.classList.contains('active');
-                const subToolbar = document.getElementById('sub-toolbar');
+            // 先关闭所有其他面板（tools、devices、bind 互斥）
+            const subToolbar = document.getElementById('sub-toolbar');
 
-                if (isActive) {
-                    // 当前激活，点击取消激活
-                    this.classList.remove('active');
-                    if (subToolbar) {
+            leftToolbarBtns.forEach(otherBtn => {
+                const otherTool = otherBtn.getAttribute('data-tool');
+                if (otherBtn !== this) {
+                    otherBtn.classList.remove('active');
+                    if (otherTool === 'tools' && subToolbar) {
                         subToolbar.classList.remove('show');
                     }
-                } else {
-                    // 当前未激活，点击激活
-                    this.classList.add('active');
-                    if (subToolbar) {
-                        subToolbar.classList.add('show');
-                    }
+                }
+            });
+
+            // 关闭设备库面板
+            if (toolType !== 'devices') {
+                const devicePanel = window.getDeviceLibraryPanel?.();
+                if (devicePanel) devicePanel.hide();
+            }
+
+            // 关闭绑定面板
+            if (toolType !== 'bind') {
+                const bindingPanel = window.getBindingPanel?.();
+                if (bindingPanel) bindingPanel.hide();
+            }
+
+            // 然后处理当前按钮的行为
+            if (toolType === 'tools') {
+                // 工具按钮：切换激活状态和子工具栏显示
+                this.classList.toggle('active');
+                if (subToolbar) {
+                    subToolbar.classList.toggle('show');
+                }
+                if (this.classList.contains('active')) {
                     // 联动激活右侧属性面板的结构tab
                     activateStructureTab();
                 }
@@ -1493,7 +1510,6 @@ function setupToolbarControls() {
                 const devicePanel = window.getDeviceLibraryPanel?.();
                 if (devicePanel) {
                     devicePanel.toggle();
-                    // 切换按钮激活状态
                     this.classList.toggle('active');
                 }
             } else if (toolType === 'bind') {

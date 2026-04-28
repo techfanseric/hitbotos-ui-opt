@@ -73,11 +73,11 @@ class DeviceLibraryPanel {
         setTimeout(() => {
             this.panel.classList.remove('initial-position');
 
-            // 获取设备库按钮的位置
-            const deviceBtn = document.querySelector('[data-tool="devices"]');
-            if (!deviceBtn) return;
+            // 获取左侧工具栏的位置（用于顶部对齐）
+            const leftToolbar = document.querySelector('.left-toolbar');
+            if (!leftToolbar) return;
 
-            const btnRect = deviceBtn.getBoundingClientRect();
+            const toolbarRect = leftToolbar.getBoundingClientRect();
 
             // 获取状态栏的位置
             const statusBar = document.querySelector('.status-bar');
@@ -90,10 +90,10 @@ class DeviceLibraryPanel {
             // 左侧位置：工具栏右侧（60px工具栏宽度 + 16px间距）
             const targetLeft = 76;
 
-            // 顶部位置：与设备库按钮对齐
-            const targetTop = btnRect.top;
+            // 顶部位置：与左侧工具栏顶部对齐
+            const targetTop = toolbarRect.top;
 
-            // 计算可用高度（从按钮顶部到状态栏顶部）
+            // 计算可用高度（从工具栏顶部到状态栏顶部）
             const availableHeight = statusBarTop - targetTop;
 
             // 设置面板最大高度为可用高度
