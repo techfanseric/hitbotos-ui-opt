@@ -60,11 +60,32 @@ const TOPOLOGY_MODEL_DATA = [
     }
 ];
 
+const BLOCKY_SOLUTION_DATA = [
+    {
+        id: 'solution-grain-sample-platform',
+        name: '全自动粮食样本检测平台',
+        meta: '含上料、检测、分拣设备'
+    },
+    {
+        id: 'solution-film-laminator',
+        name: '贴膜机',
+        meta: '含输送、定位、贴膜设备'
+    },
+    {
+        id: 'solution-nucleic-acid-line',
+        name: '核酸检测自动化产线',
+        meta: '含移液、开盖、扫码设备'
+    }
+];
+
 class BindingPanel {
     constructor() {
         this.panel = null;
         this.isVisible = false;
         this.models = TOPOLOGY_MODEL_DATA.map(model => ({ ...model }));
+        this.solutions = BLOCKY_SOLUTION_DATA.map(solution => ({ ...solution }));
+        this.selectedSolutionId = null;
+        this.confirmingSolutionId = null;
         this.selectedModelId = this.models[0].id;
         this.pendingModelId = null;
     }
@@ -90,22 +111,26 @@ class BindingPanel {
                         </button>
                     </div>
                 </div>
-                <div class="binding-columns" aria-label="拓扑模型绑定">
-                    <section class="binding-column">
-                        <div class="binding-column-title">拓扑图模型</div>
-                        <div class="binding-list" data-binding-column="models"></div>
-                    </section>
-                    <section class="binding-column binding-action-column">
-                        <div class="binding-column-title">绑定操作</div>
-                        <div class="binding-action-area">
-                            <div class="binding-selected-card" id="bindingSelectedCard"></div>
-                            <button class="binding-primary-btn" type="button" data-binding-action="start-bind">
-                                <i class="bi bi-link-45deg"></i>
-                                <span>绑定</span>
-                            </button>
-                            <div class="binding-help" id="bindingHelp">选择左侧拓扑模型后，点击绑定，再到 3D 场景里点击对应模型。</div>
+                <div class="binding-solution-bar">
+                    <label class="binding-solution-label" for="bindingSolutionSelect">绑定方案</label>
+                    <select class="binding-solution-select" id="bindingSolutionSelect" data-binding-action="select-solution">
+                        <option value="">请选择绑定的方案</option>
+                    </select>
+                    <div class="binding-solution-meta" id="bindingSolutionMeta">先选择方案后，再进行设备与 3D 模型绑定。</div>
+                </div>
+                <div class="binding-content" id="bindingContent"></div>
+                <div class="binding-confirm hidden" id="bindingConfirm" role="alertdialog" aria-modal="true" aria-labelledby="bindingConfirmTitle">
+                    <div class="binding-confirm-card">
+                        <div class="binding-confirm-icon"><i class="bi bi-exclamation-triangle"></i></div>
+                        <div class="binding-confirm-copy">
+                            <strong id="bindingConfirmTitle">切换方案会清空当前绑定</strong>
+                            <p>当前方案下已绑定的 3D 模型关系将失效，需要在新方案中重新绑定。</p>
                         </div>
-                    </section>
+                        <div class="binding-confirm-actions">
+                            <button class="binding-secondary-btn" type="button" data-binding-action="cancel-solution-change">取消</button>
+                            <button class="binding-danger-btn" type="button" data-binding-action="confirm-solution-change">继续切换</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         `;
@@ -141,6 +166,8 @@ class BindingPanel {
         this.panel.querySelector('.panel-close-btn').addEventListener('click', () => this.hide());
 
         this.panel.addEventListener('click', (event) => {
+            event.stopPropagation();
+
             const item = event.target.closest('.binding-option');
             if (item) {
                 this.selectedModelId = item.dataset.id;
@@ -149,9 +176,23 @@ class BindingPanel {
             }
 
             const action = event.target.closest('[data-binding-action]');
+            if (action?.dataset.bindingAction === 'cancel-solution-change') {
+                this.closeSolutionConfirm();
+                return;
+            }
+
+            if (action?.dataset.bindingAction === 'confirm-solution-change') {
+                this.confirmSolutionChange();
+                return;
+            }
+
             if (action?.dataset.bindingAction === 'start-bind') {
                 this.startScenePick();
             }
+        });
+
+        this.panel.querySelector('[data-binding-action="select-solution"]').addEventListener('change', (event) => {
+            this.requestSolutionChange(event.target.value);
         });
 
         document.addEventListener('click', (event) => {
@@ -177,8 +218,63 @@ class BindingPanel {
     render() {
         if (!this.panel) return;
 
+        this.renderSolutions();
+        this.renderContent();
+        if (!this.selectedSolutionId) return;
+
         this.renderModels();
         this.renderSelectedCard();
+    }
+
+    renderSolutions() {
+        const select = this.panel.querySelector('#bindingSolutionSelect');
+        select.innerHTML = [
+            '<option value="">请选择绑定的方案</option>',
+            ...this.solutions.map(solution => `
+                <option value="${this.escapeHTML(solution.id)}">${this.escapeHTML(solution.name)}</option>
+            `)
+        ].join('');
+        select.value = this.selectedSolutionId || '';
+
+        const selectedSolution = this.getSelectedSolution();
+        this.panel.querySelector('#bindingSolutionMeta').textContent = selectedSolution
+            ? selectedSolution.meta
+            : '先选择方案后，再进行设备与 3D 模型绑定。';
+    }
+
+    renderContent() {
+        const content = this.panel.querySelector('#bindingContent');
+
+        if (!this.selectedSolutionId) {
+            content.innerHTML = `
+                <div class="binding-empty-state">
+                    <i class="bi bi-diagram-3"></i>
+                    <strong>请先选择绑定的方案</strong>
+                    <span>选择方案后，会加载该方案的拓扑模型，再进行 3D 场景绑定。</span>
+                </div>
+            `;
+            return;
+        }
+
+        content.innerHTML = `
+            <div class="binding-columns" aria-label="拓扑模型绑定">
+                <section class="binding-column">
+                    <div class="binding-column-title">拓扑图模型</div>
+                    <div class="binding-list" data-binding-column="models"></div>
+                </section>
+                <section class="binding-column binding-action-column">
+                    <div class="binding-column-title">绑定操作</div>
+                    <div class="binding-action-area">
+                        <div class="binding-selected-card" id="bindingSelectedCard"></div>
+                        <button class="binding-primary-btn" type="button" data-binding-action="start-bind">
+                            <i class="bi bi-link-45deg"></i>
+                            <span>绑定</span>
+                        </button>
+                        <div class="binding-help" id="bindingHelp">选择左侧拓扑模型后，点击绑定，再到 3D 场景里点击对应模型。</div>
+                    </div>
+                </section>
+            </div>
+        `;
     }
 
     renderModels() {
@@ -228,6 +324,7 @@ class BindingPanel {
     }
 
     startScenePick() {
+        if (!this.selectedSolutionId) return;
         this.pendingModelId = this.selectedModelId;
         document.querySelector('.viewport-3d')?.classList.add('binding-pick-mode');
         // 临时隐藏绑定窗口，让用户能看清 3D 场景
@@ -259,6 +356,69 @@ class BindingPanel {
 
     getSelectedModel() {
         return this.models.find(model => model.id === this.selectedModelId) || this.models[0];
+    }
+
+    getSelectedSolution() {
+        return this.solutions.find(solution => solution.id === this.selectedSolutionId) || null;
+    }
+
+    hasActiveBindings() {
+        return this.models.some(model => Boolean(model.sceneTarget));
+    }
+
+    requestSolutionChange(nextSolutionId) {
+        if (nextSolutionId === this.selectedSolutionId) return;
+
+        const select = this.panel.querySelector('#bindingSolutionSelect');
+        select.value = this.selectedSolutionId || '';
+
+        if (!nextSolutionId) {
+            if (this.hasActiveBindings()) {
+                this.confirmingSolutionId = '';
+                this.openSolutionConfirm();
+                return;
+            }
+
+            this.applySolutionChange('');
+            return;
+        }
+
+        if (this.selectedSolutionId && this.hasActiveBindings()) {
+            this.confirmingSolutionId = nextSolutionId;
+            this.openSolutionConfirm();
+            return;
+        }
+
+        this.applySolutionChange(nextSolutionId);
+    }
+
+    applySolutionChange(nextSolutionId) {
+        this.selectedSolutionId = nextSolutionId || null;
+        this.confirmingSolutionId = null;
+        this.clearBindings();
+        this.closeSolutionConfirm();
+        this.render();
+    }
+
+    clearBindings() {
+        this.models = TOPOLOGY_MODEL_DATA.map(model => ({ ...model }));
+        this.selectedModelId = this.models[0].id;
+        this.pendingModelId = null;
+        document.querySelector('.viewport-3d')?.classList.remove('binding-pick-mode');
+    }
+
+    openSolutionConfirm() {
+        this.panel.querySelector('#bindingConfirm').classList.remove('hidden');
+    }
+
+    closeSolutionConfirm() {
+        this.confirmingSolutionId = null;
+        this.panel.querySelector('#bindingConfirm').classList.add('hidden');
+        this.panel.querySelector('#bindingSolutionSelect').value = this.selectedSolutionId || '';
+    }
+
+    confirmSolutionChange() {
+        this.applySolutionChange(this.confirmingSolutionId || '');
     }
 
     toggle() {

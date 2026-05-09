@@ -103,9 +103,126 @@
     border-color: #BD1C22;
 }
 
+.binding-secondary-btn,
+.binding-danger-btn {
+    height: 30px;
+    padding: 0 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.binding-secondary-btn {
+    border: 1px solid #555;
+    background: #333;
+    color: #ddd;
+}
+
+.binding-secondary-btn:hover {
+    border-color: #777;
+    background: #3f3f3f;
+    color: #fff;
+}
+
+.binding-danger-btn {
+    border: 1px solid #BD1C22;
+    background: #BD1C22;
+    color: #fff;
+}
+
+.binding-danger-btn:hover {
+    border-color: #d22a30;
+    background: #d22a30;
+}
+
+.binding-solution-bar {
+    display: grid;
+    grid-template-columns: 76px minmax(220px, 1fr);
+    gap: 8px 12px;
+    align-items: center;
+    padding: 12px;
+    background: #303030;
+    border-bottom: 1px solid #444;
+}
+
+.binding-solution-label {
+    color: #ddd;
+    font-size: 12px;
+}
+
+.binding-solution-select {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    height: 32px;
+    padding: 0 40px 0 10px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background-color: #242424;
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 4.5L6 7.5L9 4.5' stroke='%23B5B5B5' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px 12px;
+    color: #fff;
+    font-size: 12px;
+    outline: none;
+}
+
+.binding-solution-select:focus {
+    border-color: #BD1C22;
+    box-shadow: 0 0 0 2px rgba(189, 28, 34, 0.18);
+}
+
+.binding-solution-meta {
+    grid-column: 2;
+    color: #999;
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.binding-content {
+    min-height: 360px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.binding-empty-state {
+    flex: 1;
+    min-height: 360px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 32px;
+    color: #999;
+    text-align: center;
+    background: #2b2b2b;
+}
+
+.binding-empty-state i {
+    color: #BD1C22;
+    font-size: 34px;
+}
+
+.binding-empty-state strong {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.binding-empty-state span {
+    max-width: 320px;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
 .binding-columns {
     display: grid;
     grid-template-columns: 0.95fr 1.05fr;
+    flex: 1;
     min-height: 360px;
     overflow: hidden;
 }
@@ -352,6 +469,72 @@
     line-height: 1.6;
 }
 
+.binding-confirm {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    background: rgba(22, 22, 22, 0.68);
+}
+
+.binding-confirm.hidden {
+    display: none;
+}
+
+.binding-confirm-card {
+    width: min(420px, 100%);
+    display: grid;
+    grid-template-columns: 38px 1fr;
+    gap: 12px;
+    padding: 16px;
+    border: 1px solid #555;
+    border-radius: 8px;
+    background: #303030;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+.binding-confirm-icon {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    background: rgba(189, 28, 34, 0.14);
+    color: #ff7377;
+}
+
+.binding-confirm-copy {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.binding-confirm-copy strong {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.binding-confirm-copy p {
+    margin: 0;
+    color: #b5b5b5;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.binding-confirm-actions {
+    grid-column: 2;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 4px;
+}
+
 .viewport-3d.binding-pick-mode {
     cursor: crosshair;
     outline: 2px solid rgba(189, 28, 34, 0.75);
@@ -378,6 +561,14 @@
     .binding-panel {
         left: 64px !important;
         width: calc(100vw - 76px) !important;
+    }
+
+    .binding-solution-bar {
+        grid-template-columns: 1fr;
+    }
+
+    .binding-solution-meta {
+        grid-column: 1;
     }
 
     .binding-columns {
