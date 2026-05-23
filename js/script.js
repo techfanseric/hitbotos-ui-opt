@@ -1713,12 +1713,24 @@ function setupArmPropertyPanel() {
             const valueInput = row.querySelector('input[type="number"]');
             if (!range || !valueInput) return;
 
+            const updateRangeFill = () => {
+                const min = Number(range.min || 0);
+                const max = Number(range.max || 100);
+                const value = Number(range.value || min);
+                const percent = max === min ? 0 : ((value - min) / (max - min)) * 100;
+                range.style.setProperty('--range-fill', `${Math.max(0, Math.min(100, percent))}%`);
+            };
+
+            updateRangeFill();
+
             range.addEventListener('input', () => {
                 valueInput.value = Number(range.value).toFixed(3);
+                updateRangeFill();
             });
 
             valueInput.addEventListener('input', () => {
                 range.value = valueInput.value;
+                updateRangeFill();
             });
         });
     });

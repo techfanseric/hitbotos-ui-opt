@@ -365,12 +365,22 @@ class PanelLoader {
      * 绑定滑块控制事件
      */
     bindSliderEvents() {
+        const updateSliderFill = (slider) => {
+            const min = Number(slider.min || 0);
+            const max = Number(slider.max || 100);
+            const value = Number(slider.value || min);
+            const percent = max === min ? 0 : ((value - min) / (max - min)) * 100;
+            slider.style.setProperty('--range-fill', `${Math.max(0, Math.min(100, percent))}%`);
+        };
+
         const sliders = this.panelContainer.querySelectorAll('.panel-custom-slider');
         sliders.forEach(slider => {
+            updateSliderFill(slider);
             slider.addEventListener('input', (e) => {
                 // 查找同一个滑块控制组内的数值输入框
                 const sliderControl = e.target.closest('.panel-slider-control');
                 const valueInput = sliderControl ? sliderControl.querySelector('.panel-slider-value') : null;
+                updateSliderFill(e.target);
                 
                 if (valueInput) {
                     valueInput.value = parseFloat(e.target.value).toFixed(3);
@@ -396,11 +406,13 @@ class PanelLoader {
                         // 如果值在范围内，直接更新滑块
                         if (value >= min && value <= max) {
                             slider.value = value;
+                            updateSliderFill(slider);
                             console.log(`数值输入更新滑块: ${value}`);
                         } else {
                             // 如果值超出范围，限制在范围内并更新输入框
                             const clampedValue = Math.max(min, Math.min(max, value));
                             slider.value = clampedValue;
+                            updateSliderFill(slider);
                             e.target.value = clampedValue.toFixed(3);
                             console.log(`数值输入超出范围，已调整为: ${clampedValue}`);
                         }
@@ -466,22 +478,16 @@ class PanelLoader {
             zone.addEventListener('dragover', (e) => {
                 e.preventDefault();
                 zone.classList.add('dragover');
-                zone.style.borderColor = 'transparent';
-                zone.style.backgroundColor = '#3a2b2b';
             });
 
             zone.addEventListener('dragleave', (e) => {
                 e.preventDefault();
                 zone.classList.remove('dragover');
-                zone.style.borderColor = 'transparent';
-                zone.style.backgroundColor = '#2b2b2b';
             });
 
             zone.addEventListener('drop', (e) => {
                 e.preventDefault();
                 zone.classList.remove('dragover');
-                zone.style.borderColor = 'transparent';
-                zone.style.backgroundColor = '#2b2b2b';
                 console.log('文件拖拽上传');
             });
         });

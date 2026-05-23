@@ -1,0 +1,1199 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HitbotOS 设计元素规范</title>
+  <style>
+    :root {
+      --font-family: "Segoe UI", Tahoma, Geneva, Verdana, "Microsoft YaHei", sans-serif;
+      --font-xs: 10px;
+      --font-sm: 11px;
+      --font-md: 12px;
+      --font-lg: 14px;
+      --font-xl: 18px;
+      --line-base: 1.45;
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 24px;
+      --space-6: 32px;
+      --radius-xs: 2px;
+      --radius-sm: 3px;
+      --radius-md: 4px;
+      --radius-lg: 6px;
+      --radius-xl: 8px;
+      --bg-app: #242424;
+      --bg-workspace: #2b2b2b;
+      --bg-window: #2f2f2f;
+      --bg-panel: #303030;
+      --bg-panel-raised: #383838;
+      --bg-control: #3a3a3a;
+      --bg-control-hover: #454545;
+      --bg-control-active: #505050;
+      --bg-control-disabled: #343434;
+      --shell-bg: #f7f7f8;
+      --shell-bg-status: #f0f0f0;
+      --shell-bg-hover: rgba(0, 0, 0, 0.04);
+      --shell-surface: #ffffff;
+      --shell-text: #2c2c31;
+      --shell-text-muted: rgba(31, 31, 35, 0.56);
+      --text-strong: #ffffff;
+      --text: #dddddd;
+      --text-muted: #a5a5a5;
+      --text-disabled: #777777;
+      --accent: #bd1c22;
+      --accent-hover: #d22a30;
+      --accent-soft: rgba(189, 28, 34, 0.22);
+      --blue: #3c7eff;
+      --green: #42d987;
+      --yellow: #f2b84b;
+      --danger: #ff7478;
+      --shadow-floating: 0 14px 34px rgba(0, 0, 0, 0.24);
+      --shadow-popover: 0 18px 42px rgba(0, 0, 0, 0.34);
+      --motion-fast: 0.14s ease;
+      --motion-base: 0.2s ease;
+      --control-sm: 24px;
+      --control-md: 30px;
+      --control-lg: 36px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: var(--bg-app);
+      color: var(--text);
+      font-family: var(--font-family);
+      font-size: var(--font-md);
+      line-height: var(--line-base);
+    }
+
+    body {
+      margin: 0;
+      min-width: 1080px;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px) 0 0 / 28px 28px,
+        linear-gradient(180deg, rgba(255,255,255,0.014) 1px, transparent 1px) 0 0 / 28px 28px,
+        var(--bg-app);
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+    }
+
+    .page {
+      display: grid;
+      grid-template-columns: 240px minmax(760px, 1fr);
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      align-self: start;
+      height: 100vh;
+      padding: var(--space-5);
+      background: #202020;
+      box-shadow: 10px 0 28px rgba(0, 0, 0, 0.18);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand {
+      display: grid;
+      gap: var(--space-2);
+      margin-bottom: var(--space-6);
+    }
+
+    .brand h1 {
+      margin: 0;
+      color: var(--text-strong);
+      font-size: var(--font-xl);
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
+    .brand p {
+      margin: 0;
+      color: var(--text-muted);
+      font-size: var(--font-sm);
+    }
+
+    .nav {
+      display: grid;
+      gap: var(--space-1);
+    }
+
+    .sidebar-logo {
+      width: 142px;
+      height: auto;
+      display: block;
+      object-fit: contain;
+      margin-top: auto;
+      opacity: 0.86;
+    }
+
+    .nav a {
+      display: flex;
+      align-items: center;
+      height: var(--control-md);
+      padding: 0 var(--space-3);
+      border-radius: var(--radius-md);
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: background var(--motion-base), color var(--motion-base);
+    }
+
+    .nav a:hover {
+      background: var(--bg-control-hover);
+      color: var(--text-strong);
+    }
+
+    .main {
+      padding: var(--space-6);
+    }
+
+    .hero {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-5);
+      margin-bottom: var(--space-5);
+      padding: var(--space-5);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(135deg, var(--bg-window), var(--bg-workspace));
+      box-shadow: var(--shadow-floating);
+    }
+
+    .hero h2 {
+      margin: 0 0 var(--space-2);
+      color: var(--text-strong);
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 720px;
+      margin: 0;
+      color: var(--text-muted);
+    }
+
+    .hero-meta {
+      display: grid;
+      gap: var(--space-2);
+      min-width: 220px;
+      align-content: start;
+    }
+
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-3);
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+    }
+
+    .meta-row strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .section {
+      margin-bottom: var(--space-5);
+      padding: var(--space-5);
+      border-radius: var(--radius-xl);
+      background: var(--bg-window);
+      box-shadow: var(--shadow-floating);
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: var(--space-4);
+      margin-bottom: var(--space-4);
+    }
+
+    .section h3 {
+      margin: 0;
+      color: var(--text-strong);
+      font-size: var(--font-xl);
+      font-weight: 600;
+    }
+
+    .section-desc {
+      max-width: 620px;
+      margin: var(--space-1) 0 0;
+      color: var(--text-muted);
+    }
+
+    .rule {
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .grid {
+      display: grid;
+      gap: var(--space-3);
+    }
+
+    .grid.cols-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .grid.cols-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .grid.cols-4 {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .spec-card {
+      min-height: 86px;
+      padding: var(--space-4);
+      border-radius: var(--radius-lg);
+      background: var(--bg-panel);
+    }
+
+    .spec-card.raised {
+      background: var(--bg-panel-raised);
+    }
+
+    .spec-title {
+      margin: 0 0 var(--space-2);
+      color: var(--text-strong);
+      font-size: var(--font-lg);
+      font-weight: 600;
+    }
+
+    .spec-note {
+      margin: 0;
+      color: var(--text-muted);
+    }
+
+    .token {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      min-height: 62px;
+      padding: var(--space-3);
+      border-radius: var(--radius-lg);
+      background: var(--bg-panel);
+    }
+
+    .swatch {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius-md);
+      flex: 0 0 auto;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    }
+
+    .token-name {
+      display: block;
+      color: var(--text-strong);
+      font-weight: 600;
+    }
+
+    .token-value {
+      display: block;
+      color: var(--text-muted);
+      font-size: var(--font-sm);
+    }
+
+    .space-scale {
+      display: grid;
+      grid-template-columns: 120px 1fr 80px;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-md);
+      background: var(--bg-panel);
+    }
+
+    .space-bar {
+      height: 20px;
+      border-radius: var(--radius-sm);
+      background: var(--accent-soft);
+    }
+
+    .type-row {
+      display: grid;
+      grid-template-columns: 140px 1fr 80px;
+      gap: var(--space-3);
+      align-items: center;
+      padding: var(--space-3);
+      border-radius: var(--radius-md);
+      background: var(--bg-panel);
+    }
+
+    .type-sample {
+      color: var(--text-strong);
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-height: var(--control-sm);
+      padding: 0 var(--space-3);
+      border-radius: var(--radius-md);
+      color: var(--text);
+      background: var(--bg-control);
+      cursor: pointer;
+      transition: background var(--motion-base), color var(--motion-base), opacity var(--motion-base), transform var(--motion-fast);
+    }
+
+    .btn:hover {
+      background: var(--bg-control-hover);
+      color: var(--text-strong);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+      background: var(--bg-control-active);
+    }
+
+    .btn.primary {
+      background: var(--accent);
+      color: var(--text-strong);
+    }
+
+    .btn.primary:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn.subtle {
+      background: transparent;
+      color: var(--text-muted);
+    }
+
+    .btn.subtle:hover {
+      background: var(--bg-control-hover);
+      color: var(--text-strong);
+    }
+
+    .btn.icon {
+      width: var(--control-md);
+      padding: 0;
+      font-size: var(--font-lg);
+    }
+
+    .btn[disabled] {
+      cursor: not-allowed;
+      opacity: 0.52;
+    }
+
+    .shell-preview {
+      display: grid;
+      gap: 0;
+      overflow: hidden;
+      border-radius: var(--radius-lg);
+      background: #e5e5e5;
+      color: var(--shell-text);
+    }
+
+    .shell-top,
+    .shell-status {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 42px;
+      padding: 0 var(--space-3);
+      background: var(--shell-bg);
+    }
+
+    .shell-status {
+      min-height: 28px;
+      background: var(--shell-bg-status);
+      font-size: var(--font-sm);
+    }
+
+    .shell-menu {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    .shell-btn {
+      min-width: 34px;
+      height: 34px;
+      padding: 0 var(--space-2);
+      border-radius: var(--radius-md);
+      background: transparent;
+      color: var(--shell-text);
+      cursor: pointer;
+    }
+
+    .shell-btn:hover,
+    .shell-btn.hover {
+      background: var(--shell-bg-hover);
+      color: var(--shell-text);
+    }
+
+    .shell-popover {
+      justify-self: end;
+      width: 210px;
+      margin: var(--space-3);
+      padding: var(--space-2) 0;
+      border-radius: var(--radius-xl);
+      background: var(--shell-surface);
+      color: var(--shell-text);
+      box-shadow: 0 10px 30px rgba(16, 18, 22, 0.14);
+    }
+
+    .shell-popover-row {
+      height: 30px;
+      padding: 0 var(--space-3);
+      line-height: 30px;
+      color: var(--shell-text);
+    }
+
+    .shell-popover-row.muted {
+      color: var(--shell-text-muted);
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: var(--space-3);
+      align-items: center;
+    }
+
+    .label {
+      color: var(--text-muted);
+    }
+
+    .input,
+    .select {
+      width: 100%;
+      min-height: var(--control-md);
+      border: 0;
+      border-radius: var(--radius-md);
+      padding: 0 var(--space-3);
+      color: var(--text);
+      background: var(--bg-control);
+      outline: none;
+      transition: background var(--motion-base), color var(--motion-base), opacity var(--motion-base);
+    }
+
+    .input:hover,
+    .select:hover {
+      background: var(--bg-control-hover);
+    }
+
+    .input:focus,
+    .select:focus {
+      background: var(--bg-control-active);
+      color: var(--text-strong);
+    }
+
+    .input:disabled,
+    .select:disabled {
+      color: var(--text-disabled);
+      background: var(--bg-control-disabled);
+      opacity: 0.7;
+    }
+
+    .checkbox {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      color: var(--text);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .checkbox input {
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      margin: 0;
+      border-radius: var(--radius-sm);
+      background: var(--bg-control);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+    }
+
+    .checkbox input:hover {
+      background: var(--bg-control-hover);
+    }
+
+    .checkbox input:checked {
+      background: var(--accent);
+    }
+
+    .checkbox input:checked::after {
+      content: "";
+      width: 5px;
+      height: 9px;
+      border: solid #fff;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg) translate(-1px, -1px);
+    }
+
+    .slider-row {
+      display: grid;
+      grid-template-columns: 1fr 56px;
+      gap: var(--space-3);
+      align-items: center;
+    }
+
+    .slider {
+      --range-fill: 58%;
+      appearance: none;
+      width: 100%;
+      height: 3px;
+      border-radius: var(--radius-sm);
+      background:
+        linear-gradient(90deg, var(--accent), var(--accent)) 0 50% / var(--range-fill) 100% no-repeat,
+        #555650;
+      outline: none;
+    }
+
+    .slider::-webkit-slider-thumb {
+      appearance: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #c8c5ba;
+      box-shadow: none;
+      cursor: pointer;
+    }
+
+    .slider::-moz-range-thumb {
+      width: 12px;
+      height: 12px;
+      border: 0;
+      border-radius: 50%;
+      background: #c8c5ba;
+      cursor: pointer;
+    }
+
+    .panel-demo {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: var(--space-4);
+      align-items: start;
+    }
+
+    .panel,
+    .modal {
+      border-radius: var(--radius-lg);
+      background: var(--bg-panel);
+      box-shadow: var(--shadow-floating);
+      overflow: hidden;
+    }
+
+    .panel-head,
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 40px;
+      padding: 0 var(--space-4);
+      background: var(--bg-panel-raised);
+    }
+
+    .panel-body,
+    .modal-body {
+      padding: var(--space-4);
+    }
+
+    .close {
+      width: 24px;
+      height: 24px;
+      border-radius: var(--radius-md);
+      color: var(--text-muted);
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: var(--text-strong);
+      background: var(--bg-control-hover);
+    }
+
+    .modal {
+      background: #333333;
+      box-shadow: var(--shadow-popover);
+    }
+
+    .list {
+      display: grid;
+      gap: var(--space-2);
+    }
+
+    .list-item {
+      display: grid;
+      grid-template-columns: 34px 1fr auto;
+      gap: var(--space-3);
+      align-items: center;
+      min-height: 52px;
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-lg);
+      background: var(--bg-control);
+      transition: background var(--motion-base), transform var(--motion-fast);
+    }
+
+    .list-item:hover {
+      background: var(--bg-control-hover);
+    }
+
+    .list-item.active {
+      background: var(--accent-soft);
+      color: var(--text-strong);
+    }
+
+    .icon-box {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.08);
+      display: grid;
+      place-items: center;
+      color: var(--text-strong);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 var(--space-1);
+    }
+
+    th,
+    td {
+      padding: 8px 10px;
+      text-align: left;
+      border: 0;
+    }
+
+    th {
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    tbody tr {
+      background: var(--bg-control);
+    }
+
+    tbody tr:hover {
+      background: var(--bg-control-hover);
+    }
+
+    tbody td:first-child {
+      border-radius: var(--radius-md) 0 0 var(--radius-md);
+    }
+
+    tbody td:last-child {
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 20px;
+      padding: 0 var(--space-2);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      font-size: var(--font-xs);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .tag::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .tag.info {
+      background: rgba(42, 114, 197, 0.22);
+      color: #9fc8ff;
+    }
+
+    .tag.info::before {
+      background: #6caeff;
+    }
+
+    .tag.success {
+      background: rgba(29, 156, 98, 0.22);
+      color: #8cf2bd;
+    }
+
+    .tag.success::before {
+      background: var(--green);
+    }
+
+    .tag.warning {
+      background: rgba(212, 146, 40, 0.22);
+      color: #ffd391;
+    }
+
+    .tag.warning::before {
+      background: var(--yellow);
+    }
+
+    .tag.error {
+      background: var(--accent-soft);
+      color: #ffb5b7;
+    }
+
+    .tag.error::before {
+      background: var(--danger);
+    }
+
+    .state-grid {
+      display: grid;
+      grid-template-columns: 120px 1fr 1fr;
+      gap: var(--space-2);
+      align-items: center;
+    }
+
+    .state-cell {
+      min-height: 38px;
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-md);
+      background: var(--bg-panel);
+      display: flex;
+      align-items: center;
+    }
+
+    .state-cell.hover {
+      background: var(--bg-control-hover);
+      color: var(--text-strong);
+    }
+
+    .state-cell.active {
+      background: var(--bg-control-active);
+      color: var(--text-strong);
+      transform: translateY(1px);
+    }
+
+    .state-cell.selected {
+      background: var(--accent-soft);
+      color: var(--text-strong);
+    }
+
+    .state-cell.disabled {
+      background: var(--bg-control-disabled);
+      color: var(--text-disabled);
+      opacity: 0.7;
+    }
+
+    .guideline-list {
+      display: grid;
+      gap: var(--space-2);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .guideline-list li {
+      padding: var(--space-3);
+      border-radius: var(--radius-md);
+      background: var(--bg-panel);
+      color: var(--text-muted);
+    }
+
+    .guideline-list strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    @media (max-width: 1180px) {
+      body {
+        min-width: 0;
+      }
+
+      .page {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: relative;
+        height: auto;
+      }
+
+      .nav {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .hero,
+      .panel-demo,
+      .grid.cols-2,
+      .grid.cols-3,
+      .grid.cols-4 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <aside class="sidebar">
+      <div class="brand">
+        <div>
+          <h1>设计元素规范</h1>
+          <p>HitbotOS UI主题</p>
+        </div>
+      </div>
+      <nav class="nav" aria-label="页面导航">
+        <a href="#colors">颜色</a>
+        <a href="#spacing">间距</a>
+        <a href="#type">字体</a>
+        <a href="#buttons">按钮</a>
+        <a href="#forms">表单控件</a>
+        <a href="#surfaces">面板/弹窗</a>
+        <a href="#data">列表/表格</a>
+        <a href="#states">状态/交互</a>
+      </nav>
+      <img class="sidebar-logo" src="./assets/hitbot-logo.png" alt="Hitbot">
+    </aside>
+
+    <main class="main">
+      <section class="hero">
+        <div>
+          <h2>以背景层级表达结构，以色块表达状态</h2>
+          <p>本页整理当前项目的静态设计元素：整体保留深色工业后台、仿真工作台的低照度视觉；去除装饰性描边，组件状态主要通过背景明度、透明色块、文本强弱和轻微位移表达。</p>
+        </div>
+        <div class="hero-meta" aria-label="设计原则摘要">
+          <div class="meta-row"><span>主基调</span><strong>Dark Industrial</strong></div>
+          <div class="meta-row"><span>状态表达</span><strong>Background Layers</strong></div>
+          <div class="meta-row"><span>主强调色</span><strong>#BD1C22</strong></div>
+          <div class="meta-row"><span>圆角</span><strong>2-8px</strong></div>
+        </div>
+      </section>
+
+      <section class="section" id="colors">
+        <div class="section-head">
+          <div>
+            <h3>颜色</h3>
+            <p class="section-desc">背景从应用底色到控件激活态逐级抬高；功能色只用于状态、告警和关键操作，避免大面积铺色。</p>
+          </div>
+          <div class="rule">禁用高亮描边作为主要状态</div>
+        </div>
+        <div class="grid cols-4">
+          <div class="token"><span class="swatch" style="background:#242424"></span><span><span class="token-name">App</span><span class="token-value">#242424 / 全局底色</span></span></div>
+          <div class="token"><span class="swatch" style="background:#2b2b2b"></span><span><span class="token-name">Workspace</span><span class="token-value">#2B2B2B / 工作区</span></span></div>
+          <div class="token"><span class="swatch" style="background:#2f2f2f"></span><span><span class="token-name">Window</span><span class="token-value">#2F2F2F / 窗口</span></span></div>
+          <div class="token"><span class="swatch" style="background:#303030"></span><span><span class="token-name">Panel</span><span class="token-value">#303030 / 面板</span></span></div>
+          <div class="token"><span class="swatch" style="background:#383838"></span><span><span class="token-name">Raised</span><span class="token-value">#383838 / 抬高层</span></span></div>
+          <div class="token"><span class="swatch" style="background:#3a3a3a"></span><span><span class="token-name">Control</span><span class="token-value">#3A3A3A / 控件</span></span></div>
+          <div class="token"><span class="swatch" style="background:#454545"></span><span><span class="token-name">Hover</span><span class="token-value">#454545 / 悬停</span></span></div>
+          <div class="token"><span class="swatch" style="background:#505050"></span><span><span class="token-name">Active</span><span class="token-value">#505050 / 激活</span></span></div>
+          <div class="token"><span class="swatch" style="background:#f7f7f8"></span><span><span class="token-name">Shell</span><span class="token-value">#F7F7F8 / 顶部全局栏</span></span></div>
+          <div class="token"><span class="swatch" style="background:#ffffff"></span><span><span class="token-name">Shell Popover</span><span class="token-value">#FFFFFF / 全局下拉</span></span></div>
+          <div class="token"><span class="swatch" style="background:#bd1c22"></span><span><span class="token-name">Accent</span><span class="token-value">#BD1C22 / 主操作</span></span></div>
+          <div class="token"><span class="swatch" style="background:#3c7eff"></span><span><span class="token-name">Info</span><span class="token-value">#3C7EFF / 下载/构建</span></span></div>
+          <div class="token"><span class="swatch" style="background:#42d987"></span><span><span class="token-name">Success</span><span class="token-value">#42D987 / 运行成功</span></span></div>
+          <div class="token"><span class="swatch" style="background:#f2b84b"></span><span><span class="token-name">Warning</span><span class="token-value">#F2B84B / 暂停/编译</span></span></div>
+        </div>
+      </section>
+
+      <section class="section" id="shell">
+        <div class="section-head">
+          <div>
+            <h3>全局外壳</h3>
+            <p class="section-desc">顶部菜单、项目下拉、下载/用户菜单、布局选择页、状态栏和窗口管理属于窗口外区域，使用亮色体系，不套用暗色面板状态。</p>
+          </div>
+          <div class="rule">hover 只变浅背景，不改文字色</div>
+        </div>
+        <div class="grid cols-2">
+          <div class="spec-card">
+            <p class="spec-title">结构示例</p>
+            <div class="shell-preview">
+              <div class="shell-top">
+                <strong>项目中心</strong>
+                <div class="shell-menu">
+                  <button class="shell-btn">AI</button>
+                  <button class="shell-btn hover">下载</button>
+                  <button class="shell-btn">设置</button>
+                </div>
+              </div>
+              <div class="shell-popover">
+                <div class="shell-popover-row">平台调用示例代码</div>
+                <div class="shell-popover-row muted">最近更新 12:20</div>
+              </div>
+              <div class="shell-status">设备库 · Blockly · 3D 仿真 <span>已连接</span></div>
+            </div>
+          </div>
+          <div class="spec-card">
+            <p class="spec-title">适用范围</p>
+            <p class="spec-note">project-dropdown-menu、top-dropdown-menu、menu-right 按钮、workspace 布局选择、status-center/status-bar 均保持 #F7F7F8/#FFFFFF 的亮色外壳。窗口、属性面板、绑定窗口、设备库内容区才进入暗色工作面。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="spacing">
+        <div class="section-head">
+          <div>
+            <h3>间距</h3>
+            <p class="section-desc">采用 4px 基准栅格，控件密度偏紧，适合工程后台重复扫描和高频操作。</p>
+          </div>
+          <div class="rule">面板内优先 8/12/16px</div>
+        </div>
+        <div class="grid">
+          <div class="space-scale"><strong>space-1</strong><span class="space-bar" style="width:4px"></span><span>4px</span></div>
+          <div class="space-scale"><strong>space-2</strong><span class="space-bar" style="width:8px"></span><span>8px</span></div>
+          <div class="space-scale"><strong>space-3</strong><span class="space-bar" style="width:12px"></span><span>12px</span></div>
+          <div class="space-scale"><strong>space-4</strong><span class="space-bar" style="width:16px"></span><span>16px</span></div>
+          <div class="space-scale"><strong>space-5</strong><span class="space-bar" style="width:24px"></span><span>24px</span></div>
+          <div class="space-scale"><strong>space-6</strong><span class="space-bar" style="width:32px"></span><span>32px</span></div>
+        </div>
+      </section>
+
+      <section class="section" id="type">
+        <div class="section-head">
+          <div>
+            <h3>字体</h3>
+            <p class="section-desc">字体沿用 Segoe UI / Tahoma / 系统无衬线，字号小而清晰，标题克制，避免营销化大字。</p>
+          </div>
+          <div class="rule">letter-spacing: 0</div>
+        </div>
+        <div class="grid">
+          <div class="type-row"><strong>标题</strong><span class="type-sample" style="font-size:18px;font-weight:600">仿真工作台配置</span><span>18px / 600</span></div>
+          <div class="type-row"><strong>分组标题</strong><span class="type-sample" style="font-size:14px;font-weight:600">设备运行参数</span><span>14px / 600</span></div>
+          <div class="type-row"><strong>正文</strong><span class="type-sample" style="font-size:12px">当前位置、状态、配置值说明</span><span>12px / 400</span></div>
+          <div class="type-row"><strong>辅助文本</strong><span class="type-sample" style="font-size:11px;color:var(--text-muted)">上次同步 14:32，已加载 6 个节点</span><span>11px / muted</span></div>
+          <div class="type-row"><strong>状态徽标</strong><span class="type-sample" style="font-size:10px;font-weight:600">RUNNING</span><span>10px / 600</span></div>
+        </div>
+      </section>
+
+      <section class="section" id="buttons">
+        <div class="section-head">
+          <div>
+            <h3>按钮</h3>
+            <p class="section-desc">按钮不使用外描边；主按钮用于确认、运行、保存等关键动作，次级按钮依靠控件背景抬高。</p>
+          </div>
+          <div class="rule">高度 24/30/36px</div>
+        </div>
+        <div class="grid cols-2">
+          <div class="spec-card">
+            <p class="spec-title">基础按钮</p>
+            <div class="toolbar">
+              <button class="btn primary">运行</button>
+              <button class="btn">保存配置</button>
+              <button class="btn subtle">取消</button>
+              <button class="btn icon" aria-label="刷新">↻</button>
+              <button class="btn" disabled>禁用</button>
+            </div>
+          </div>
+          <div class="spec-card">
+            <p class="spec-title">规范</p>
+            <p class="spec-note">圆角 4px；默认背景 #3A3A3A，hover 提升到 #454545，active 到 #505050 并下移 1px；禁用 opacity 0.52。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="forms">
+        <div class="section-head">
+          <div>
+            <h3>输入 / 下拉 / Checkbox / Slider</h3>
+            <p class="section-desc">表单控件保持暗色填充、无边框、无焦点外环；焦点通过背景变亮和文字增强表达。</p>
+          </div>
+          <div class="rule">focus 不加描边</div>
+        </div>
+        <div class="grid cols-2">
+          <div class="spec-card">
+            <div class="field-grid">
+              <label class="label" for="axis-name">轴名称</label>
+              <input class="input" id="axis-name" value="Arm Joint 03">
+              <label class="label" for="mode">控制模式</label>
+              <select class="select" id="mode">
+                <option>位置控制</option>
+                <option>速度控制</option>
+                <option>力矩控制</option>
+              </select>
+              <label class="label" for="disabled-input">禁用值</label>
+              <input class="input" id="disabled-input" value="不可编辑" disabled>
+              <span class="label">选项</span>
+              <label class="checkbox"><input type="checkbox" checked> 启用软限位</label>
+              <span class="label">速度</span>
+              <div class="slider-row"><input class="slider" type="range" value="58" min="0" max="100"><span class="input slider-value" style="display:flex;align-items:center;justify-content:center;padding:0">58%</span></div>
+            </div>
+          </div>
+          <div class="spec-card">
+            <p class="spec-title">规范</p>
+            <p class="spec-note">输入框、下拉、数值框统一 30px 高；checkbox 16px；slider 轨道 3px、手柄 12px。控件与标签使用 12px 间距，单位或数值靠右对齐。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="surfaces">
+        <div class="section-head">
+          <div>
+            <h3>面板 / 弹窗</h3>
+            <p class="section-desc">面板是工作台的主要容器，靠背景层级和阴影区分浮层；不要在卡片内再套卡片。</p>
+          </div>
+          <div class="rule">浮层阴影 0 14px 34px</div>
+        </div>
+        <div class="panel-demo">
+          <div class="panel">
+            <div class="panel-head">
+              <strong>设备属性</strong>
+              <button class="close" aria-label="关闭">×</button>
+            </div>
+            <div class="panel-body">
+              <div class="list">
+                <div class="list-item active"><span class="icon-box">A</span><span><strong>机械臂</strong><br><span class="token-value">6 轴 · 在线</span></span><span class="tag success">RUNNING</span></div>
+                <div class="list-item"><span class="icon-box">C</span><span><strong>相机模块</strong><br><span class="token-value">采集频率 30fps</span></span><span class="tag info">READY</span></div>
+                <div class="list-item"><span class="icon-box">D</span><span><strong>夹爪</strong><br><span class="token-value">等待绑定</span></span><span class="tag warning">PAUSED</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="modal">
+            <div class="modal-head">
+              <strong>确认下发</strong>
+              <button class="close" aria-label="关闭">×</button>
+            </div>
+            <div class="modal-body">
+              <p class="spec-note" style="margin-top:0">本次参数将写入控制器并触发仿真刷新。</p>
+              <div class="toolbar" style="justify-content:flex-end;margin-top:16px">
+                <button class="btn subtle">取消</button>
+                <button class="btn primary">确认</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="data">
+        <div class="section-head">
+          <div>
+            <h3>列表 / 表格</h3>
+            <p class="section-desc">列表行和表格行都使用独立背景块表达可交互单元，表格取消线框和分割线，仅保留 4px 行距。</p>
+          </div>
+          <div class="rule">border-spacing: 0 4px</div>
+        </div>
+        <table aria-label="设备参数表格">
+          <thead>
+            <tr>
+              <th>模块</th>
+              <th>参数</th>
+              <th>当前值</th>
+              <th>状态</th>
+              <th>更新时间</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Arm Joint 01</td>
+              <td>Target Position</td>
+              <td>124.8°</td>
+              <td><span class="tag success">SYNCED</span></td>
+              <td>14:32:11</td>
+            </tr>
+            <tr>
+              <td>Camera A</td>
+              <td>Exposure</td>
+              <td>12ms</td>
+              <td><span class="tag info">READY</span></td>
+              <td>14:31:58</td>
+            </tr>
+            <tr>
+              <td>Controller</td>
+              <td>Runtime</td>
+              <td>Simulation</td>
+              <td><span class="tag warning">PENDING</span></td>
+              <td>14:30:04</td>
+            </tr>
+            <tr>
+              <td>Gripper</td>
+              <td>Force Limit</td>
+              <td>--</td>
+              <td><span class="tag error">ERROR</span></td>
+              <td>14:28:19</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section" id="states">
+        <div class="section-head">
+          <div>
+            <h3>状态标签 / 交互状态</h3>
+            <p class="section-desc">状态标签使用透明色块加圆点，不靠边框；交互状态按背景明度递进，选中态使用主色透明底。</p>
+          </div>
+          <div class="rule">motion 0.14-0.2s ease</div>
+        </div>
+        <div class="grid cols-2">
+          <div class="spec-card">
+            <p class="spec-title">状态标签</p>
+            <div class="toolbar">
+              <span class="tag">IDLE</span>
+              <span class="tag info">DOWNLOADING</span>
+              <span class="tag success">RUNNING</span>
+              <span class="tag warning">COMPILING</span>
+              <span class="tag error">ERROR</span>
+            </div>
+          </div>
+          <div class="spec-card">
+            <p class="spec-title">状态规则</p>
+            <div class="state-grid">
+              <strong>默认</strong><span class="state-cell">Control #3A3A3A</span><span class="state-cell">文字 #DDDDDD</span>
+              <strong>悬停</strong><span class="state-cell hover">Hover #454545</span><span class="state-cell hover">文字增强</span>
+              <strong>按下/焦点</strong><span class="state-cell active">Active #505050</span><span class="state-cell active">轻微位移</span>
+              <strong>选中</strong><span class="state-cell selected">Accent Soft</span><span class="state-cell selected">主色透明底</span>
+              <strong>禁用</strong><span class="state-cell disabled">Disabled #343434</span><span class="state-cell disabled">opacity 0.52-0.7</span>
+            </div>
+          </div>
+        </div>
+        <div class="spec-card raised" style="margin-top:12px">
+          <p class="spec-title">交互原则</p>
+          <ul class="guideline-list">
+            <li><strong>少描边：</strong>默认、悬停、选中、焦点都优先用背景层级表达，只有必要的结构轮廓可使用极弱内阴影。</li>
+            <li><strong>少套层：</strong>页面区块、面板、列表项各自独立，不在面板里继续制造多层卡片。</li>
+            <li><strong>密度稳定：</strong>工具栏、图标按钮、表格行、输入框使用固定高度，hover 不改变尺寸。</li>
+            <li><strong>颜色克制：</strong>红色只用于主操作、选中和错误；蓝/绿/黄用于信息、运行、编译/暂停等状态。</li>
+          </ul>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script>
+    document.querySelectorAll('.slider').forEach((slider) => {
+      const valueEl = slider.closest('.slider-row')?.querySelector('.slider-value');
+      const update = () => {
+        const min = Number(slider.min || 0);
+        const max = Number(slider.max || 100);
+        const value = Number(slider.value || min);
+        const percent = max === min ? 0 : ((value - min) / (max - min)) * 100;
+        const clamped = Math.max(0, Math.min(100, percent));
+        slider.style.setProperty('--range-fill', `${clamped}%`);
+        if (valueEl) valueEl.textContent = `${Math.round(clamped)}%`;
+      };
+      update();
+      slider.addEventListener('input', update);
+    });
+  </script>
+</body>
+</html>
