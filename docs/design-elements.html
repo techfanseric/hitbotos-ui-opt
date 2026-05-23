@@ -495,26 +495,37 @@
       border-radius: var(--radius-md);
       padding: 0 var(--space-3);
       color: var(--text);
-      background: var(--bg-control);
+      background-color: var(--bg-control);
       outline: none;
       transition: background var(--motion-base), color var(--motion-base), opacity var(--motion-base);
     }
 
+    .select {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      padding-right: 36px;
+      background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 4.5L6 7.5L9 4.5' stroke='%23A5A5A5' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      background-size: 12px 12px;
+    }
+
     .input:hover,
     .select:hover {
-      background: var(--bg-control-hover);
+      background-color: var(--bg-control-hover);
     }
 
     .input:focus,
     .select:focus {
-      background: var(--bg-control-active);
+      background-color: var(--bg-control-active);
       color: var(--text-strong);
     }
 
     .input:disabled,
     .select:disabled {
       color: var(--text-disabled);
-      background: var(--bg-control-disabled);
+      background-color: var(--bg-control-disabled);
       opacity: 0.7;
     }
 

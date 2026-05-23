@@ -71,7 +71,7 @@ class PanelLoader {
      * 绑定Tab切换事件
      */
     bindTabEvents() {
-        const tabs = this.panelContainer.querySelectorAll('.panel-tab');
+        const tabs = this.panelContainer.querySelectorAll('.panel-tab[data-tab]');
         tabs.forEach(tab => {
             tab.addEventListener('click', (e) => {
                 const tabType = e.currentTarget.dataset.tab;
@@ -92,7 +92,7 @@ class PanelLoader {
         }
 
         // 移除所有tab的激活状态
-        const tabs = this.panelContainer.querySelectorAll('.panel-tab');
+        const tabs = this.panelContainer.querySelectorAll('.panel-tab[data-tab]');
         tabs.forEach(tab => {
             tab.classList.remove('active');
         });

@@ -1576,9 +1576,10 @@ function setupArmPropertyPanel() {
 
     const viewport = sourcePanel.closest('.center-content');
     const panels = createArmPropertyPanelVariants(sourcePanel);
-    const openBtns = document.querySelectorAll('[data-arm-panel-toggle]');
+    const dockPanel = document.querySelector('.timeline-panel');
+    const dockBtns = document.querySelectorAll('[data-arm-panel-dock]');
+    const openAllBtns = document.querySelectorAll('[data-arm-panel-toggle]');
     const panelStates = new Map();
-    const userClosedPanels = new Set(); // 追踪用户手动关闭的面板
     let activeDragState = null;
     let isAnyPanelDragging = false; // 是否有面板正在被拖动
 
@@ -1608,14 +1609,21 @@ function setupArmPropertyPanel() {
 
         const viewportRect = viewport.getBoundingClientRect();
         const visiblePanels = panels.filter(panel => !panel.classList.contains('hidden'));
+        if (!visiblePanels.length) return;
+
         const padding = 12;
-        const gap = 12;
-        const availableLeft = Math.max(padding, viewportRect.left + padding);
+        const gap = 10;
+        const anchorTop = Math.max(padding, viewportRect.top + 60);
         const anchorRight = Math.min(viewportRect.right - padding, window.innerWidth - padding);
-        const totalPanelWidth = visiblePanels.reduce((sum, panel) => sum + panel.getBoundingClientRect().width, 0);
-        const totalWidth = totalPanelWidth + Math.max(0, visiblePanels.length - 1) * gap;
-        const canPlaceSideBySide = anchorRight - totalWidth >= availableLeft;
-        let nextLeft = anchorRight - totalWidth;
+        let nextRight = anchorRight;
+
+        visiblePanels.forEach(panel => {
+            const state = panelStates.get(panel);
+            if (state?.hasCustomPosition) return;
+            if (activeDragState && activeDragState.panel === panel) return;
+
+            panel.style.maxHeight = '';
+        });
 
         visiblePanels.forEach((panel, index) => {
             const state = panelStates.get(panel);
@@ -1624,49 +1632,66 @@ function setupArmPropertyPanel() {
             if (activeDragState && activeDragState.panel === panel) return;
 
             const panelRect = panel.getBoundingClientRect();
-            const sideBySideLeft = nextLeft;
-            const cascadeLeft = index % 2 === 0
-                ? Math.max(padding, anchorRight - panelRect.width - Math.floor(index / 2) * 24)
-                : padding + Math.floor(index / 2) * 24;
-            const nextTop = viewportRect.top + 60 + (canPlaceSideBySide ? 0 : index * 34);
+            const preferredLeft = nextRight - panelRect.width;
+            const wrappedLeft = Math.max(padding, anchorRight - panelRect.width - index * 24);
+            const nextLeft = preferredLeft >= padding ? preferredLeft : wrappedLeft;
+            const nextTop = preferredLeft >= padding ? anchorTop : anchorTop + index * 34;
 
             setPanelPosition(
                 panel,
-                Math.max(padding, canPlaceSideBySide ? sideBySideLeft : cascadeLeft),
-                Math.max(padding, nextTop)
+                nextLeft,
+                nextTop
             );
             panel.style.zIndex = String(1200 + index);
-            nextLeft += panelRect.width + gap;
+            nextRight = nextLeft - gap;
         });
     }
 
-    // 检查仿真窗口是否处于全屏状态
-    function isSimulationFullscreen() {
-        if (!layoutManager) return false;
-        const state = layoutManager.getState();
-        return state.fullscreenWindow?.classList.contains('simulation-window');
+    function getPanelById(panelId) {
+        return panels.find(panel => panel.id === panelId) || panels[0];
     }
 
-    // 根据全屏状态更新面板可见性
-    function updatePanelVisibility() {
-        if (isSimulationFullscreen()) {
-            panels.forEach(panel => {
-                // 如果用户手动关闭了面板，不再自动显示
-                if (userClosedPanels.has(panel)) return;
-                panel.classList.remove('hidden');
-            });
-            window.requestAnimationFrame(setInitialPanelPositions);
-        } else {
-            panels.forEach(panel => panel.classList.add('hidden'));
-        }
+    function syncDockState() {
+        let dockedCount = 0;
+
+        dockBtns.forEach(btn => {
+            const targetId = btn.dataset.armPanelDock || panels[0]?.id;
+            const targetPanel = getPanelById(targetId);
+            const isDocked = targetPanel && targetPanel.classList.contains('hidden');
+            btn.hidden = !isDocked;
+            btn.setAttribute('aria-expanded', String(!isDocked));
+            if (isDocked) dockedCount += 1;
+        });
+
+        dockPanel?.classList.toggle('dock-empty', dockedCount === 0);
     }
 
-    function showPanels() {
-        // 只有在全屏状态下才允许显示面板
-        if (!isSimulationFullscreen()) return;
-        // 用户手动点击打开按钮时，清除关闭状态并显示所有面板
-        userClosedPanels.clear();
-        panels.forEach(panel => panel.classList.remove('hidden'));
+    function hidePanel(panel) {
+        if (!panel) return;
+        panel.classList.add('hidden');
+        syncDockState();
+    }
+
+    function showPanel(panelId) {
+        const panel = getPanelById(panelId);
+        if (!panel) return;
+
+        const state = panelStates.get(panel);
+        if (state) state.hasCustomPosition = false;
+        panel.style.right = '';
+        panel.classList.remove('hidden');
+        syncDockState();
+        window.requestAnimationFrame(setInitialPanelPositions);
+    }
+
+    function showAllPanels() {
+        panels.forEach(panel => {
+            const state = panelStates.get(panel);
+            if (state) state.hasCustomPosition = false;
+            panel.style.right = '';
+            panel.classList.remove('hidden');
+        });
+        syncDockState();
         window.requestAnimationFrame(setInitialPanelPositions);
     }
 
@@ -1678,8 +1703,7 @@ function setupArmPropertyPanel() {
 
         closeBtn?.addEventListener('click', (e) => {
             e.stopPropagation();
-            panel.classList.add('hidden');
-            userClosedPanels.add(panel); // 标记用户手动关闭的面板
+            hidePanel(panel);
         });
 
         header?.addEventListener('mousedown', (e) => {
@@ -1735,8 +1759,16 @@ function setupArmPropertyPanel() {
         });
     });
 
-    openBtns.forEach(btn => {
-        btn.addEventListener('click', showPanels);
+    dockBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            showPanel(btn.dataset.armPanelDock);
+        });
+    });
+
+    openAllBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            showAllPanels();
+        });
     });
 
     document.addEventListener('mousemove', (e) => {
@@ -1756,23 +1788,22 @@ function setupArmPropertyPanel() {
         isAnyPanelDragging = false; // 清除拖动状态
     });
 
-    // 监听窗口大小变化，检测全屏状态变化
+    // 监听窗口大小变化，保持已展开面板停靠在可视区域内
     if (typeof ResizeObserver !== 'undefined' && viewport) {
         const observer = new ResizeObserver(() => {
             setInitialPanelPositions();
-            updatePanelVisibility();
         });
         observer.observe(viewport);
         window.armPropertyPanelResizeObserver = observer;
     }
 
-    // 监听布局管理器状态变化（通过定时检查）
-    const stateCheckInterval = setInterval(() => {
-        updatePanelVisibility();
-    }, 500);
-
-    // 初始检查（延迟执行确保布局管理器已初始化）
-    setTimeout(updatePanelVisibility, 100);
+    panels.forEach(panel => {
+        const state = panelStates.get(panel);
+        if (state) state.hasCustomPosition = false;
+        panel.classList.remove('hidden');
+    });
+    syncDockState();
+    window.requestAnimationFrame(setInitialPanelPositions);
 }
 
 function createArmPropertyPanelVariants(sourcePanel) {
@@ -2048,7 +2079,7 @@ function updateAllWindowControls() {
 
 // 设置属性面板Tab功能
 function setupPanelTabs() {
-    const panelTabs = document.querySelectorAll('.panel-tab');
+    const panelTabs = document.querySelectorAll('.panel-tab[data-tab]');
     const tabContents = document.querySelectorAll('.panel-tab-content');
     const panelContentWrapper = document.querySelector('.panel-content-wrapper');
     const rightPanel = document.querySelector('.right-panel');
@@ -2112,7 +2143,7 @@ function setupPanelTabs() {
 function activateStructureTab() {
     const structureTab = document.querySelector('[data-tab="structure"]');
     const structureContent = document.querySelector('[data-content="structure"]');
-    const panelTabs = document.querySelectorAll('.panel-tab');
+    const panelTabs = document.querySelectorAll('.panel-tab[data-tab]');
     const tabContents = document.querySelectorAll('.panel-tab-content');
     const panelContentWrapper = document.querySelector('.panel-content-wrapper');
     const rightPanel = document.querySelector('.right-panel');

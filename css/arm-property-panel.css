@@ -11,10 +11,10 @@
     flex-direction: column;
     overflow: hidden;
     color: #dfdfdf;
-    background: #292929;
-    border: 1px solid #3f3f3f;
+    background: var(--ds-bg-panel-floating);
+    border: 0;
     border-radius: 6px;
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.34);
+    box-shadow: var(--ds-shadow-floating-strong);
     transition: box-shadow 0.18s ease, transform 0.18s ease;
     --arm-field-bg: #373735;
     --arm-field-border: #484843;
@@ -43,7 +43,7 @@
     gap: 8px;
     padding: 0 6px 0 12px;
     background: #303030;
-    border-bottom: 1px solid #3b3b3b;
+    border-bottom: 0;
     cursor: move;
 }
 
@@ -79,7 +79,7 @@
     padding: 0 6px;
     color: #d7d7d7;
     background: #3b3b3b;
-    border: 1px solid #4a4a4a;
+    border: 0;
     border-radius: 3px;
     font-size: 10px;
     line-height: 1;
@@ -525,8 +525,8 @@
 .arm-panel-variant-readout .arm-joint-list {
     gap: 7px;
     padding: 6px 0;
-    border-top: 1px solid #393939;
-    border-bottom: 1px solid #393939;
+    border-top: 0;
+    border-bottom: 0;
 }
 
 .arm-panel-variant-readout .arm-joint-row {
@@ -746,8 +746,8 @@
 /* 去线条化：用色块、间距和状态色建立层级，减少静态描边与分割线 */
 .arm-property-panel {
     border: 0;
-    background: #292927;
-    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.28);
+    background: var(--ds-bg-panel-floating);
+    box-shadow: var(--ds-shadow-floating-strong);
     --arm-field-border: transparent;
     --arm-thumb-border: transparent;
 }

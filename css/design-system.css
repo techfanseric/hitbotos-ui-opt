@@ -26,7 +26,10 @@
     --ds-bg-workspace: #2b2b2b;
     --ds-bg-window: #2f2f2f;
     --ds-bg-panel: #303030;
+    --ds-bg-panel-docked: #2f2f2f;
     --ds-bg-panel-raised: #383838;
+    --ds-bg-panel-floating: #383838;
+    --ds-bg-popover: #3b3b3b;
     --ds-bg-control: #3a3a3a;
     --ds-bg-control-hover: #454545;
     --ds-bg-control-active: #505050;
@@ -46,7 +49,8 @@
     --ds-danger: #ff7478;
 
     --ds-shadow-floating: 0 14px 34px rgba(0, 0, 0, 0.24);
-    --ds-shadow-popover: 0 18px 42px rgba(0, 0, 0, 0.34);
+    --ds-shadow-floating-strong: 0 22px 52px rgba(0, 0, 0, 0.48), 0 6px 18px rgba(0, 0, 0, 0.28);
+    --ds-shadow-popover: 0 18px 42px rgba(0, 0, 0, 0.44), 0 4px 14px rgba(0, 0, 0, 0.24);
 
     --ds-motion-fast: 0.14s ease;
     --ds-motion-base: 0.2s ease;
@@ -289,9 +293,17 @@ textarea,
     min-height: var(--ds-control-h-sm);
     border: 0;
     border-radius: var(--ds-radius-md);
-    background: var(--ds-bg-control);
+    background-color: var(--ds-bg-control);
     color: var(--ds-text);
     transition: background-color var(--ds-motion-base), color var(--ds-motion-base), opacity var(--ds-motion-base);
+}
+
+select,
+.binding-solution-select,
+.panel-custom-select select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 }
 
 input:not([type="range"]):hover,
@@ -306,12 +318,12 @@ textarea:hover,
 .binding-solution-select:hover,
 .device-library-panel .panel-search input:hover,
 .panel-custom-select select:hover {
-    background: var(--ds-bg-control-hover);
+    background-color: var(--ds-bg-control-hover);
 }
 
 .arm-coordinate-grid input:hover,
 .arm-joint-row input[type="number"]:hover {
-    background: var(--ds-bg-control-hover);
+    background-color: var(--ds-bg-control-hover);
 }
 
 input:not([type="range"]):focus,
@@ -326,13 +338,13 @@ textarea:focus,
 .binding-solution-select:focus,
 .device-library-panel .panel-search input:focus,
 .panel-custom-select select:focus {
-    background: var(--ds-bg-control-active);
+    background-color: var(--ds-bg-control-active);
     color: var(--ds-text-strong);
 }
 
 .arm-coordinate-grid input:focus,
 .arm-joint-row input[type="number"]:focus {
-    background: var(--ds-bg-control-active);
+    background-color: var(--ds-bg-control-active);
     color: var(--ds-text-strong);
 }
 
@@ -452,6 +464,42 @@ textarea:focus,
     color: var(--ds-text-strong);
 }
 
+/* Surface layers */
+.window,
+.left-toolbar,
+.viewport-toolbar,
+.right-panel,
+.panel-section {
+    background: var(--ds-bg-panel-docked);
+}
+
+.device-library-panel,
+.binding-panel,
+.arm-property-panel {
+    background: var(--ds-bg-panel-floating);
+    border: 0;
+    box-shadow: var(--ds-shadow-floating-strong);
+}
+
+.project-dropdown-menu,
+.project-item-menu,
+.top-dropdown-menu,
+.dropdown-menu,
+.swap-dropdown-menu,
+.host-blockly-program-menu,
+.device-detail-popup,
+.binding-confirm-card {
+    background: var(--ds-bg-popover);
+    border: 0;
+    box-shadow: var(--ds-shadow-popover);
+}
+
+.device-library-panel.dragging,
+.binding-panel.dragging,
+.arm-property-panel.dragging {
+    box-shadow: 0 28px 58px rgba(0, 0, 0, 0.54);
+}
+
 /* Panels, popovers, lists */
 .window,
 .left-toolbar,
@@ -461,11 +509,7 @@ textarea:focus,
 .top-dropdown-menu,
 .dropdown-menu,
 .swap-dropdown-menu,
-.host-blockly-program-menu,
-.device-library-panel,
-.binding-panel,
-.arm-property-panel,
-.device-detail-popup {
+.host-blockly-program-menu {
     box-shadow: var(--ds-shadow-floating);
 }
 
@@ -492,12 +536,7 @@ textarea:focus,
 
 .right-panel,
 .panel-section,
-.device-library-panel,
-.binding-panel,
-.arm-property-panel,
-.device-detail-popup,
 .binding-confirm-card {
-    background: var(--ds-bg-panel);
     border-radius: var(--ds-radius-xl);
 }
 

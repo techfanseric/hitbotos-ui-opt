@@ -6,10 +6,10 @@
     width: 680px;
     max-width: calc(100vw - 96px);
     max-height: calc(100vh - 100px);
-    background: #2b2b2b;
-    border: 1px solid #444;
+    background: var(--ds-bg-panel-floating);
+    border: 0;
     border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    box-shadow: var(--ds-shadow-floating-strong);
     z-index: 2000;
     display: flex;
     flex-direction: column;
@@ -32,7 +32,7 @@
     align-items: center;
     padding: 12px 4px 12px 12px;
     background: #3a3a3a;
-    border-bottom: 1px solid #444;
+    border-bottom: 0;
     user-select: none;
 }
 
@@ -143,7 +143,7 @@
     align-items: center;
     padding: 12px;
     background: #303030;
-    border-bottom: 1px solid #444;
+    border-bottom: 0;
 }
 
 .binding-solution-label {
@@ -154,15 +154,16 @@
 .binding-solution-select {
     appearance: none;
     -webkit-appearance: none;
+    -moz-appearance: none;
     width: 100%;
     height: 32px;
-    padding: 0 40px 0 10px;
+    padding: 0 44px 0 10px;
     border: 1px solid #555;
     border-radius: 4px;
     background-color: #242424;
     background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 4.5L6 7.5L9 4.5' stroke='%23B5B5B5' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: right 12px center;
+    background-position: right 16px center;
     background-size: 12px 12px;
     color: #fff;
     font-size: 12px;
@@ -243,7 +244,7 @@
     padding: 10px 12px;
     color: #999;
     font-size: 12px;
-    border-bottom: 1px solid #444;
+    border-bottom: 0;
     background: #303030;
 }
 
@@ -397,7 +398,7 @@
 
 .binding-selected-card {
     padding: 12px;
-    border: 1px solid #444;
+    border: 0;
     border-radius: 6px;
     background: #333;
 }
@@ -409,7 +410,7 @@
     gap: 10px;
     padding-bottom: 12px;
     margin-bottom: 12px;
-    border-bottom: 1px solid #444;
+    border-bottom: 0;
     text-align: center;
 }
 
@@ -456,7 +457,7 @@
     justify-content: space-between;
     gap: 16px;
     padding: 8px 0;
-    border-bottom: 1px solid #3f3f3f;
+    border-bottom: 0;
 }
 
 .binding-selected-row:last-child {
@@ -490,10 +491,10 @@
     grid-template-columns: 38px 1fr;
     gap: 12px;
     padding: 16px;
-    border: 1px solid #555;
+    border: 0;
     border-radius: 8px;
-    background: #303030;
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+    background: var(--ds-bg-popover);
+    box-shadow: var(--ds-shadow-popover);
 }
 
 .binding-confirm-icon {
@@ -537,8 +538,7 @@
 
 .viewport-3d.binding-pick-mode {
     cursor: crosshair;
-    outline: 2px solid rgba(189, 28, 34, 0.75);
-    outline-offset: -2px;
+    outline: 0;
 }
 
 .viewport-3d.binding-pick-mode::after {
@@ -550,7 +550,8 @@
     padding: 6px 10px;
     border-radius: 4px;
     background: rgba(43, 43, 43, 0.9);
-    border: 1px solid #BD1C22;
+    border: 0;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.34);
     color: #ffffff;
     font-size: 12px;
     pointer-events: none;
@@ -580,7 +581,7 @@
     .binding-column {
         min-height: 220px;
         border-right: 0;
-        border-bottom: 1px solid #444;
+        border-bottom: 0;
     }
 
     .binding-column:last-child {
@@ -591,8 +592,8 @@
 /* 去线条化：绑定窗口依靠背景层级和留白区分区域，静态边框只保留为交互反馈 */
 .binding-panel {
     border: 0;
-    background: #2b2b2b;
-    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.36);
+    background: var(--ds-bg-panel-floating);
+    box-shadow: var(--ds-shadow-floating-strong);
 }
 
 .binding-panel .panel-header,
@@ -692,7 +693,7 @@
 }
 
 .binding-confirm-card {
-    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.38);
+    box-shadow: var(--ds-shadow-popover);
 }
 
 .viewport-3d.binding-pick-mode {

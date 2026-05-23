@@ -454,11 +454,13 @@
 }
 
 .right-panel {
-    background: #363636;
+    background: var(--ds-bg-panel-docked);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.16);
 }
 
 .panel-section {
     background: #2c2c2c;
+    box-shadow: none;
 }
 
 .panel-content {

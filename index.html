@@ -519,15 +519,14 @@
                             </div>
 
                             <!-- 补充行为控制面板 -->
-                            <div class="timeline-panel">
+                            <div class="timeline-panel dock-empty">
                                 <div class="timeline-header">
-                                    <span class="timeline-title">补充行为控制</span>
-                                    <button class="timeline-toggle">
-                                        <i class="bi bi-caret-up-fill"></i>
-                                    </button>
-                                </div>
-                                <div class="timeline-content">
-                                    <!-- 面板内容待添加 -->
+                                    <span class="timeline-title">悬浮面板停靠栏</span>
+                                    <div class="arm-taskbar" role="group" aria-label="机械臂属性面板">
+                                        <button class="arm-taskbar-item" type="button" data-arm-panel-dock="armPropertyPanel" hidden>机械臂属性</button>
+                                        <button class="arm-taskbar-item" type="button" data-arm-panel-dock="armPropertyPanelReadout" hidden>空间坐标</button>
+                                        <button class="arm-taskbar-item" type="button" data-arm-panel-dock="armPropertyPanelCompact" hidden>手柄控制</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
