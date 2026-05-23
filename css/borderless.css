@@ -1,0 +1,199 @@
+/* 全局去线条化规则：减少装饰性描边、分割线、表格线和控件聚焦线 */
+button,
+input,
+select,
+textarea,
+table,
+thead,
+tbody,
+tfoot,
+tr,
+th,
+td,
+.window,
+.window-context-badge,
+.window-state-badge,
+.project-dropdown-menu,
+.project-item-menu,
+.top-dropdown-menu,
+.layout-preview,
+.layout-cell,
+.status-bar,
+.status-item,
+.modal,
+.dialog,
+.card,
+.panel,
+.window-item,
+.dropdown-menu,
+.swap-dropdown-menu,
+.host-blockly-program-trigger,
+.host-blockly-program-menu,
+.host-run-target-check {
+    border-color: transparent !important;
+}
+
+button:focus,
+button:focus-visible,
+input:focus,
+input:focus-visible,
+select:focus,
+select:focus-visible,
+textarea:focus,
+textarea:focus-visible,
+[tabindex]:focus,
+[tabindex]:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+    border-color: transparent !important;
+}
+
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+th,
+td {
+    border: 0 !important;
+}
+
+button,
+.menu-btn,
+.top-dropdown-item,
+.project-dropdown-btn,
+.project-dropdown-item-more,
+.window-control-btn,
+.toolbar-btn,
+.left-toolbar-btn,
+.panel-tab,
+.panel-toggle,
+.action-btn,
+.binding-option,
+.device-card {
+    box-shadow: none !important;
+}
+
+.project-dropdown-menu,
+.project-item-menu,
+.top-dropdown-menu,
+.dropdown-menu,
+.swap-dropdown-menu,
+.host-blockly-program-menu,
+.window,
+.left-toolbar,
+.viewport-toolbar,
+.viewport-toolbar.permanent,
+.device-library-panel,
+.binding-panel,
+.arm-property-panel,
+.device-detail-popup {
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.24) !important;
+}
+
+.main-container,
+.top-menu-bar,
+.workspace,
+.window-header,
+.window-content,
+.timeline-ruler,
+.component-group,
+.panel-header,
+.panel-content,
+.binding-column,
+.binding-column-title,
+.binding-solution-bar,
+.binding-selected-head,
+.binding-selected-row,
+.device-library-panel .panel-header,
+.device-library-panel .panel-search {
+    border: 0 !important;
+}
+
+.top-menu-divider,
+.project-dropdown-item::after,
+.host-run-inline-group::before,
+.host-run-cluster-divider,
+.host-blockly-left-edit,
+.host-blockly-toolbar-group + .host-blockly-toolbar-group::before,
+.host-blockly-toolbar-group + .host-run-inline-group::before {
+    display: none !important;
+}
+
+.resize-handle::after {
+    border: 0 !important;
+    background: rgba(160, 160, 160, 0.42);
+    border-radius: 3px;
+}
+
+.window-state-badge::before {
+    box-shadow: none !important;
+}
+
+.standard-input,
+.range-input,
+.panel-slider-value,
+.counter-input input,
+.property-row input,
+.input-with-label input,
+.binding-solution-select,
+.device-library-panel .panel-search input,
+.panel-custom-select select,
+input,
+select,
+textarea {
+    border-color: transparent !important;
+    box-shadow: none !important;
+}
+
+.standard-input:focus,
+.range-input:focus,
+.panel-slider-value:focus,
+.counter-input input:focus,
+.property-row input:focus,
+.input-with-label input:focus,
+.binding-solution-select:focus,
+.device-library-panel .panel-search input:focus,
+.panel-custom-select select:focus,
+input:focus,
+select:focus,
+textarea:focus {
+    background-color: #424242;
+}
+
+.panel-secondary-btn-outline,
+.binding-secondary-btn,
+.binding-primary-btn,
+.binding-danger-btn,
+.panel-primary-btn,
+.panel-secondary-btn,
+.panel-action-btn-large,
+.panel-action-btn-icon,
+.panel-status-btn,
+.arm-secondary-btn,
+.arm-joint-toolbar button,
+.arm-mount-btn {
+    border-color: transparent !important;
+}
+
+.upload-zone,
+.model-preview,
+.binding-model-thumb,
+.binding-selected-thumb,
+.device-detail-image,
+.device-detail-image-fallback {
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.upload-zone.dragover,
+.upload-zone:hover {
+    border-color: transparent !important;
+}
+
+.face,
+.cylinder-side,
+.cylinder-top,
+.cylinder-bottom {
+    border: 0 !important;
+}

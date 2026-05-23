@@ -374,7 +374,7 @@ function createEmbeddedRunControlStyles(doc) {
             position: relative;
         }
         .host-run-inline-group::before {
-            content: '';
+            content: none;
             position: absolute;
             left: 0;
             top: 50%;
@@ -409,11 +409,11 @@ function createEmbeddedRunControlStyles(doc) {
             background: rgba(255, 255, 255, 0.08);
         }
         .host-run-cluster-divider {
-            width: 1px;
+            width: 0;
             height: 14px;
             margin: 0 4px;
             align-self: center;
-            background: rgba(255, 255, 255, 0.12);
+            background: transparent;
         }
         .host-run-inline-group.is-disabled {
             opacity: 0.72;
@@ -458,10 +458,10 @@ function createEmbeddedRunControlStyles(doc) {
         .host-run-target-check {
             width: 12px;
             height: 12px;
-            border: 1px solid rgba(255,255,255,0.28);
+            border: 0;
             border-radius: 3px;
             flex: 0 0 auto;
-            background: transparent;
+            background: rgba(255,255,255,0.12);
             transition: all 0.16s ease;
             position: relative;
         }
@@ -525,18 +525,17 @@ function createEmbeddedRunControlStyles(doc) {
             min-width: 0;
             max-width: 280px;
             padding: 0 8px;
-            border: 1px solid rgba(255,255,255,0.10);
+            border: 0;
             border-radius: 4px;
             color: rgba(255,255,255,0.9);
             background: rgba(255,255,255,0.07);
             cursor: pointer;
             font-size: 12px;
             line-height: 1;
-            transition: background-color 0.16s ease, border-color 0.16s ease;
+            transition: background-color 0.16s ease;
         }
         .host-blockly-program-trigger:hover,
         .host-blockly-program-switcher.is-open .host-blockly-program-trigger {
-            border-color: rgba(60, 126, 255, 0.48);
             background: rgba(60, 126, 255, 0.14);
         }
         .host-blockly-program-name {
@@ -547,12 +546,12 @@ function createEmbeddedRunControlStyles(doc) {
             font-weight: 600;
         }
         .host-blockly-program-caret {
-            width: 0;
-            height: 0;
+            width: 8px;
+            height: 8px;
             margin-left: auto;
-            border-left: 4px solid transparent;
-            border-right: 4px solid transparent;
-            border-top: 5px solid rgba(255,255,255,0.56);
+            border: 0;
+            background: rgba(255,255,255,0.56);
+            clip-path: polygon(0 25%, 100% 25%, 50% 75%);
             flex: 0 0 auto;
         }
         .host-blockly-program-state {
@@ -589,7 +588,7 @@ function createEmbeddedRunControlStyles(doc) {
             z-index: 1002;
             min-width: 190px;
             padding: 4px;
-            border: 1px solid rgba(255,255,255,0.10);
+            border: 0;
             border-radius: 6px;
             background: #2f3136;
             box-shadow: 0 8px 20px rgba(0,0,0,0.28);
@@ -645,7 +644,7 @@ function createEmbeddedRunControlStyles(doc) {
             gap: 6px;
             height: 28px;
             padding-left: 10px;
-            border-left: 1px solid rgba(255,255,255,0.12);
+            border-left: 0;
             color: rgba(255,255,255,0.68);
             font-size: 11px;
             line-height: 1;
@@ -664,7 +663,7 @@ function createEmbeddedRunControlStyles(doc) {
         }
         .host-blockly-toolbar-group + .host-blockly-toolbar-group::before,
         .host-blockly-toolbar-group + .host-run-inline-group::before {
-            content: '';
+            content: none;
             position: absolute;
             left: 0;
             top: 50%;
@@ -1933,7 +1932,7 @@ function addSwapControlsStyles() {
             right: 0;
             min-width: 120px;
             background: #2b2b2b;
-            border: 1px solid #444;
+            border: 0;
             border-radius: 4px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
             z-index: 1000;

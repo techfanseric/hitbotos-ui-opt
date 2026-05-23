@@ -444,3 +444,53 @@
 }
 
 /* 注意：面板UI组件样式已分离至 panel-ui-components.css */
+
+/* 去线条化：右侧属性面板减少卡片描边与输入框硬边界 */
+.right-panel,
+.panel-section,
+.panel-content,
+.panel-header {
+    background-clip: padding-box;
+}
+
+.right-panel {
+    background: #363636;
+}
+
+.panel-section {
+    background: #2c2c2c;
+}
+
+.panel-content {
+    background: #2f2f2f;
+}
+
+.panel-header {
+    background: #292929;
+}
+
+.panel-header:hover {
+    background: #303030;
+}
+
+.property-row input,
+.input-with-label input {
+    border-color: transparent;
+    background: #383838;
+}
+
+.property-row input:focus,
+.input-with-label input:focus {
+    border-color: transparent;
+    box-shadow: none;
+    background: #424242;
+}
+
+.right-panel input:focus,
+.right-panel input:focus-visible,
+.right-panel button:focus,
+.right-panel button:focus-visible {
+    outline: none;
+    border-color: transparent;
+    box-shadow: none;
+}

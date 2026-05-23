@@ -465,19 +465,22 @@ class PanelLoader {
 
             zone.addEventListener('dragover', (e) => {
                 e.preventDefault();
-                zone.style.borderColor = '#BD1C22';
+                zone.classList.add('dragover');
+                zone.style.borderColor = 'transparent';
                 zone.style.backgroundColor = '#3a2b2b';
             });
 
             zone.addEventListener('dragleave', (e) => {
                 e.preventDefault();
-                zone.style.borderColor = '#555';
+                zone.classList.remove('dragover');
+                zone.style.borderColor = 'transparent';
                 zone.style.backgroundColor = '#2b2b2b';
             });
 
             zone.addEventListener('drop', (e) => {
                 e.preventDefault();
-                zone.style.borderColor = '#555';
+                zone.classList.remove('dragover');
+                zone.style.borderColor = 'transparent';
                 zone.style.backgroundColor = '#2b2b2b';
                 console.log('文件拖拽上传');
             });

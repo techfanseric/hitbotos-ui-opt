@@ -548,3 +548,74 @@
     justify-content: flex-end;
     margin-top: 8px;
 } 
+
+/* 去线条化：通用属性控件减少静态描边，保留焦点和选中状态 */
+.component-group {
+    border-bottom: 0;
+}
+
+.standard-input,
+.panel-slider-value,
+.range-input,
+.panel-custom-select select,
+.counter-input input,
+.checkmark,
+.panel-secondary-btn-outline,
+.upload-zone,
+.model-preview {
+    border-color: transparent;
+}
+
+.standard-input,
+.panel-slider-value,
+.range-input,
+.panel-custom-select select,
+.counter-input input,
+.upload-zone,
+.model-preview {
+    background-color: #383838;
+}
+
+.standard-input:focus,
+.panel-slider-value:focus,
+.range-input:focus,
+.panel-custom-select select:focus,
+.counter-input input:focus {
+    border-color: transparent;
+    box-shadow: none;
+    background-color: #424242;
+}
+
+.custom-checkbox input[type="checkbox"]:checked ~ .checkmark,
+.custom-checkbox:hover .checkmark,
+.panel-secondary-btn-outline:hover,
+.panel-custom-select select:hover,
+.upload-zone:hover {
+    border-color: transparent;
+}
+
+.panel-secondary-btn-outline {
+    background: #3f3f3f;
+}
+
+.panel-secondary-btn-outline:hover {
+    background: #555;
+}
+
+.upload-zone:hover {
+    background: #404040;
+}
+
+.standard-input:focus-visible,
+.panel-slider-value:focus-visible,
+.range-input:focus-visible,
+.panel-custom-select select:focus-visible,
+.counter-input input:focus-visible,
+.panel-secondary-btn-outline:focus,
+.panel-secondary-btn-outline:focus-visible,
+.upload-zone:focus,
+.upload-zone:focus-visible {
+    outline: none;
+    border-color: transparent;
+    box-shadow: none;
+}

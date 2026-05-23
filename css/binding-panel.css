@@ -587,3 +587,135 @@
         border-bottom: 0;
     }
 }
+
+/* 去线条化：绑定窗口依靠背景层级和留白区分区域，静态边框只保留为交互反馈 */
+.binding-panel {
+    border: 0;
+    background: #2b2b2b;
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.36);
+}
+
+.binding-panel .panel-header,
+.binding-solution-bar,
+.binding-column-title {
+    border-bottom: 0;
+}
+
+.binding-panel .panel-header {
+    background: #383838;
+}
+
+.binding-solution-bar,
+.binding-column-title {
+    background: #303030;
+}
+
+.binding-primary-btn,
+.binding-secondary-btn,
+.binding-danger-btn,
+.binding-solution-select,
+.binding-option,
+.binding-selected-card,
+.binding-model-thumb,
+.binding-selected-thumb,
+.binding-confirm-card,
+.viewport-3d.binding-pick-mode::after {
+    border-color: transparent;
+}
+
+.binding-primary-btn:hover,
+.binding-danger-btn:hover,
+.binding-secondary-btn:hover {
+    border-color: transparent;
+}
+
+.binding-secondary-btn {
+    background: #3b3b3b;
+}
+
+.binding-solution-select {
+    background-color: #242424;
+}
+
+.binding-solution-select:focus {
+    border-color: transparent;
+    box-shadow: none;
+    background-color: #2d2d2d;
+}
+
+.binding-columns {
+    gap: 10px;
+    padding: 0 10px 10px;
+    background: #2b2b2b;
+}
+
+.binding-column {
+    border-right: 0;
+    background: #303030;
+    border-radius: 6px;
+}
+
+.binding-action-column {
+    background: #303030;
+}
+
+.binding-option {
+    background: #3a3a3a;
+}
+
+.binding-option:hover {
+    border-color: transparent;
+    background: #464646;
+}
+
+.binding-option.active {
+    border-color: transparent;
+    background: rgba(189, 28, 34, 0.22);
+}
+
+.binding-model-thumb,
+.binding-selected-thumb {
+    border-style: solid;
+}
+
+.binding-selected-head,
+.binding-selected-row {
+    border-bottom: 0;
+}
+
+.binding-selected-card {
+    background: #363636;
+}
+
+.binding-selected-row {
+    padding: 7px 0;
+}
+
+.binding-confirm-card {
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.38);
+}
+
+.viewport-3d.binding-pick-mode {
+    outline: 0;
+}
+
+@media (max-width: 920px) {
+    .binding-columns {
+        gap: 10px;
+    }
+
+    .binding-column {
+        border-bottom: 0;
+    }
+}
+
+.binding-panel input:focus,
+.binding-panel input:focus-visible,
+.binding-panel select:focus,
+.binding-panel select:focus-visible,
+.binding-panel button:focus,
+.binding-panel button:focus-visible {
+    outline: none;
+    border-color: transparent;
+    box-shadow: none;
+}

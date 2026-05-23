@@ -742,3 +742,109 @@
         grid-template-columns: 28px minmax(0, 1fr) 74px;
     }
 }
+
+/* 去线条化：用色块、间距和状态色建立层级，减少静态描边与分割线 */
+.arm-property-panel {
+    border: 0;
+    background: #292927;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.28);
+    --arm-field-border: transparent;
+    --arm-thumb-border: transparent;
+}
+
+.arm-panel-header {
+    border-bottom: 0;
+    background: #30302d;
+}
+
+.arm-panel-status span,
+.arm-coordinate-grid input,
+.arm-joint-row input[type="number"],
+.arm-checkbox span,
+.arm-secondary-btn,
+.arm-joint-toolbar button,
+.arm-mount-btn {
+    border-color: transparent;
+}
+
+.arm-panel-status span {
+    background: #3c3c38;
+}
+
+.arm-coordinate-grid input,
+.arm-joint-row input[type="number"] {
+    background: #363632;
+}
+
+.arm-coordinate-grid input:focus,
+.arm-joint-row input[type="number"]:focus {
+    border-color: transparent;
+    box-shadow: 0 0 0 2px rgba(189, 28, 34, 0.2);
+}
+
+.arm-checkbox input:checked + span {
+    border-color: transparent;
+}
+
+.arm-secondary-btn:hover,
+.arm-joint-toolbar button:hover,
+.arm-mount-btn:hover {
+    border-color: transparent;
+}
+
+.arm-joint-row input[type="range"]::-webkit-slider-thumb,
+.arm-joint-row input[type="range"]::-moz-range-thumb {
+    border-color: transparent;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.24);
+}
+
+.arm-panel-variant-flow,
+.arm-panel-variant-readout,
+.arm-panel-variant-compact {
+    border: 0;
+}
+
+.arm-panel-variant-flow .arm-coordinate-grid,
+.arm-panel-variant-readout .arm-coordinate-grid {
+    border: 0;
+}
+
+.arm-panel-variant-readout .arm-joint-list {
+    border-top: 0;
+    border-bottom: 0;
+}
+
+.arm-panel-variant-compact .arm-secondary-btn,
+.arm-panel-variant-compact .arm-joint-toolbar button,
+.arm-panel-variant-compact .arm-mount-btn {
+    border-color: transparent;
+    box-shadow: none;
+}
+
+.arm-property-panel input:focus,
+.arm-property-panel input:focus-visible,
+.arm-property-panel button:focus,
+.arm-property-panel button:focus-visible {
+    outline: none;
+    border-color: transparent;
+    box-shadow: none;
+}
+
+.arm-property-panel .arm-coordinate-grid input:focus,
+.arm-property-panel .arm-joint-row input[type="number"]:focus,
+.arm-panel-variant-flow .arm-coordinate-grid input:focus,
+.arm-panel-variant-readout .arm-coordinate-grid input:focus,
+.arm-panel-variant-compact .arm-coordinate-grid input:focus,
+.arm-panel-variant-readout .arm-joint-row input[type="number"]:focus,
+.arm-panel-variant-compact .arm-joint-row input[type="number"]:focus {
+    border-color: transparent;
+    box-shadow: none;
+    background: #3d3d39;
+}
+
+.arm-panel-variant-flow .arm-coordinate-grid input,
+.arm-panel-variant-readout .arm-coordinate-grid input,
+.arm-panel-variant-readout .arm-joint-row input[type="number"],
+.arm-panel-variant-compact .arm-joint-row input[type="number"] {
+    border-color: transparent;
+}

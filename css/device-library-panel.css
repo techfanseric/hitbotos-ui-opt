@@ -378,3 +378,77 @@
     background: #BD1C22;
     border-radius: 50%;
 }
+
+/* 去线条化：设备库改为无描边面板，选中和悬停用背景变化表达 */
+.device-library-panel {
+    border: 0;
+    background: #2b2b2b;
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.36);
+}
+
+.device-library-panel .panel-header,
+.device-library-panel .panel-search {
+    border-bottom: 0;
+}
+
+.device-library-panel .panel-header {
+    background: #383838;
+}
+
+.device-library-panel .panel-search input,
+.device-library-panel .device-card,
+.device-detail-popup,
+.device-detail-image,
+.device-detail-image-fallback {
+    border-color: transparent;
+}
+
+.device-library-panel .panel-search input {
+    background: #383838;
+}
+
+.device-library-panel .panel-search input:focus {
+    border-color: transparent;
+    box-shadow: none;
+    background: #424242;
+}
+
+.device-library-panel .category-header {
+    background: #383838;
+}
+
+.device-library-panel .category-header:hover {
+    background: #454545;
+}
+
+.device-library-panel .device-card {
+    border-width: 0;
+    background: #383838;
+}
+
+.device-library-panel .device-card:hover {
+    border-color: transparent;
+    background: #454545;
+}
+
+.device-library-panel .device-card.selected {
+    border-color: transparent;
+    background: rgba(189, 28, 34, 0.24);
+}
+
+.device-detail-popup {
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.42);
+}
+
+.device-detail-image-fallback {
+    box-shadow: none;
+}
+
+.device-library-panel input:focus,
+.device-library-panel input:focus-visible,
+.device-library-panel button:focus,
+.device-library-panel button:focus-visible {
+    outline: none;
+    border-color: transparent;
+    box-shadow: none;
+}
