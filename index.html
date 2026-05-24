@@ -256,79 +256,124 @@
                             </div>
 
                             <!-- 3D工具栏（常驻居中） -->
-                            <div class="viewport-toolbar permanent" id="sub-toolbar">
-                                <button class="toolbar-btn" title="测量">
-                                    <i class="bi bi-rulers"></i>
-                                    <span>测量</span>
-                                </button>
-                                <div class="toolbar-dropdown">
-                                    <button class="toolbar-btn dropdown-toggle" title="对齐">
-                                        <i class="bi bi-distribute-horizontal"></i>
-                                        <div class="btn-text">
-                                            <span>对齐</span>
-                                            <i class="bi bi-chevron-down dropdown-arrow"></i>
-                                        </div>
+                            <div class="viewport-toolbar-accordion" id="viewport-toolbar-accordion">
+                                <div class="viewport-toolbar permanent" id="sub-toolbar">
+                                    <button class="toolbar-btn" title="测量">
+                                        <i class="bi bi-rulers"></i>
+                                        <span>测量</span>
                                     </button>
-                                    <div class="dropdown-menu">
-                                        <div class="dropdown-item">左对齐</div>
-                                        <div class="dropdown-item">居中对齐</div>
-                                        <div class="dropdown-item">右对齐</div>
+                                    <div class="toolbar-dropdown">
+                                        <button class="toolbar-btn dropdown-toggle" title="对齐">
+                                            <i class="bi bi-distribute-horizontal"></i>
+                                            <div class="btn-text">
+                                                <span>对齐</span>
+                                                <i class="bi bi-chevron-down dropdown-arrow"></i>
+                                            </div>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <div class="dropdown-item">左对齐</div>
+                                            <div class="dropdown-item">居中对齐</div>
+                                            <div class="dropdown-item">右对齐</div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="toolbar-dropdown">
-                                    <button class="toolbar-btn dropdown-toggle disabled" title="捕捉（功能开发中）">
-                                        <i class="bi bi-eyedropper"></i>
-                                        <div class="btn-text">
-                                            <span>捕捉</span>
-                                            <i class="bi bi-chevron-down dropdown-arrow"></i>
-                                        </div>
+                                    <div class="toolbar-dropdown">
+                                        <button class="toolbar-btn dropdown-toggle disabled" title="捕捉（功能开发中）">
+                                            <i class="bi bi-eyedropper"></i>
+                                            <div class="btn-text">
+                                                <span>捕捉</span>
+                                                <i class="bi bi-chevron-down dropdown-arrow"></i>
+                                            </div>
+                                        </button>
+                                    </div>
+                                    <button class="toolbar-btn" title="挂载">
+                                        <i class="bi bi-usb-symbol"></i>
+                                        <span>挂载</span>
+                                    </button>
+                                    <button class="toolbar-btn" title="复制">
+                                        <i class="bi bi-files"></i>
+                                        <span>复制</span>
+                                    </button>
+                                    <button class="toolbar-btn" title="属性" data-arm-panel-toggle>
+                                        <i class="bi bi-info-circle"></i>
+                                        <span>属性</span>
+                                    </button>
+                                    <button class="toolbar-btn" title="调度">
+                                        <i class="bi bi-bar-chart-steps"></i>
+                                        <span>调度</span>
+                                    </button>
+                                    <button class="toolbar-btn" title="成组">
+                                        <i class="bi bi-collection"></i>
+                                        <span>成组</span>
+                                    </button>
+                                    <button class="toolbar-btn" title="解组">
+                                        <i class="bi bi-grid"></i>
+                                        <span>解组</span>
+                                    </button>
+                                    <button class="toolbar-btn" title="刻度">
+                                        <i class="bi bi-grid-3x3-gap-fill"></i>
+                                        <span>刻度</span>
+                                    </button>
+                                    <button class="toolbar-btn" title="导入">
+                                        <i class="bi bi-download"></i>
+                                        <span>导入</span>
+                                    </button>
+                                    <div class="toolbar-dropdown">
+                                        <button class="toolbar-btn dropdown-toggle disabled" title="碰撞（功能开发中）">
+                                            <i class="bi bi-shield-exclamation"></i>
+                                            <div class="btn-text">
+                                                <span>碰撞</span>
+                                                <i class="bi bi-chevron-down dropdown-arrow"></i>
+                                            </div>
+                                        </button>
+                                    </div>
+                                    <button class="toolbar-btn" title="录屏">
+                                        <i class="bi bi-record-circle"></i>
+                                        <span>录屏</span>
+                                    </button>
+                                    <button class="toolbar-btn viewport-toolbar-handle" type="button" title="收起视口工具栏" aria-expanded="true">
+                                        <i class="bi bi-chevron-left"></i>
                                     </button>
                                 </div>
-                                <button class="toolbar-btn" title="挂载">
-                                    <i class="bi bi-usb-symbol"></i>
-                                    <span>挂载</span>
-                                </button>
-                                <button class="toolbar-btn" title="复制">
-                                    <i class="bi bi-files"></i>
-                                    <span>复制</span>
-                                </button>
-                                <button class="toolbar-btn" title="属性" data-arm-panel-toggle>
-                                    <i class="bi bi-info-circle"></i>
-                                    <span>属性</span>
-                                </button>
-                                <button class="toolbar-btn" title="调度">
-                                    <i class="bi bi-bar-chart-steps"></i>
-                                    <span>调度</span>
-                                </button>
-                                <button class="toolbar-btn" title="成组">
-                                    <i class="bi bi-collection"></i>
-                                    <span>成组</span>
-                                </button>
-                                <button class="toolbar-btn" title="解组">
-                                    <i class="bi bi-grid"></i>
-                                    <span>解组</span>
-                                </button>
-                                <button class="toolbar-btn" title="刻度">
-                                    <i class="bi bi-grid-3x3-gap-fill"></i>
-                                    <span>刻度</span>
-                                </button>
-                                <button class="toolbar-btn" title="导入">
-                                    <i class="bi bi-download"></i>
-                                    <span>导入</span>
-                                </button>
-                                <div class="toolbar-dropdown">
-                                    <button class="toolbar-btn dropdown-toggle disabled" title="碰撞（功能开发中）">
-                                        <i class="bi bi-shield-exclamation"></i>
-                                        <div class="btn-text">
-                                            <span>碰撞</span>
-                                            <i class="bi bi-chevron-down dropdown-arrow"></i>
+                                <div class="execute-toolbar" id="execute-toolbar" aria-expanded="false">
+                                    <div class="execute-toolbar-panel" id="execute-toolbar-panel" aria-hidden="true">
+                                        <div class="execute-field">
+                                            <label class="execute-field-label" for="execute-data-source">数据源</label>
+                                            <select class="execute-select" id="execute-data-source" data-execute-source>
+                                                <option value="editor">编辑器</option>
+                                                <option value="blockly">Blockly</option>
+                                                <option value="flow">流程图</option>
+                                            </select>
                                         </div>
+                                        <div class="execute-field">
+                                            <label class="execute-field-label" for="execute-play-source">播放源</label>
+                                            <select class="execute-select" id="execute-play-source" data-execute-play-source>
+                                                <option value="source-1">播放源1</option>
+                                                <option value="source-2">播放源2</option>
+                                                <option value="source-3">播放源3</option>
+                                            </select>
+                                        </div>
+                                        <div class="execute-field" data-execute-region-field hidden>
+                                            <label class="execute-field-label" for="execute-region">区域</label>
+                                            <select class="execute-select" id="execute-region" data-execute-region>
+                                                <option value="region-1">区域1</option>
+                                                <option value="region-2">区域2</option>
+                                                <option value="region-3">区域3</option>
+                                            </select>
+                                        </div>
+                                        <button class="toolbar-btn execute-action-btn" type="button" data-execute-action="stop" title="停止">
+                                            <i class="bi bi-stop-fill"></i>
+                                            <span>停止</span>
+                                        </button>
+                                        <button class="toolbar-btn execute-action-btn" type="button" data-execute-action="reset" title="复位">
+                                            <i class="bi bi-arrow-counterclockwise"></i>
+                                            <span>复位</span>
+                                        </button>
+                                    </div>
+                                    <button class="toolbar-btn execute-toolbar-toggle" type="button" title="展开执行工具栏" aria-controls="execute-toolbar-panel" aria-expanded="false">
+                                        <i class="bi bi-play-fill"></i>
+                                        <span>运行</span>
                                     </button>
                                 </div>
-                                <button class="toolbar-btn" title="录屏">
-                                    <i class="bi bi-record-circle"></i>
-                                    <span>录屏</span>
-                                </button>
                             </div>
                             
                             <!-- 主视口 -->

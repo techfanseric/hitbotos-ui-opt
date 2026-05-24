@@ -7,6 +7,7 @@ let layoutManager = null;
 let activePanelTab = null;
 
 const EXECUTION_CONTEXT_STORAGE_KEY = 'hitbot-execution-context-v3';
+const EXECUTE_TOOLBAR_STORAGE_KEY = 'hitbot-execute-toolbar-v1';
 const DEFAULT_EXECUTION_CONTEXT = {
     machineConnected: false,
     machineLabel: '真机未连接',
@@ -45,6 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupWindowControls();
     setupTimelineToggle();
     setupToolbarControls();
+    setupExecuteToolbar();
     setupToolbarResponsive();
     setupArmPropertyPanel();
     setupWindowSwapControls();
@@ -1459,6 +1461,201 @@ function initializeWindowStates() {
     fullscreenWindow = null;
 }
 
+function setupExecuteToolbar() {
+    const accordion = document.getElementById('viewport-toolbar-accordion');
+    const viewportToolbar = document.getElementById('sub-toolbar');
+    const executeToolbar = document.getElementById('execute-toolbar');
+    const toggle = executeToolbar?.querySelector('.execute-toolbar-toggle');
+    const viewportHandle = viewportToolbar?.querySelector('.viewport-toolbar-handle');
+    const panel = document.getElementById('execute-toolbar-panel');
+    const sourceSelect = executeToolbar?.querySelector('[data-execute-source]');
+    const playSourceSelect = executeToolbar?.querySelector('[data-execute-play-source]');
+    const regionField = executeToolbar?.querySelector('[data-execute-region-field]');
+    const regionSelect = executeToolbar?.querySelector('[data-execute-region]');
+    const stopButton = executeToolbar?.querySelector('[data-execute-action="stop"]');
+    const resetButton = executeToolbar?.querySelector('[data-execute-action="reset"]');
+
+    if (!accordion || !viewportToolbar || !executeToolbar || !toggle || !viewportHandle || !panel || !sourceSelect || !playSourceSelect || !regionField || !regionSelect || !stopButton || !resetButton) return;
+
+    const defaultState = {
+        dataSource: 'editor',
+        playSource: 'source-1',
+        region: 'region-1',
+        runState: 'idle'
+    };
+
+    const normalizeState = (rawState) => {
+        const nextState = { ...defaultState, ...(rawState || {}) };
+        if (!['editor', 'blockly', 'flow'].includes(nextState.dataSource)) nextState.dataSource = defaultState.dataSource;
+        if (!['source-1', 'source-2', 'source-3'].includes(nextState.playSource)) nextState.playSource = defaultState.playSource;
+        if (!['region-1', 'region-2', 'region-3'].includes(nextState.region)) nextState.region = defaultState.region;
+        if (!['idle', 'running', 'paused'].includes(nextState.runState)) nextState.runState = defaultState.runState;
+        return nextState;
+    };
+
+    const loadState = () => {
+        try {
+            const saved = window.localStorage.getItem(EXECUTE_TOOLBAR_STORAGE_KEY);
+            return normalizeState(saved ? JSON.parse(saved) : null);
+        } catch (error) {
+            console.warn('读取执行工具栏配置失败，使用默认值。', error);
+            return normalizeState(null);
+        }
+    };
+
+    const saveState = () => {
+        try {
+            window.localStorage.setItem(EXECUTE_TOOLBAR_STORAGE_KEY, JSON.stringify(executeState));
+        } catch (error) {
+            console.warn('保存执行工具栏配置失败。', error);
+        }
+    };
+
+    let executeState = loadState();
+
+    const getDataSourceLabel = (source) => {
+        if (source === 'blockly') return 'Blockly';
+        if (source === 'flow') return '流程图';
+        return '编辑器';
+    };
+
+    const syncExecuteState = () => {
+        executeState = normalizeState(executeState);
+
+        const isBlockly = executeState.dataSource === 'blockly';
+        const isRunning = executeState.runState === 'running';
+        const isPaused = executeState.runState === 'paused';
+        const toggleIcon = toggle.querySelector('i');
+        const toggleText = toggle.querySelector('span');
+
+        sourceSelect.value = executeState.dataSource;
+        playSourceSelect.value = executeState.playSource;
+        regionSelect.value = executeState.region;
+        regionField.hidden = !isBlockly;
+        toggle.title = isRunning ? '暂停' : (isPaused ? '继续运行' : '运行');
+        toggle.setAttribute('aria-label', isRunning ? '暂停' : (isPaused ? '继续运行' : '运行'));
+        stopButton.disabled = !isRunning && !isPaused;
+        stopButton.classList.toggle('disabled', stopButton.disabled);
+        stopButton.setAttribute('aria-label', stopButton.disabled ? '停止（未运行时不可用）' : '停止');
+        stopButton.title = stopButton.disabled ? '未运行时不可停止' : '停止';
+        resetButton.setAttribute('aria-label', '复位');
+        executeToolbar.dataset.executeRunState = executeState.runState;
+        executeToolbar.dataset.executeDataSource = executeState.dataSource;
+
+        if (toggleIcon) {
+            toggleIcon.classList.toggle('bi-play-fill', !isRunning);
+            toggleIcon.classList.toggle('bi-pause-fill', isRunning);
+        }
+        if (toggleText) {
+            toggleText.textContent = isRunning ? '暂停' : '运行';
+        }
+
+        saveState();
+        window.dispatchEvent(new CustomEvent('hitbot:execute-toolbar-change', {
+            detail: {
+                ...executeState,
+                dataSourceLabel: getDataSourceLabel(executeState.dataSource)
+            }
+        }));
+    };
+
+    const syncViewportToolbarWidth = () => {
+        const naturalWidth = Math.ceil(viewportToolbar.scrollWidth);
+        const currentWidth = Number.parseFloat(accordion.style.getPropertyValue('--viewport-toolbar-expanded')) || 0;
+        const isCollapsed = accordion.classList.contains('is-viewport-collapsed');
+
+        if (naturalWidth > 0 && (!isCollapsed || naturalWidth > currentWidth)) {
+            accordion.style.setProperty('--viewport-toolbar-expanded', `${naturalWidth}px`);
+        }
+    };
+
+    const setViewportCollapsed = (isCollapsed) => {
+        if (isCollapsed) {
+            syncViewportToolbarWidth();
+            accordion.classList.add('is-collapsing');
+        } else {
+            accordion.classList.remove('is-collapsing');
+        }
+        accordion.classList.toggle('is-viewport-collapsed', isCollapsed);
+        viewportHandle.setAttribute('aria-expanded', String(!isCollapsed));
+        viewportHandle.title = isCollapsed ? '展开视口工具栏' : '收起视口工具栏';
+        if (isCollapsed) {
+            window.requestAnimationFrame(() => {
+                accordion.classList.remove('is-collapsing');
+            });
+        }
+    };
+
+    const setExpanded = (isExpanded) => {
+        accordion.classList.toggle('is-execute-expanded', isExpanded);
+        executeToolbar.setAttribute('aria-expanded', String(isExpanded));
+        toggle.setAttribute('aria-expanded', String(isExpanded));
+        panel.setAttribute('aria-hidden', String(!isExpanded));
+    };
+
+    toggle.addEventListener('click', () => {
+        const isExpanded = accordion.classList.contains('is-execute-expanded');
+        if (!isExpanded) {
+            setExpanded(true);
+            setViewportCollapsed(true);
+            return;
+        }
+
+        executeState.runState = executeState.runState === 'running' ? 'paused' : 'running';
+        syncExecuteState();
+    });
+
+    viewportHandle.addEventListener('click', () => {
+        const shouldCollapse = !accordion.classList.contains('is-viewport-collapsed');
+        setViewportCollapsed(shouldCollapse);
+        if (shouldCollapse) {
+            setExpanded(true);
+        } else {
+            setExpanded(false);
+        }
+    });
+
+    sourceSelect.addEventListener('change', () => {
+        executeState.dataSource = sourceSelect.value;
+        executeState.runState = 'idle';
+        syncExecuteState();
+    });
+
+    playSourceSelect.addEventListener('change', () => {
+        executeState.playSource = playSourceSelect.value;
+        syncExecuteState();
+    });
+
+    regionSelect.addEventListener('change', () => {
+        executeState.region = regionSelect.value;
+        syncExecuteState();
+    });
+
+    stopButton.addEventListener('click', () => {
+        executeState.runState = 'idle';
+        syncExecuteState();
+    });
+
+    resetButton.addEventListener('click', () => {
+        executeState.runState = 'idle';
+        syncExecuteState();
+        window.dispatchEvent(new CustomEvent('hitbot:execute-toolbar-reset', {
+            detail: {
+                ...executeState,
+                dataSourceLabel: getDataSourceLabel(executeState.dataSource)
+            }
+        }));
+    });
+
+    syncExecuteState();
+
+    syncViewportToolbarWidth();
+    window.addEventListener('resize', syncViewportToolbarWidth);
+    window.requestAnimationFrame(syncViewportToolbarWidth);
+    setViewportCollapsed(false);
+    setExpanded(false);
+}
+
 // 工具栏按钮切换逻辑
 function setupToolbarControls() {
     const leftToolbarBtns = document.querySelectorAll('.left-toolbar-btn');
@@ -1537,8 +1734,9 @@ function setupToolbarResponsive() {
 
     function checkSpace() {
         const containerWidth = centerContent.offsetWidth;
+        const toolbarShell = document.getElementById('viewport-toolbar-accordion');
         const subToolbar = document.getElementById('sub-toolbar');
-        const toolbarWidth = subToolbar ? subToolbar.offsetWidth : 595;
+        const toolbarWidth = toolbarShell ? toolbarShell.offsetWidth : (subToolbar ? subToolbar.offsetWidth : 595);
 
         // 判断是否有足够空间居中显示
         // 需要：容器宽度 >= 工具栏宽度 + 左侧工具栏宽度(60px) + 边距(50px)
@@ -1797,13 +1995,7 @@ function setupArmPropertyPanel() {
         window.armPropertyPanelResizeObserver = observer;
     }
 
-    panels.forEach(panel => {
-        const state = panelStates.get(panel);
-        if (state) state.hasCustomPosition = false;
-        panel.classList.remove('hidden');
-    });
     syncDockState();
-    window.requestAnimationFrame(setInitialPanelPositions);
 }
 
 function createArmPropertyPanelVariants(sourcePanel) {

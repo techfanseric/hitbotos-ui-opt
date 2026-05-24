@@ -248,17 +248,196 @@
 }
 
 /* 常驻居中的工具栏 */
-.viewport-toolbar.permanent {
+.viewport-toolbar-accordion {
+    --execute-toolbar-collapsed: 56px;
+    --toolbar-motion: 280ms cubic-bezier(0.22, 1, 0.36, 1);
+    --viewport-toolbar-expanded: max-content;
+    --viewport-toolbar-collapsed: 28px;
+    --viewport-toolbar-current: var(--viewport-toolbar-expanded);
     position: absolute;
     top: 4px;
     left: 50%;
+    width: max-content;
+    height: 48px;
+    display: flex;
+    align-items: stretch;
+    gap: 6px;
     transform: translateX(-50%);
+    z-index: 15;
+    transition: width var(--toolbar-motion), transform var(--toolbar-motion);
+}
+
+.viewport-toolbar.permanent {
+    position: relative;
+    top: 0;
+    left: 0;
+    transform: none;
+    width: var(--viewport-toolbar-current);
+    flex: 0 0 var(--viewport-toolbar-current);
+    box-sizing: border-box;
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
     border-radius: 6px;
+    padding-right: 30px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+    overflow: hidden;
+    transition:
+        width var(--toolbar-motion),
+        flex-basis var(--toolbar-motion),
+        padding var(--toolbar-motion),
+        opacity 0.3s ease,
+        visibility 0.3s ease;
+}
+
+.viewport-toolbar-accordion.is-viewport-collapsed {
+    justify-content: flex-end;
+}
+
+.viewport-toolbar-accordion.is-collapsing .viewport-toolbar.permanent,
+.viewport-toolbar-accordion.is-collapsing .execute-toolbar,
+.viewport-toolbar-accordion.is-collapsing .execute-toolbar-panel,
+.viewport-toolbar-accordion.is-collapsing .viewport-toolbar.permanent > :not(.viewport-toolbar-handle) {
+    transition: none;
+}
+
+.viewport-toolbar-accordion.is-viewport-collapsed .viewport-toolbar.permanent {
+    --viewport-toolbar-current: var(--viewport-toolbar-collapsed);
+    padding: 0;
+}
+
+.viewport-toolbar-handle {
+    position: absolute;
+    top: 4px;
+    right: 2px;
+    width: 24px;
+    height: 40px;
+    flex: 0 0 24px;
+    z-index: 2;
+    padding: 0;
+    border-radius: 3px;
+}
+
+.viewport-toolbar-accordion.is-viewport-collapsed .viewport-toolbar.permanent > :not(.viewport-toolbar-handle) {
+    opacity: 0;
+    transform: translateX(-8px);
+    pointer-events: none;
+}
+
+.viewport-toolbar-handle i {
+    transition: transform var(--toolbar-motion);
+}
+
+.viewport-toolbar-accordion.is-viewport-collapsed .viewport-toolbar-handle i {
+    transform: rotate(180deg);
+}
+
+.viewport-toolbar.permanent > :not(.viewport-toolbar-handle) {
+    transition: opacity 160ms ease, transform var(--toolbar-motion);
+}
+
+.execute-toolbar {
+    position: relative;
+    top: 0;
+    right: 0;
+    width: var(--execute-toolbar-collapsed);
+    flex: 0 0 var(--execute-toolbar-collapsed);
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1px;
+    overflow: hidden;
+    background: rgba(60, 60, 60, 0.9);
+    backdrop-filter: blur(4px);
+    border-radius: 6px;
+    padding: 0 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: width var(--toolbar-motion), flex-basis var(--toolbar-motion);
+}
+
+.viewport-toolbar-accordion.is-execute-expanded .execute-toolbar {
+    width: max-content;
+    flex-basis: auto;
+}
+
+.execute-toolbar-toggle {
+    flex: 0 0 48px;
+    order: 2;
+}
+
+.execute-toolbar-panel {
+    order: 1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 0 0 auto;
+    opacity: 0;
+    transform: translateX(8px);
+    pointer-events: none;
+    transition: opacity 180ms ease, transform var(--toolbar-motion);
+}
+
+.viewport-toolbar-accordion.is-execute-expanded .execute-toolbar-panel {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+}
+
+.execute-field {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    min-width: 76px;
+    height: 40px;
+}
+
+.execute-field[hidden] {
+    display: none;
+}
+
+.execute-field-label {
+    color: rgba(255, 255, 255, 0.56);
+    font-size: 9px;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.execute-select {
+    width: 86px;
+    height: 22px;
+    border: 0;
+    border-radius: 4px;
+    padding: 0 22px 0 7px;
+    color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255, 255, 255, 0.1);
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 3.5L5 6.5L8 3.5' fill='none' stroke='rgba(255,255,255,0.72)' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 7px center;
+    background-size: 10px 10px;
+    font-size: 11px;
+    line-height: 22px;
+    outline: none;
+    cursor: pointer;
+}
+
+.execute-select:hover {
+    background-color: var(--ds-bg-control-hover);
+}
+
+.execute-select:focus {
+    background-color: var(--ds-bg-control-active);
+}
+
+.execute-select option {
+    color: #222;
+}
+
+.execute-action-btn {
+    width: 42px;
+    height: 40px;
+    flex: 0 0 42px;
 }
 
 /* 隐藏工具切换按钮（默认不显示，由JS控制） */
@@ -271,9 +450,12 @@
     display: flex;
 }
 
-.center-content.space-constrained .viewport-toolbar.permanent {
+.center-content.space-constrained .viewport-toolbar-accordion {
     left: 56px;
     transform: none;
+}
+
+.center-content.space-constrained .viewport-toolbar.permanent {
     border-radius: 0 4px 4px 0;
     opacity: 0;
     visibility: hidden;
