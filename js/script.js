@@ -48,6 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupToolbarControls();
     setupExecuteToolbar();
     setupToolbarResponsive();
+    setupNumericInputDragAdjust();
     setupArmPropertyPanel();
     setupWindowSwapControls();
     initializeWindowStates();
@@ -67,6 +68,13 @@ document.addEventListener('DOMContentLoaded', function() {
         window.getBindingPanel = module.getBindingPanel;
         window.initBindingPanel();
     });
+
+    // 初始化 WebGL 3D 视口
+    import('./simple-webgl-scene.js').then(module => {
+        window.hitbotWebGLScene = module.initSimpleWebGLScene();
+    }).catch(error => {
+        console.warn('初始化 WebGL 视口失败，保留静态模型占位。', error);
+    });
     
     // 确保所有窗口控制状态正确
     updateAllWindowControls();
@@ -76,6 +84,109 @@ document.addEventListener('DOMContentLoaded', function() {
     setupTopMenuInteractions();
     setupExecutionEnhancements();
 });
+
+function setupNumericInputDragAdjust() {
+    if (window.__hitbotNumericInputDragAdjustReady) return;
+    window.__hitbotNumericInputDragAdjustReady = true;
+
+    const PIXELS_PER_STEP = 4;
+    const MIN_DRAG_DISTANCE = 2;
+    let dragState = null;
+
+    function getStep(input) {
+        if (input.step && input.step !== 'any') {
+            const parsedStep = Number(input.step);
+            if (Number.isFinite(parsedStep) && parsedStep > 0) return parsedStep;
+        }
+
+        return 1;
+    }
+
+    function getPrecision(input, step) {
+        const candidates = [String(input.value || ''), String(input.getAttribute('value') || ''), String(step)];
+        return candidates.reduce((precision, value) => {
+            const decimal = value.toLowerCase().split('e')[0].split('.')[1];
+            return Math.max(precision, decimal ? decimal.length : 0);
+        }, 0);
+    }
+
+    function clampNumber(value, input) {
+        const min = input.min === '' ? -Infinity : Number(input.min);
+        const max = input.max === '' ? Infinity : Number(input.max);
+        let nextValue = value;
+
+        if (Number.isFinite(min)) nextValue = Math.max(min, nextValue);
+        if (Number.isFinite(max)) nextValue = Math.min(max, nextValue);
+        return nextValue;
+    }
+
+    function commitInputValue(input, value, precision) {
+        const nextValue = precision > 0 ? value.toFixed(precision) : String(Math.round(value));
+        if (input.value === nextValue) return false;
+
+        input.value = nextValue;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        return true;
+    }
+
+    document.addEventListener('pointerdown', (event) => {
+        if (event.button !== 0) return;
+
+        const input = event.target.closest('input[type="number"]');
+        if (!input || input.disabled || input.readOnly) return;
+
+        const baseValue = Number(input.value || input.getAttribute('value') || 0);
+        const step = getStep(input);
+
+        dragState = {
+            input,
+            pointerId: event.pointerId,
+            startX: event.clientX,
+            startY: event.clientY,
+            baseValue: Number.isFinite(baseValue) ? baseValue : 0,
+            step,
+            precision: getPrecision(input, step),
+            isDragging: false,
+            didChange: false
+        };
+
+        input.focus();
+        input.setPointerCapture?.(event.pointerId);
+    }, true);
+
+    document.addEventListener('pointermove', (event) => {
+        if (!dragState || event.pointerId !== dragState.pointerId) return;
+
+        const deltaX = event.clientX - dragState.startX;
+        const deltaY = event.clientY - dragState.startY;
+        const distance = Math.hypot(deltaX, deltaY);
+        if (!dragState.isDragging && distance < MIN_DRAG_DISTANCE) return;
+
+        dragState.isDragging = true;
+        document.body.classList.add('numeric-input-dragging');
+
+        const signedSteps = (deltaX + deltaY) / PIXELS_PER_STEP;
+        const nextValue = clampNumber(dragState.baseValue + signedSteps * dragState.step, dragState.input);
+        dragState.didChange = commitInputValue(dragState.input, nextValue, dragState.precision) || dragState.didChange;
+        event.preventDefault();
+    }, true);
+
+    function endDrag(event) {
+        if (!dragState || event.pointerId !== dragState.pointerId) return;
+
+        dragState.input.releasePointerCapture?.(event.pointerId);
+        document.body.classList.remove('numeric-input-dragging');
+
+        if (dragState.didChange) {
+            dragState.input.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+
+        dragState = null;
+    }
+
+    document.addEventListener('pointerup', endDrag, true);
+    document.addEventListener('pointercancel', endDrag, true);
+}
 
 function summarizeExecutionTargets(targets) {
     if (targets.includes('real') && targets.includes('simulation')) return '孪生';

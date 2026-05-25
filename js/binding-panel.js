@@ -326,7 +326,7 @@ class BindingPanel {
     startScenePick() {
         if (!this.selectedSolutionId) return;
         this.pendingModelId = this.selectedModelId;
-        document.querySelector('.viewport-3d')?.classList.add('binding-pick-mode');
+        document.querySelector('.viewport-3d')?.classList.add('binding-panel-open', 'binding-pick-mode');
         // 临时隐藏绑定窗口，让用户能看清 3D 场景
         this.panel.classList.add('hidden');
         this.render();
@@ -335,6 +335,7 @@ class BindingPanel {
     cancelScenePick() {
         this.pendingModelId = null;
         document.querySelector('.viewport-3d')?.classList.remove('binding-pick-mode');
+        document.querySelector('.viewport-3d')?.classList.add('binding-panel-open');
         // 重新显示绑定窗口
         this.panel.classList.remove('hidden');
         this.render();
@@ -348,6 +349,7 @@ class BindingPanel {
         model.sceneTarget = sceneName;
         this.pendingModelId = null;
         document.querySelector('.viewport-3d')?.classList.remove('binding-pick-mode');
+        document.querySelector('.viewport-3d')?.classList.add('binding-panel-open');
         this.selectedModelId = model.id;
         // 重新显示绑定窗口
         this.panel.classList.remove('hidden');
@@ -428,6 +430,7 @@ class BindingPanel {
     show() {
         this.panel.classList.remove('hidden');
         this.isVisible = true;
+        document.querySelector('.viewport-3d')?.classList.add('binding-panel-open');
         this.setInitialPosition();
     }
 
@@ -435,7 +438,7 @@ class BindingPanel {
         this.panel.classList.add('hidden');
         this.isVisible = false;
         this.pendingModelId = null;
-        document.querySelector('.viewport-3d')?.classList.remove('binding-pick-mode');
+        document.querySelector('.viewport-3d')?.classList.remove('binding-panel-open', 'binding-pick-mode');
         document.querySelector('[data-tool="bind"]')?.classList.remove('active');
     }
 

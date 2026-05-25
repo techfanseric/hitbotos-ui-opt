@@ -348,6 +348,16 @@ textarea:focus,
     color: var(--ds-text-strong);
 }
 
+input[type="number"]:not(:disabled):not([readonly]) {
+    cursor: ew-resize;
+}
+
+body.numeric-input-dragging,
+body.numeric-input-dragging * {
+    cursor: ew-resize !important;
+    user-select: none !important;
+}
+
 .checkmark,
 .arm-checkbox span,
 .host-run-target-check {
