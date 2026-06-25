@@ -20,9 +20,9 @@ export const DEVICE_DATA = [
         category: "抓取设备",
         icon: "bi-hand-index",
         devices: [
-            withDetails({ id: "Z-EMG-4", name: "Z-EMG-4", icon: "bi-box" }),
-            withDetails({ id: "Z-EFG-8S", name: "Z-EFG-8S", icon: "bi-box" }),
-            withDetails({ id: "Z-EFG-20S", name: "Z-EFG-20S", icon: "bi-box" }),
+            withDetails({ id: "Z-EMG-4", name: "Z-EMG-4", icon: "bi-box", productId: "p-001" }),
+            withDetails({ id: "Z-EFG-8S", name: "Z-EFG-8S", icon: "bi-box", productId: "p-002" }),
+            withDetails({ id: "Z-EFG-20", name: "Z-EFG-20", icon: "bi-box", productId: "p-003" }),
             withDetails({ id: "Z-EMG-CO-1", name: "Z-EMG-CO-1", icon: "bi-box" }),
             withDetails({ id: "Z-EMG-CO-2", name: "Z-EMG-CO-2", icon: "bi-box" }),
             withDetails({ id: "Z-EMG-CO-3", name: "Z-EMG-CO-3", icon: "bi-box" }),
@@ -34,22 +34,22 @@ export const DEVICE_DATA = [
         category: "四轴机器臂",
         icon: "bi-robot",
         devices: [
-            withDetails({ id: "Z-EMG-4", name: "Z-EMG-4", icon: "bi-robot" }),
-            withDetails({ id: "Z-EFG-8S", name: "Z-EFG-8S", icon: "bi-robot" })
+            withDetails({ id: "Z-Arm S622", name: "Z-Arm S622", icon: "bi-robot", productId: "p-004" }),
+            withDetails({ id: "Z-Arm 2442", name: "Z-Arm 2442", icon: "bi-robot", productId: "p-005" })
         ]
     },
     {
         category: "六轴机器臂",
         icon: "bi-robot",
         devices: [
-            withDetails({ id: "Z-EFG-20S", name: "Z-EFG-20S", icon: "bi-robot" })
+            withDetails({ id: "Z-Arm H1500", name: "Z-Arm H1500", icon: "bi-robot", productId: "p-006" })
         ]
     },
     {
         category: "灵巧手",
         icon: "bi-hand-thumbs-up",
         devices: [
-            withDetails({ id: "Z-EMG-CO-1", name: "Z-EMG-CO-1", icon: "bi-hand" })
+            withDetails({ id: "Z-Hand 6", name: "Z-Hand 6", icon: "bi-hand", productId: "p-007" })
         ]
     },
     {
@@ -63,7 +63,7 @@ export const DEVICE_DATA = [
         category: "智能电缸",
         icon: "bi-arrows-expand",
         devices: [
-            withDetails({ id: "Z-EMG-CO-3", name: "Z-EMG-CO-3", icon: "bi-arrows-expand" })
+            withDetails({ id: "Z-Mod-SE-54", name: "Z-Mod-SE-54", icon: "bi-arrows-expand", productId: "p-008" })
         ]
     },
     {

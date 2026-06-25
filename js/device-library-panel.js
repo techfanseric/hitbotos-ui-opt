@@ -146,8 +146,11 @@ class DeviceLibraryPanel {
         const isCollapsed = this.collapsedCategories.has(category.category);
         const collapsedClass = isCollapsed ? 'collapsed' : '';
 
-        let devicesHTML = devices.map(device => `
-            <div class="device-card" data-device-id="${device.id}" data-device-name="${device.name}" data-category="${category.category}" draggable="true">
+        let devicesHTML = devices.map(device => {
+            const cartActionHTML = this.createDeviceCartActionHTML(device, category.category);
+
+            return `
+            <div class="device-card ${cartActionHTML ? 'has-cart-action' : ''}" data-device-id="${device.id}" data-device-name="${device.name}" data-category="${category.category}" draggable="true">
                 <div class="device-card-icon">
                     <i class="bi ${device.icon}"></i>
                 </div>
@@ -155,8 +158,10 @@ class DeviceLibraryPanel {
                     <div class="device-model">${device.name}</div>
                     <div class="device-category">${category.category}</div>
                 </div>
+                ${cartActionHTML}
             </div>
-        `).join('');
+        `;
+        }).join('');
 
         return `
             <div class="device-category">
@@ -172,6 +177,23 @@ class DeviceLibraryPanel {
         `;
     }
 
+    // 创建设备卡片购物车动作
+    createDeviceCartActionHTML(device, categoryName) {
+        const cart = window.HitbotCart;
+        const product = cart?.getProductForDevice?.(categoryName, device);
+        if (!product) return '';
+
+        const canAdd = cart.canAddProduct?.(product);
+        const label = canAdd ? `加入购物车：${product.model}` : `${product.model} 暂不可加入购物车`;
+        const icon = canAdd ? 'bi-cart-plus' : 'bi-slash-circle';
+
+        return `
+            <button class="device-cart-btn" type="button" draggable="false" data-cart-product-id="${this.escapeHTML(product.id)}" title="${this.escapeHTML(label)}" aria-label="${this.escapeHTML(label)}" ${canAdd ? '' : 'disabled'}>
+                <i class="bi ${icon}"></i>
+            </button>
+        `;
+    }
+
     // 绑定设备卡片事件
     bindDeviceCardEvents() {
         const deviceCards = this.panel.querySelectorAll('.device-card');
@@ -179,8 +201,28 @@ class DeviceLibraryPanel {
         deviceCards.forEach(card => {
             // 点击选中
             card.addEventListener('click', (e) => {
+                if (e.target.closest('.device-cart-btn')) return;
                 this.selectDevice(card);
             });
+
+            const cartButton = card.querySelector('.device-cart-btn');
+            if (cartButton) {
+                cartButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const result = window.HitbotCart?.addProduct?.(cartButton.dataset.cartProductId);
+                    if (!result?.ok) return;
+
+                    cartButton.classList.add('is-added');
+                    cartButton.innerHTML = '<i class="bi bi-check"></i>';
+                    window.setTimeout(() => {
+                        cartButton.classList.remove('is-added');
+                        cartButton.innerHTML = '<i class="bi bi-cart-plus"></i>';
+                    }, 1200);
+                });
+                cartButton.addEventListener('mousedown', (e) => e.stopPropagation());
+                cartButton.addEventListener('dragstart', (e) => e.preventDefault());
+            }
 
             card.addEventListener('mouseenter', () => {
                 this.queueDeviceDetail(card);
@@ -196,6 +238,11 @@ class DeviceLibraryPanel {
                 this.hideDeviceDetail();
                 e.dataTransfer.setData('deviceId', card.dataset.deviceId);
                 e.dataTransfer.setData('deviceName', card.dataset.deviceName);
+                e.dataTransfer.setData('deviceCategory', card.dataset.category);
+                const productId = card.querySelector('.device-cart-btn')?.dataset.cartProductId;
+                if (productId) {
+                    e.dataTransfer.setData('productId', productId);
+                }
                 e.dataTransfer.effectAllowed = 'copy';
             });
 

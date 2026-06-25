@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="css/device-library-panel.css">
     <link rel="stylesheet" href="css/binding-panel.css">
     <link rel="stylesheet" href="css/design-system.css">
+    <link rel="stylesheet" href="css/cart.css">
     <link rel="stylesheet" href="css/borderless.css">
 </head>
 <body>
@@ -103,6 +104,15 @@
                 <button class="menu-btn top-icon-btn" type="button" data-tooltip="日志查看"><span class="hitbot-icon"></span></button>
                 <button class="menu-btn top-icon-btn subdued" type="button" data-tooltip="国际化"><span class="hitbot-icon"></span></button>
                 <button class="menu-btn top-icon-btn" type="button" data-tooltip="后台管理"><span class="hitbot-icon"></span></button>
+                <div class="top-menu-dropdown cart-menu-dropdown">
+                    <button class="menu-btn cart-menu-btn" type="button" data-tooltip="购物车" aria-haspopup="menu" aria-expanded="false">
+                        <i class="bi bi-cart3"></i>
+                        <span class="cart-count-badge" data-cart-count hidden>0</span>
+                    </button>
+                    <div class="top-dropdown-menu cart-dropdown-menu" role="menu" aria-label="购物车" data-cart-dropdown>
+                        <!-- 购物车预览由 js/cart.js 渲染 -->
+                    </div>
+                </div>
                 <div class="top-menu-dropdown top-menu-download">
                     <button class="menu-btn download-menu-btn" type="button" data-tooltip="下载" aria-haspopup="menu" aria-expanded="false">
                         <span class="download-menu-icon" aria-hidden="true">
@@ -711,6 +721,7 @@
 
     <script src="js/layout-manager.js"></script>
     <script src="js/action-editor.js"></script>
+    <script src="js/cart.js"></script>
     <script src="js/script.js"></script>
     <script src="js/panel-loader.js"></script>
     <script type="module" src="js/device-library-panel.js"></script>
