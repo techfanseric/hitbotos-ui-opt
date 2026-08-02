@@ -1,5 +1,5 @@
 const MODEL_POINTS = {
-    Gripper_1: [0, 0.32, 0]
+    Z_EFG_8S_1: [0, 0.32, 0]
 };
 
 const COLOR = {
@@ -43,7 +43,6 @@ export function initSimpleWebGLScene() {
         box: createMesh(gl, makeBox(1, 1, 1)),
         cylinder: createMesh(gl, makeCylinder(1, 1, 40))
     };
-    const sceneObjects = [...viewport.querySelectorAll('[data-scene-model-name]')];
     const camera = {
         eye: [...DEFAULT_CAMERA.eye],
         yaw: DEFAULT_CAMERA.yaw,
@@ -65,7 +64,8 @@ export function initSimpleWebGLScene() {
 
     const rangeEditor = setupGripperRangeEditor(viewport, canvas);
     const cleanupViewInteractions = setupCanvasViewInteractions(canvas, camera, render);
-    const cleanupContextMenu = setupGripperContextMenu(viewport, canvas, rangeEditor);
+    const cleanupContextMenu = setupSceneContextMenu(viewport, canvas, rangeEditor);
+    const cleanupSceneDrop = setupSceneDrop(viewport, render);
     const resizeObserver = new ResizeObserver(render);
     resizeObserver.observe(viewport);
 
@@ -116,13 +116,21 @@ export function initSimpleWebGLScene() {
     }
 
     function positionSceneLabels(width, height) {
-        sceneObjects.forEach((object) => {
-            const point = MODEL_POINTS[object.dataset.sceneModelName];
-            if (!point) return;
-            const screen = project(point, state.viewProjection, width, height);
-            object.style.left = `${screen.x}px`;
-            object.style.top = `${screen.y}px`;
-            object.style.zIndex = String(Math.round(1000 - screen.z * 100));
+        viewport.querySelectorAll('[data-scene-model-name]').forEach((object) => {
+            const modelKey = object.dataset.sceneModelName.replace(/-/g, '_');
+            const point = MODEL_POINTS[modelKey];
+            if (point) {
+                const screen = project(point, state.viewProjection, width, height);
+                object.style.left = `${screen.x}px`;
+                object.style.top = `${screen.y}px`;
+                object.style.zIndex = String(Math.round(1000 - screen.z * 100));
+                return;
+            }
+
+            if (object.dataset.sceneX && object.dataset.sceneY) {
+                object.style.left = `${Number(object.dataset.sceneX) * width}px`;
+                object.style.top = `${Number(object.dataset.sceneY) * height}px`;
+            }
         });
     }
 
@@ -133,6 +141,7 @@ export function initSimpleWebGLScene() {
             cancelAnimationFrame(raf);
             cleanupViewInteractions();
             cleanupContextMenu();
+            cleanupSceneDrop();
             rangeEditor.dispose();
             resizeObserver.disconnect();
             viewport.classList.remove('webgl-ready');
@@ -141,13 +150,14 @@ export function initSimpleWebGLScene() {
     };
 }
 
-function setupGripperContextMenu(viewport, canvas, rangeEditor) {
+function setupSceneContextMenu(viewport, canvas, rangeEditor) {
     const menu = document.createElement('div');
     menu.className = 'gripper-context-menu hidden';
     menu.innerHTML = `
-        <button type="button" data-gripper-menu-action="menu-1" disabled>菜单一</button>
-        <button type="button" data-gripper-menu-action="menu-2" disabled>菜单二</button>
-        <button type="button" data-gripper-menu-action="range">夹取范围调整</button>
+        <div class="gripper-context-menu-title" data-scene-menu-title>未选择模型</div>
+        <button type="button" data-gripper-menu-action="add-cart"><i class="bi bi-cart-plus" aria-hidden="true"></i><span data-scene-cart-action-label>加入购物车</span></button>
+        <button type="button" data-gripper-menu-action="range"><i class="bi bi-arrows-expand" aria-hidden="true"></i><span>夹取范围调整</span></button>
+        <div class="gripper-context-menu-hint" data-scene-menu-hint></div>
     `;
 
     const panel = document.createElement('div');
@@ -162,25 +172,73 @@ function setupGripperContextMenu(viewport, canvas, rangeEditor) {
 
     viewport.append(menu, panel);
     rangeEditor.attachPanel(panel.querySelector('[data-gripper-range-panel-body]'));
+    const sceneObjects = viewport.querySelector('.scene-objects');
+    const addCartButton = menu.querySelector('[data-gripper-menu-action="add-cart"]');
+    const rangeButton = menu.querySelector('[data-gripper-menu-action="range"]');
+    const title = menu.querySelector('[data-scene-menu-title]');
+    const hint = menu.querySelector('[data-scene-menu-hint]');
+    const addCartLabel = menu.querySelector('[data-scene-cart-action-label]');
+    let selectedObject = null;
 
     const hideMenu = () => menu.classList.add('hidden');
 
+    const selectObject = (object) => {
+        if (selectedObject && selectedObject !== object) {
+            selectedObject.classList.remove('is-selected');
+        }
+        selectedObject = object || null;
+        selectedObject?.classList.add('is-selected');
+    };
+
+    const updateMenuState = () => {
+        const cart = window.HitbotCart;
+        const displayName = selectedObject?.dataset.sceneDisplayName
+            || selectedObject?.dataset.sceneModelName
+            || '未选择模型';
+        const cartState = cart?.getSceneObjectCartState?.(selectedObject) || {
+            canAdd: false,
+            reason: selectedObject ? '该模型暂不支持加入购物车' : '请先选择一个场景模型'
+        };
+
+        title.textContent = displayName;
+        addCartButton.disabled = !cartState.canAdd;
+        addCartLabel.textContent = cartState.inCart ? '已在购物车' : '加入购物车';
+        rangeButton.disabled = selectedObject?.dataset.objectType !== 'gripper';
+        hint.textContent = cartState.canAdd ? '按当前场景参数加入' : cartState.reason;
+        hint.hidden = !hint.textContent;
+    };
+
     const showMenu = (event) => {
+        if (event.target.closest('.gripper-context-menu')) return;
         event.preventDefault();
+        const targetObject = event.target.closest('.scene-object');
+        if (targetObject) selectObject(targetObject);
         const rect = viewport.getBoundingClientRect();
-        menu.style.left = `${Math.min(event.clientX - rect.left, rect.width - 128)}px`;
-        menu.style.top = `${Math.min(event.clientY - rect.top, rect.height - 104)}px`;
+        updateMenuState();
+        menu.style.left = `${Math.max(4, Math.min(event.clientX - rect.left, rect.width - 188))}px`;
+        menu.style.top = `${Math.max(4, Math.min(event.clientY - rect.top, rect.height - 156))}px`;
         menu.classList.remove('hidden');
     };
 
     const onMenuClick = (event) => {
         const action = event.target.closest('[data-gripper-menu-action]')?.dataset.gripperMenuAction;
         if (!action) return;
-        hideMenu();
+        if (action === 'add-cart') {
+            const result = window.HitbotCart?.addSceneObject?.(selectedObject);
+            if (result?.ok) hideMenu();
+            else updateMenuState();
+            return;
+        }
         if (action === 'range') {
+            hideMenu();
             panel.classList.remove('hidden');
             rangeEditor.show();
         }
+    };
+
+    const onScenePointerDown = (event) => {
+        const object = event.target.closest('.scene-object');
+        if (object && event.button === 0) selectObject(object);
     };
 
     const onDocumentPointerDown = (event) => {
@@ -193,13 +251,15 @@ function setupGripperContextMenu(viewport, canvas, rangeEditor) {
         rangeEditor.hide();
     };
 
-    canvas.addEventListener('contextmenu', showMenu);
+    viewport.addEventListener('contextmenu', showMenu);
+    sceneObjects?.addEventListener('pointerdown', onScenePointerDown);
     menu.addEventListener('click', onMenuClick);
     document.addEventListener('pointerdown', onDocumentPointerDown);
     panel.querySelector('[data-gripper-panel-close]').addEventListener('click', onPanelClose);
 
     return () => {
-        canvas.removeEventListener('contextmenu', showMenu);
+        viewport.removeEventListener('contextmenu', showMenu);
+        sceneObjects?.removeEventListener('pointerdown', onScenePointerDown);
         menu.removeEventListener('click', onMenuClick);
         document.removeEventListener('pointerdown', onDocumentPointerDown);
         rangeEditor.hide();
@@ -207,6 +267,81 @@ function setupGripperContextMenu(viewport, canvas, rangeEditor) {
         panel.remove();
         menu.remove();
     };
+}
+
+function setupSceneDrop(viewport, render) {
+    const sceneObjects = viewport.querySelector('.scene-objects');
+    if (!sceneObjects) return () => {};
+
+    const onDragOver = (event) => {
+        if (!event.dataTransfer?.types?.includes('deviceId')) return;
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'copy';
+        viewport.classList.add('scene-drop-active');
+    };
+
+    const onDragLeave = (event) => {
+        if (event.relatedTarget && viewport.contains(event.relatedTarget)) return;
+        viewport.classList.remove('scene-drop-active');
+    };
+
+    const onDrop = (event) => {
+        const deviceId = event.dataTransfer?.getData('deviceId');
+        if (!deviceId) return;
+
+        event.preventDefault();
+        viewport.classList.remove('scene-drop-active');
+        const productId = event.dataTransfer.getData('productId');
+        const deviceName = event.dataTransfer.getData('deviceName') || deviceId;
+        const rect = viewport.getBoundingClientRect();
+        const objectId = `scene-${slugify(deviceId)}-${Date.now().toString(36)}`;
+        const object = document.createElement('div');
+        const label = document.createElement('span');
+        const marker = document.createElement('div');
+
+        object.className = 'scene-object is-selected';
+        object.dataset.sceneObjectId = objectId;
+        object.dataset.sceneModelName = `${deviceName}_${Date.now().toString(36).slice(-4)}`;
+        object.dataset.sceneDisplayName = deviceName;
+        object.dataset.objectType = 'device';
+        object.dataset.sceneX = String(clamp((event.clientX - rect.left) / Math.max(1, rect.width), 0.08, 0.92));
+        object.dataset.sceneY = String(clamp((event.clientY - rect.top) / Math.max(1, rect.height), 0.12, 0.88));
+        object.dataset.cartDynamic = 'true';
+        if (productId) object.dataset.productId = productId;
+
+        const cartParameters = event.dataTransfer.getData('cartParameters');
+        if (cartParameters) object.dataset.cartParameters = cartParameters;
+
+        marker.className = 'object-3d box';
+        label.className = 'object-label';
+        label.textContent = object.dataset.sceneModelName;
+        object.append(marker, label);
+        sceneObjects.querySelectorAll('.scene-object.is-selected').forEach((item) => item.classList.remove('is-selected'));
+        sceneObjects.appendChild(object);
+        render();
+        window.dispatchEvent(new CustomEvent('hitbot:scene-changed', {
+            detail: { type: 'added', sceneObjectId: objectId }
+        }));
+    };
+
+    viewport.addEventListener('dragover', onDragOver);
+    viewport.addEventListener('dragleave', onDragLeave);
+    viewport.addEventListener('drop', onDrop);
+
+    return () => {
+        viewport.removeEventListener('dragover', onDragOver);
+        viewport.removeEventListener('dragleave', onDragLeave);
+        viewport.removeEventListener('drop', onDrop);
+        viewport.classList.remove('scene-drop-active');
+    };
+}
+
+function slugify(value) {
+    return String(value || 'device')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '')
+        .slice(0, 28) || 'device';
 }
 
 function setupGripperRangeEditor(viewport, canvas) {

@@ -1,10 +1,14 @@
-// Storefront-compatible cart for HitbotOS.
+// HitbotOS 3D-scene cart and storefront handoff.
 (function () {
     'use strict';
 
     const STORAGE_KEY = 'hitbot-cart-v2';
-    const AUTO_SYNC_STORAGE_KEY = 'hitbot-cart-auto-sync-v1';
+    const AUTO_SYNC_STORAGE_KEY = 'hitbot-cart-scene-sync-v2';
+    const CHECKOUT_HANDOFF_STORAGE_KEY = 'hitbot-store-checkout-handoff-v1';
     const CART_UPDATED_EVENT = 'hitbot-cart-updated';
+    const SCENE_CHANGED_EVENT = 'hitbot:scene-changed';
+    const SCENE_PARAMETERS_EVENT = 'hitbot:scene-model-updated';
+    const CART_SCHEMA_VERSION = 3;
     const DEFAULT_ENTERPRISE = {
         enterpriseId: 'ENT-HITBOT-CUSTOMER',
         companyName: '深圳智造装备有限公司'
@@ -25,7 +29,8 @@
             priceCents: 280000,
             currency: 'CNY',
             stock: 'in-stock',
-            sourceLabel: '商城标准件'
+            sourceLabel: '商城标准件',
+            defaultParameters: { jawStrokeMm: 40 }
         },
         'p-002': {
             id: 'p-002',
@@ -35,7 +40,8 @@
             priceCents: 320000,
             currency: 'CNY',
             stock: 'in-stock',
-            sourceLabel: '商城标准件'
+            sourceLabel: '商城标准件',
+            defaultParameters: { jawStrokeMm: 80 }
         },
         'p-003': {
             id: 'p-003',
@@ -95,7 +101,13 @@
             priceCents: 580000,
             currency: 'CNY',
             stock: 'in-stock',
-            sourceLabel: '商城标准件'
+            sourceLabel: '商城标准件',
+            defaultParameters: { strokeMm: 100, mounting: 'standard' },
+            pricingRule: {
+                parameter: 'strokeMm',
+                baseValue: 100,
+                pricePerUnitCents: 1200
+            }
         },
         'p-009': {
             id: 'p-009',
@@ -116,6 +128,18 @@
             currency: 'CNY',
             stock: 'in-stock',
             sourceLabel: '定制询价件'
+        },
+        'p-011': {
+            id: 'p-011',
+            model: 'JIG-AL6061-240',
+            name: '定位治具转接板',
+            partClass: 'machined',
+            priceCents: 0,
+            currency: 'CNY',
+            stock: 'in-stock',
+            sourceLabel: '项目加工件',
+            checkoutStatus: 'unavailable',
+            unavailableReason: '加工件需按图纸线下核价，暂不支持商城直接下单'
         }
     };
 
@@ -131,14 +155,62 @@
         '智能电缸|Z-Mod-SE-54': 'p-008'
     };
 
+    const PARAMETER_LABELS = {
+        strokeMm: '行程',
+        jawStrokeMm: '夹持行程',
+        lengthMm: '长',
+        widthMm: '宽',
+        heightMm: '高',
+        material: '材质',
+        mounting: '安装',
+        toleranceMm: '公差',
+        surfaceFinish: '表面处理',
+        drawingNo: '图号'
+    };
+
     let toastTimer = null;
-    let autoSyncObserver = null;
-    let autoSyncTimer = null;
-    let pendingSyncReview = null;
-    let pendingRemoveProductId = null;
+    let sceneSyncObserver = null;
+    let sceneSyncTimer = null;
+    let setCartOpen = null;
+    let cartDropdownElement = null;
 
     function now() {
         return Date.now();
+    }
+
+    function escapeHTML(value) {
+        return String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    function stableSerialize(value) {
+        if (Array.isArray(value)) {
+            return `[${value.map(stableSerialize).join(',')}]`;
+        }
+        if (value && typeof value === 'object') {
+            return `{${Object.keys(value).sort().map((key) => (
+                `${JSON.stringify(key)}:${stableSerialize(value[key])}`
+            )).join(',')}}`;
+        }
+        return JSON.stringify(value);
+    }
+
+    function hashString(value) {
+        let hash = 2166136261;
+        const text = String(value);
+        for (let index = 0; index < text.length; index += 1) {
+            hash ^= text.charCodeAt(index);
+            hash = Math.imul(hash, 16777619);
+        }
+        return (hash >>> 0).toString(36);
+    }
+
+    function configurationKey(productId, parameters) {
+        return `${productId}:${stableSerialize(parameters || {})}`;
     }
 
     function projectEnterpriseId(project) {
@@ -159,6 +231,109 @@
         };
     }
 
+    function getProduct(productId) {
+        return PRODUCT_CATALOG[productId] || null;
+    }
+
+    function getProductForDevice(categoryName, device) {
+        if (!device) return null;
+        const explicitProduct = device.productId ? getProduct(device.productId) : null;
+        if (explicitProduct) return explicitProduct;
+        return getProduct(DEVICE_PRODUCT_MAP[`${categoryName}|${device.name || device.id}`]) || null;
+    }
+
+    function normalizedName(value) {
+        return String(value || '')
+            .toLowerCase()
+            .replace(/[^a-z0-9\u4e00-\u9fa5]/g, '');
+    }
+
+    function getProductByUsedName(name) {
+        const normalized = normalizedName(name);
+        if (!normalized) return null;
+        return Object.values(PRODUCT_CATALOG).find((product) => {
+            const model = normalizedName(product.model);
+            return model && normalized.includes(model);
+        }) || null;
+    }
+
+    function productIsCartRelevant(product) {
+        return Boolean(product) && product.partClass !== 'reference';
+    }
+
+    function productIsCheckoutEligible(product) {
+        return Boolean(product)
+            && product.partClass === 'standard'
+            && product.priceCents > 0
+            && product.stock !== 'out-of-stock'
+            && product.checkoutStatus !== 'unavailable';
+    }
+
+    function productNeedsQuote(product) {
+        return Boolean(product) && product.partClass === 'custom';
+    }
+
+    function canAddProduct(product) {
+        return productIsCartRelevant(product);
+    }
+
+    function calculateUnitPriceCents(product, parameters = {}) {
+        if (!product || product.priceCents <= 0) return 0;
+        const rule = product.pricingRule;
+        if (!rule) return product.priceCents;
+
+        const rawValue = Number(parameters[rule.parameter]);
+        if (!Number.isFinite(rawValue)) return product.priceCents;
+        const delta = Math.max(0, rawValue - rule.baseValue);
+        return Math.max(0, Math.round(product.priceCents + delta * rule.pricePerUnitCents));
+    }
+
+    function normalizeParameters(product, parameters) {
+        const raw = parameters && typeof parameters === 'object' && !Array.isArray(parameters)
+            ? parameters
+            : {};
+        return {
+            ...(product?.defaultParameters || {}),
+            ...raw
+        };
+    }
+
+    function normalizeStoredItem(item) {
+        const product = getProduct(item?.productId);
+        if (!product) return null;
+        if (item.source === 'demo' && item.productId === 'p-011') return null;
+
+        const parameters = normalizeParameters(product, item.parameters);
+        const key = item.configurationKey || configurationKey(product.id, parameters);
+        const sceneObjectIds = Array.isArray(item.sceneObjectIds)
+            ? [...new Set(item.sceneObjectIds.filter(Boolean))]
+            : [];
+        const source = item.source === 'scene' ? 'scene' : 'legacy';
+        const qty = source === 'scene' && sceneObjectIds.length
+            ? sceneObjectIds.length
+            : Math.max(1, Number(item.qty) || 1);
+
+        return {
+            ...item,
+            itemId: item.itemId || `${source}:${product.id}:${hashString(key)}`,
+            productId: product.id,
+            partClass: product.partClass,
+            qty,
+            source,
+            syncMode: item.syncMode || (source === 'scene' ? 'manual' : 'legacy'),
+            sceneObjectIds,
+            sceneModelNames: Array.isArray(item.sceneModelNames) ? item.sceneModelNames : [],
+            parameters,
+            configurationKey: key,
+            unitPriceCents: calculateUnitPriceCents(product, parameters),
+            selected: productIsCheckoutEligible(product) && Boolean(item.selected),
+            sellable: productIsCheckoutEligible(product),
+            quoteRequired: productNeedsQuote(product),
+            syncStatus: 'synced',
+            addedAt: item.addedAt || now()
+        };
+    }
+
     function normalizeStoredState(rawState) {
         const state = rawState && typeof rawState === 'object' ? rawState : {};
         const enterpriseId = state.enterpriseId || DEFAULT_ENTERPRISE.enterpriseId;
@@ -172,15 +347,26 @@
             items: Array.isArray(state.items) ? state.items : [],
             updatedAt: now()
         };
-        const projects = Array.isArray(state.projects) && state.projects.length
-            ? state.projects.map((project) => ({
+        const rawProjects = Array.isArray(state.projects) && state.projects.length
+            ? state.projects
+            : [legacyProject];
+        const projects = rawProjects.map((project) => {
+            const items = (project.items || []).map(normalizeStoredItem).filter(Boolean);
+            const selectionPreferences = { ...(project.selectionPreferences || {}) };
+            items.forEach((item) => {
+                if (!(item.configurationKey in selectionPreferences)) {
+                    selectionPreferences[item.configurationKey] = item.selected;
+                }
+            });
+            return {
                 ...project,
                 enterpriseId: project.enterpriseId || enterpriseId,
                 companyName: project.companyName || companyName,
-                items: Array.isArray(project.items) ? project.items : [],
+                items,
+                selectionPreferences,
                 updatedAt: project.updatedAt || now()
-            }))
-            : [legacyProject];
+            };
+        });
         const currentProjectId = state.currentProjectId || legacyProject.projectId;
         const activeProject = projects.find(
             (project) => project.projectId === currentProjectId && projectEnterpriseId(project) === enterpriseId
@@ -188,6 +374,7 @@
 
         return {
             ...state,
+            schemaVersion: CART_SCHEMA_VERSION,
             enterpriseId,
             companyName,
             currentProjectId: activeProject.projectId,
@@ -201,98 +388,24 @@
     function readCartEnvelope() {
         try {
             const raw = window.localStorage.getItem(STORAGE_KEY);
-            if (!raw) {
-                return {
-                    state: normalizeStoredState(null),
-                    version: 0
-                };
-            }
-
+            if (!raw) return { state: normalizeStoredState(null), version: CART_SCHEMA_VERSION };
             const parsed = JSON.parse(raw);
-            const state = parsed && typeof parsed === 'object' && parsed.state
-                ? parsed.state
-                : parsed;
-
+            const state = parsed && typeof parsed === 'object' && parsed.state ? parsed.state : parsed;
             return {
                 state: normalizeStoredState(state),
-                version: parsed?.version || 0
+                version: Number(parsed?.version) || 0
             };
         } catch (error) {
             console.warn('读取购物车失败，已使用默认购物车。', error);
-            return {
-                state: normalizeStoredState(null),
-                version: 0
-            };
+            return { state: normalizeStoredState(null), version: CART_SCHEMA_VERSION };
         }
     }
 
-    function writeCartEnvelope(state, version) {
-        const envelope = {
-            state,
-            version: version || 0
-        };
-
+    function writeCartEnvelope(state) {
+        const normalizedState = normalizeStoredState(state);
+        const envelope = { state: normalizedState, version: CART_SCHEMA_VERSION };
         window.localStorage.setItem(STORAGE_KEY, JSON.stringify(envelope));
-        window.dispatchEvent(new CustomEvent(CART_UPDATED_EVENT, { detail: { state } }));
-    }
-
-    function getProduct(productId) {
-        return PRODUCT_CATALOG[productId] || null;
-    }
-
-    function getProductForDevice(categoryName, device) {
-        if (!device) return null;
-
-        const explicitProduct = device.productId ? getProduct(device.productId) : null;
-        if (explicitProduct) return explicitProduct;
-
-        const key = `${categoryName}|${device.name || device.id}`;
-        return getProduct(DEVICE_PRODUCT_MAP[key]) || null;
-    }
-
-    function normalizedName(value) {
-        return String(value || '')
-            .toLowerCase()
-            .replace(/[^a-z0-9\u4e00-\u9fa5]/g, '');
-    }
-
-    function getProductByUsedName(name) {
-        const normalized = normalizedName(name);
-        if (!normalized) return null;
-
-        return Object.values(PRODUCT_CATALOG).find((product) => {
-            const model = normalizedName(product.model);
-            return model && normalized.includes(model);
-        }) || null;
-    }
-
-    function productIsSellable(product) {
-        return product.partClass === 'standard' && product.priceCents > 0 && product.stock !== 'out-of-stock';
-    }
-
-    function productNeedsQuote(product) {
-        return product.partClass === 'custom' || (!productIsSellable(product) && product.partClass !== 'reference');
-    }
-
-    function canAddProduct(product) {
-        return Boolean(product) && product.stock !== 'out-of-stock' && product.partClass !== 'reference';
-    }
-
-    function createCartItem(product, qty) {
-        const sellable = productIsSellable(product);
-        const quoteRequired = productNeedsQuote(product);
-
-        return {
-            productId: product.id,
-            partClass: product.partClass,
-            qty,
-            source: 'os',
-            selected: product.partClass !== 'reference',
-            sellable,
-            quoteRequired,
-            syncStatus: 'pending',
-            addedAt: now()
-        };
+        window.dispatchEvent(new CustomEvent(CART_UPDATED_EVENT, { detail: { state: normalizedState } }));
     }
 
     function syncActiveFields(state, activeProject) {
@@ -322,6 +435,7 @@
             projectName: meta.projectName,
             source: 'os',
             items: [],
+            selectionPreferences: {},
             updatedAt: now()
         };
         const updatedProject = {
@@ -332,9 +446,10 @@
             source: 'os',
             updatedAt: now()
         };
-        const nextProjects = projects.some(
+        const exists = projects.some(
             (project) => project.projectId === updatedProject.projectId && projectEnterpriseId(project) === enterpriseId
-        )
+        );
+        const nextProjects = exists
             ? projects.map((project) => (
                 project.projectId === updatedProject.projectId && projectEnterpriseId(project) === enterpriseId
                     ? updatedProject
@@ -348,384 +463,14 @@
             projects: nextProjects
         }, updatedProject);
 
-        writeCartEnvelope(nextState, envelope.version);
+        writeCartEnvelope(nextState);
         return { state: nextState, project: updatedProject };
-    }
-
-    function addProduct(productId, options = {}) {
-        const product = getProduct(productId);
-        const qty = Math.max(1, Number(options.qty) || 1);
-
-        if (!canAddProduct(product)) {
-            const message = product?.stock === 'out-of-stock' ? `${product.model} 暂不可加入购物车` : '该物料暂不支持加入购物车';
-            showToast(message, 'warn');
-            return { ok: false, reason: 'unavailable', product };
-        }
-
-        const result = updateCurrentProject((project) => {
-            const existing = project.items.find((item) => item.productId === product.id);
-            const items = existing
-                ? project.items.map((item) => item.productId === product.id
-                    ? {
-                        ...item,
-                        qty: item.qty + qty,
-                        selected: true,
-                        source: 'os',
-                        syncStatus: 'pending'
-                    }
-                    : item)
-                : [...project.items, createCartItem(product, qty)];
-
-            return {
-                ...project,
-                items
-            };
-        });
-
-        renderCartUI(true);
-        showToast(`${product.model} 已加入购物车`);
-        return { ok: true, product, ...result };
-    }
-
-    function getUsedProductQty(productId) {
-        const usage = collectUsedProductUsages().find((item) => item.productId === productId);
-        return Math.max(0, Number(usage?.qty) || 0);
-    }
-
-    function removeProduct(productId, options = {}) {
-        const product = getProduct(productId);
-        const { state } = readCartEnvelope();
-        const project = getActiveProject(state);
-        const existing = (project.items || []).find((item) => item.productId === productId);
-
-        if (!existing) {
-            renderCartUI();
-            return { ok: false, reason: 'missing', product };
-        }
-
-        const result = updateCurrentProject((currentProject) => ({
-            ...currentProject,
-            items: (currentProject.items || []).filter((item) => item.productId !== productId)
-        }));
-
-        if (pendingRemoveProductId === productId) {
-            pendingRemoveProductId = null;
-        }
-
-        renderCartUI();
-        if (!options.silent) {
-            showToast(`${product?.model || '物料'} 已从购物车移除`);
-        }
-        return { ok: true, product, removedQty: existing.qty, ...result };
-    }
-
-    function requestRemoveProduct(productId) {
-        if (getUsedProductQty(productId) > 0) {
-            pendingRemoveProductId = productId;
-            renderCartUI();
-            return;
-        }
-
-        removeProduct(productId);
-    }
-
-    function confirmRemoveProduct(productId) {
-        const product = getProduct(productId);
-        const wasAutoSyncEnabled = isAutoSyncEnabled();
-        const usedQty = getUsedProductQty(productId);
-        const result = removeProduct(productId, { silent: true });
-
-        if (!result.ok) return;
-
-        if (usedQty > 0 && wasAutoSyncEnabled) {
-            persistAutoSyncEnabled(false);
-            stopAutoSync();
-            renderCartUI();
-            showToast(`${product?.model || '物料'} 已移除，自动同步已关闭`, 'warn');
-            return;
-        }
-
-        showToast(`${product?.model || '物料'} 已从购物车移除`);
-    }
-
-    function syncUsedProducts(usages, options = {}) {
-        const normalizedUsages = Array.isArray(usages)
-            ? usages
-                .map((usage) => {
-                    const product = getProduct(usage.productId);
-                    const qty = Math.max(1, Number(usage.qty) || 1);
-                    return product && canAddProduct(product) ? { product, qty } : null;
-                })
-                .filter(Boolean)
-            : [];
-
-        if (!normalizedUsages.length) return { ok: false, added: 0 };
-
-        let changedCount = 0;
-        const result = updateCurrentProject((project) => {
-            const nextItems = [...project.items];
-
-            normalizedUsages.forEach(({ product, qty }) => {
-                const existingIndex = nextItems.findIndex((item) => item.productId === product.id);
-                if (existingIndex >= 0) {
-                    const existing = nextItems[existingIndex];
-                    const nextQty = Math.max(existing.qty, qty);
-                    if (nextQty !== existing.qty || existing.syncStatus !== 'pending' || existing.source !== 'os') {
-                        nextItems[existingIndex] = {
-                            ...existing,
-                            qty: nextQty,
-                            selected: true,
-                            source: 'os',
-                            syncStatus: 'pending'
-                        };
-                        changedCount += 1;
-                    }
-                } else {
-                    nextItems.push(createCartItem(product, qty));
-                    changedCount += 1;
-                }
-            });
-
-            return {
-                ...project,
-                items: nextItems
-            };
-        });
-
-        const added = changedCount;
-
-        if (added > 0) {
-            renderCartUI(true);
-            if (!options.silent) {
-                showToast(`已同步 ${added} 种方案设备`);
-            }
-        }
-
-        return { ok: added > 0, added, ...result };
-    }
-
-    function buildUsedProductSyncCandidates() {
-        const usages = collectUsedProductUsages();
-        if (!usages.length) return [];
-
-        const { state } = readCartEnvelope();
-        const project = getActiveProject(state);
-        const cartQtyMap = new Map();
-
-        (project.items || []).forEach((item) => {
-            const qty = Math.max(0, Number(item.qty) || 0);
-            cartQtyMap.set(item.productId, (cartQtyMap.get(item.productId) || 0) + qty);
-        });
-
-        return usages
-            .map((usage) => {
-                const product = getProduct(usage.productId);
-                if (!canAddProduct(product)) return null;
-
-                const usageQty = Math.max(1, Number(usage.qty) || 1);
-                const cartQty = Math.max(0, cartQtyMap.get(product.id) || 0);
-                if (cartQty >= usageQty) return null;
-
-                return {
-                    productId: product.id,
-                    qty: usageQty,
-                    cartQty,
-                    syncQty: usageQty - cartQty,
-                    product
-                };
-            })
-            .filter(Boolean);
-    }
-
-    function createPendingSyncReview(candidates, selectedProductIds) {
-        return {
-            candidates,
-            selectedProductIds: new Set(selectedProductIds || candidates.map((candidate) => candidate.productId))
-        };
-    }
-
-    function refreshPendingSyncReview() {
-        if (!pendingSyncReview) return null;
-
-        const previousSelection = pendingSyncReview.selectedProductIds;
-        const candidates = buildUsedProductSyncCandidates();
-        if (!candidates.length) {
-            pendingSyncReview = null;
-            return null;
-        }
-
-        const selectedIds = candidates
-            .filter((candidate) => previousSelection.has(candidate.productId))
-            .map((candidate) => candidate.productId);
-
-        pendingSyncReview = createPendingSyncReview(candidates, selectedIds.length ? selectedIds : undefined);
-        return pendingSyncReview;
-    }
-
-    function persistAutoSyncEnabled(enabled) {
-        try {
-            window.localStorage.setItem(AUTO_SYNC_STORAGE_KEY, enabled ? 'true' : 'false');
-        } catch (error) {
-            console.warn('保存自动同步配置失败。', error);
-        }
-    }
-
-    function isAutoSyncEnabled() {
-        try {
-            return window.localStorage.getItem(AUTO_SYNC_STORAGE_KEY) === 'true';
-        } catch (error) {
-            return false;
-        }
-    }
-
-    function setAutoSyncEnabled(enabled) {
-        if (enabled) {
-            const candidates = buildUsedProductSyncCandidates();
-            if (candidates.length) {
-                pendingSyncReview = createPendingSyncReview(candidates);
-                persistAutoSyncEnabled(false);
-                stopAutoSync();
-                renderCartUI();
-                showToast(`发现 ${candidates.length} 种方案设备待同步`, 'warn');
-                return;
-            }
-
-            completeAutoSyncEnable();
-        } else {
-            pendingSyncReview = null;
-            persistAutoSyncEnabled(false);
-            stopAutoSync();
-            showToast('已关闭自动同步方案设备');
-            renderCartUI();
-        }
-    }
-
-    function completeAutoSyncEnable(added = 0) {
-        pendingSyncReview = null;
-        persistAutoSyncEnabled(true);
-        startAutoSync();
-        showToast(added > 0 ? `已同步 ${added} 种方案设备，并开启自动同步` : '已开启自动同步方案设备');
-        renderCartUI(added > 0);
-    }
-
-    function resolvePendingSyncReview(candidates) {
-        const selectedCandidates = Array.isArray(candidates) ? candidates : [];
-        if (!selectedCandidates.length) {
-            showToast('请先选择要同步的方案设备', 'warn');
-            return;
-        }
-
-        pendingSyncReview = null;
-        const result = syncUsedProducts(
-            selectedCandidates.map((candidate) => ({
-                productId: candidate.productId,
-                qty: candidate.qty
-            })),
-            { silent: true }
-        );
-        const remainingCandidates = buildUsedProductSyncCandidates();
-
-        if (remainingCandidates.length) {
-            pendingSyncReview = createPendingSyncReview(remainingCandidates);
-            persistAutoSyncEnabled(false);
-            stopAutoSync();
-            renderCartUI(result.added > 0);
-            showToast(`已同步 ${result.added} 种，仍有 ${remainingCandidates.length} 种待处理`, 'warn');
-            return;
-        }
-
-        completeAutoSyncEnable(result.added);
-    }
-
-    function cancelPendingSyncReview() {
-        pendingSyncReview = null;
-        persistAutoSyncEnabled(false);
-        stopAutoSync();
-        showToast('已取消自动同步');
-        renderCartUI();
-    }
-
-    function collectUsedProductUsages() {
-        const usageMap = new Map();
-        const addUsage = (product, qty = 1) => {
-            if (!product || !canAddProduct(product)) return;
-            usageMap.set(product.id, (usageMap.get(product.id) || 0) + qty);
-        };
-
-        document.querySelectorAll('[data-scene-model-name]').forEach((element) => {
-            addUsage(getProductByUsedName(element.dataset.sceneModelName));
-        });
-
-        document.querySelectorAll('.collection-item.leaf .item-name').forEach((element) => {
-            addUsage(getProductByUsedName(element.textContent));
-        });
-
-        return Array.from(usageMap, ([productId, qty]) => ({ productId, qty }));
-    }
-
-    function scheduleAutoSync() {
-        if (!isAutoSyncEnabled()) return;
-        window.clearTimeout(autoSyncTimer);
-        autoSyncTimer = window.setTimeout(() => {
-            syncUsedProducts(collectUsedProductUsages(), { silent: true });
-        }, 120);
-    }
-
-    function startAutoSync() {
-        stopAutoSync();
-        const targets = [
-            document.querySelector('.scene-objects'),
-            document.querySelector('.panel-content-wrapper'),
-            document.querySelector('.electrical-window')
-        ].filter(Boolean);
-
-        if (targets.length) {
-            autoSyncObserver = new MutationObserver(scheduleAutoSync);
-            targets.forEach((target) => {
-                autoSyncObserver.observe(target, {
-                    childList: true,
-                    subtree: true,
-                    attributes: true,
-                    attributeFilter: ['data-scene-model-name', 'data-visible']
-                });
-            });
-        }
-    }
-
-    function stopAutoSync() {
-        if (autoSyncObserver) {
-            autoSyncObserver.disconnect();
-            autoSyncObserver = null;
-        }
-
-        window.clearTimeout(autoSyncTimer);
-        autoSyncTimer = null;
-    }
-
-    function bindAutoSyncDrop() {
-        if (document.documentElement.dataset.cartAutoDropBound === 'true') return;
-        document.documentElement.dataset.cartAutoDropBound = 'true';
-
-        document.addEventListener('drop', (event) => {
-            if (!isAutoSyncEnabled()) return;
-
-            const targetArea = event.target.closest('.viewport-3d, .simulation-window, .electrical-window');
-            if (!targetArea) return;
-
-            const productId = event.dataTransfer?.getData('productId');
-            if (productId) {
-                addProduct(productId);
-            } else {
-                scheduleAutoSync();
-            }
-        }, true);
     }
 
     function getActiveProject(state) {
         const projects = Array.isArray(state.projects) ? state.projects : [];
         const enterpriseId = state.enterpriseId || DEFAULT_ENTERPRISE.enterpriseId;
         const osProject = getCurrentProjectMeta();
-
         return projects.find(
             (project) => project.projectId === osProject.projectId && projectEnterpriseId(project) === enterpriseId
         ) || {
@@ -735,8 +480,330 @@
             projectName: osProject.projectName,
             source: 'os',
             items: [],
+            selectionPreferences: {},
             updatedAt: now()
         };
+    }
+
+    function parseSceneParameters(element, product) {
+        if (!element) return normalizeParameters(product, null);
+        try {
+            const parsed = element.dataset.cartParameters
+                ? JSON.parse(element.dataset.cartParameters)
+                : {};
+            return normalizeParameters(product, parsed);
+        } catch (error) {
+            console.warn('场景模型参数格式无效，已使用默认参数。', error);
+            return normalizeParameters(product, null);
+        }
+    }
+
+    function readSceneObjectSnapshot(element) {
+        if (!element) return null;
+        const product = getProduct(element.dataset.productId)
+            || getProductByUsedName(element.dataset.sceneModelName);
+        if (!product) return null;
+        const sceneObjectId = element.dataset.sceneObjectId;
+        if (!sceneObjectId) return null;
+        const parameters = parseSceneParameters(element, product);
+        const key = configurationKey(product.id, parameters);
+        return {
+            sceneObjectId,
+            sceneModelName: element.dataset.sceneModelName || sceneObjectId,
+            displayName: element.dataset.sceneDisplayName || product.name,
+            productId: product.id,
+            product,
+            parameters,
+            configurationKey: key,
+            unitPriceCents: calculateUnitPriceCents(product, parameters),
+            cartRelevant: productIsCartRelevant(product)
+        };
+    }
+
+    function collectSceneProductSnapshots() {
+        return Array.from(document.querySelectorAll('.viewport-3d .scene-object[data-scene-object-id]'))
+            .map(readSceneObjectSnapshot)
+            .filter((snapshot) => snapshot?.cartRelevant);
+    }
+
+    function groupSceneSnapshots(snapshots) {
+        const groups = new Map();
+        snapshots.forEach((snapshot) => {
+            const existing = groups.get(snapshot.configurationKey);
+            if (existing) {
+                existing.sceneObjectIds.push(snapshot.sceneObjectId);
+                existing.sceneModelNames.push(snapshot.sceneModelName);
+                return;
+            }
+            groups.set(snapshot.configurationKey, {
+                ...snapshot,
+                sceneObjectIds: [snapshot.sceneObjectId],
+                sceneModelNames: [snapshot.sceneModelName]
+            });
+        });
+        return Array.from(groups.values());
+    }
+
+    function buildSceneItem(group, project, autoSyncEnabled) {
+        const sceneItems = (project.items || []).filter((item) => item.source === 'scene');
+        const overlaps = sceneItems.filter((item) => (
+            item.configurationKey === group.configurationKey
+            || item.sceneObjectIds.some((id) => group.sceneObjectIds.includes(id))
+        ));
+        const preference = project.selectionPreferences?.[group.configurationKey];
+        const selected = overlaps.length
+            ? overlaps.every((item) => item.selected)
+            : Boolean(preference);
+        const product = group.product;
+
+        return {
+            itemId: `scene:${product.id}:${hashString(group.configurationKey)}`,
+            productId: product.id,
+            partClass: product.partClass,
+            qty: group.sceneObjectIds.length,
+            source: 'scene',
+            syncMode: autoSyncEnabled ? 'auto' : overlaps[0]?.syncMode || 'manual',
+            sceneObjectIds: [...group.sceneObjectIds].sort(),
+            sceneModelNames: [...group.sceneModelNames].sort(),
+            parameters: group.parameters,
+            configurationKey: group.configurationKey,
+            unitPriceCents: group.unitPriceCents,
+            selected: productIsCheckoutEligible(product) && selected,
+            sellable: productIsCheckoutEligible(product),
+            quoteRequired: productNeedsQuote(product),
+            syncStatus: 'synced',
+            addedAt: Math.min(...overlaps.map((item) => item.addedAt || now()), now())
+        };
+    }
+
+    function isAutoSyncEnabled() {
+        try {
+            const stored = window.localStorage.getItem(AUTO_SYNC_STORAGE_KEY);
+            return stored === null ? true : stored === 'true';
+        } catch (error) {
+            return true;
+        }
+    }
+
+    function persistAutoSyncEnabled(enabled) {
+        try {
+            window.localStorage.setItem(AUTO_SYNC_STORAGE_KEY, enabled ? 'true' : 'false');
+        } catch (error) {
+            console.warn('保存 3D 场景自动同步配置失败。', error);
+        }
+    }
+
+    function reconcileSceneCart() {
+        const autoSyncEnabled = isAutoSyncEnabled();
+        const snapshots = collectSceneProductSnapshots();
+        return updateCurrentProject((project) => {
+            const sceneItems = (project.items || []).filter((item) => item.source === 'scene');
+            const trackedIds = new Set(sceneItems.flatMap((item) => item.sceneObjectIds || []));
+            const targetSnapshots = autoSyncEnabled
+                ? snapshots
+                : snapshots.filter((snapshot) => trackedIds.has(snapshot.sceneObjectId));
+            const nextSceneItems = groupSceneSnapshots(targetSnapshots)
+                .map((group) => buildSceneItem(group, project, autoSyncEnabled));
+            const retainedItems = (project.items || []).filter((item) => item.source !== 'scene');
+            return {
+                ...project,
+                items: [...retainedItems, ...nextSceneItems]
+            };
+        });
+    }
+
+    function scheduleSceneSync() {
+        window.clearTimeout(sceneSyncTimer);
+        sceneSyncTimer = window.setTimeout(reconcileSceneCart, 80);
+    }
+
+    function startSceneSync() {
+        if (sceneSyncObserver) sceneSyncObserver.disconnect();
+        const sceneObjects = document.querySelector('.viewport-3d .scene-objects');
+        if (sceneObjects) {
+            sceneSyncObserver = new MutationObserver(scheduleSceneSync);
+            sceneSyncObserver.observe(sceneObjects, {
+                childList: true,
+                subtree: true,
+                attributes: true,
+                attributeFilter: [
+                    'data-scene-object-id',
+                    'data-scene-model-name',
+                    'data-scene-display-name',
+                    'data-product-id',
+                    'data-cart-parameters'
+                ]
+            });
+        }
+        window.addEventListener(SCENE_CHANGED_EVENT, scheduleSceneSync);
+        window.addEventListener(SCENE_PARAMETERS_EVENT, scheduleSceneSync);
+    }
+
+    function setAutoSyncEnabled(enabled) {
+        persistAutoSyncEnabled(enabled);
+        reconcileSceneCart();
+        showToast(enabled ? '已开启 3D 场景自动同步' : '已关闭自动加入；已在购物车中的模型仍会同步参数');
+    }
+
+    function getSceneObjectCartState(element) {
+        if (!element) return { canAdd: false, inCart: false, reason: '请先选择一个场景模型' };
+        const snapshot = readSceneObjectSnapshot(element);
+        if (!snapshot) return { canAdd: false, inCart: false, reason: '该场景模型尚未关联商城物料' };
+        if (!snapshot.cartRelevant) return { canAdd: false, inCart: false, reason: '参考物不进入购物车' };
+
+        const { state } = readCartEnvelope();
+        const project = getActiveProject(state);
+        const inCart = (project.items || []).some((item) => (
+            item.sceneObjectIds?.includes(snapshot.sceneObjectId)
+        ));
+        if (inCart) return { canAdd: false, inCart: true, reason: '该模型已在购物车中' };
+        if (isAutoSyncEnabled()) {
+            return { canAdd: false, inCart: false, reason: '已开启自动同步，无需手动添加' };
+        }
+        return { canAdd: true, inCart: false, reason: '' };
+    }
+
+    function addSceneObject(element) {
+        const state = getSceneObjectCartState(element);
+        const snapshot = readSceneObjectSnapshot(element);
+        if (!state.canAdd || !snapshot) {
+            showToast(state.reason || '该模型暂不支持加入购物车', 'warn');
+            return { ok: false, reason: state.reason };
+        }
+
+        updateCurrentProject((project) => {
+            const items = [...(project.items || [])];
+            const existingIndex = items.findIndex((item) => (
+                item.source === 'scene' && item.configurationKey === snapshot.configurationKey
+            ));
+            if (existingIndex >= 0) {
+                const existing = items[existingIndex];
+                items[existingIndex] = {
+                    ...existing,
+                    qty: existing.qty + 1,
+                    sceneObjectIds: [...existing.sceneObjectIds, snapshot.sceneObjectId].sort(),
+                    sceneModelNames: [...existing.sceneModelNames, snapshot.sceneModelName].sort(),
+                    syncMode: 'manual'
+                };
+            } else {
+                items.push(buildSceneItem({
+                    ...snapshot,
+                    sceneObjectIds: [snapshot.sceneObjectId],
+                    sceneModelNames: [snapshot.sceneModelName]
+                }, project, false));
+            }
+            return { ...project, items };
+        });
+        showToast(`${snapshot.product.model} 已按当前参数加入购物车`);
+        return { ok: true, snapshot };
+    }
+
+    function addProduct(productId, options = {}) {
+        const product = getProduct(productId);
+        if (!productIsCartRelevant(product)) {
+            showToast('该物料暂不支持加入购物车', 'warn');
+            return { ok: false, reason: 'unavailable', product };
+        }
+        const parameters = normalizeParameters(product, options.parameters);
+        const key = configurationKey(product.id, parameters);
+        const qty = Math.max(1, Number(options.qty) || 1);
+        updateCurrentProject((project) => {
+            const items = [...(project.items || [])];
+            const index = items.findIndex((item) => item.source !== 'scene' && item.configurationKey === key);
+            if (index >= 0) {
+                items[index] = { ...items[index], qty: items[index].qty + qty };
+            } else {
+                items.push(normalizeStoredItem({
+                    itemId: `legacy:${product.id}:${hashString(key)}`,
+                    productId: product.id,
+                    qty,
+                    source: 'legacy',
+                    parameters,
+                    configurationKey: key,
+                    selected: false,
+                    addedAt: now()
+                }));
+            }
+            return { ...project, items };
+        });
+        showToast(`${product.model} 已加入购物车`);
+        return { ok: true, product };
+    }
+
+    function removeItem(itemId) {
+        const { state } = readCartEnvelope();
+        const project = getActiveProject(state);
+        const item = (project.items || []).find((candidate) => candidate.itemId === itemId);
+        if (!item) return { ok: false, reason: 'missing' };
+        if (item.source === 'scene' && isAutoSyncEnabled()) {
+            showToast('自动同步项请取消勾选以排除结算', 'warn');
+            return { ok: false, reason: 'auto-sync' };
+        }
+
+        updateCurrentProject((currentProject) => ({
+            ...currentProject,
+            items: (currentProject.items || []).filter((candidate) => candidate.itemId !== itemId)
+        }));
+        showToast('物料已从购物车移除');
+        return { ok: true };
+    }
+
+    function updateSceneObjectParameters(sceneObjectId, parameters) {
+        const element = document.querySelector(
+            `.viewport-3d .scene-object[data-scene-object-id="${CSS.escape(String(sceneObjectId))}"]`
+        );
+        if (!element || !parameters || typeof parameters !== 'object') return false;
+        const product = getProduct(element.dataset.productId) || getProductByUsedName(element.dataset.sceneModelName);
+        element.dataset.cartParameters = JSON.stringify(normalizeParameters(product, parameters));
+        window.dispatchEvent(new CustomEvent(SCENE_PARAMETERS_EVENT, {
+            detail: { sceneObjectId, parameters }
+        }));
+        return true;
+    }
+
+    function itemIsCheckoutEligible(item) {
+        return productIsCheckoutEligible(getProduct(item.productId));
+    }
+
+    function cartTotals(items) {
+        return items.reduce((total, item) => {
+            const selected = item.selected && itemIsCheckoutEligible(item);
+            return {
+                count: total.count + item.qty,
+                selectedCount: total.selectedCount + (selected ? item.qty : 0),
+                subtotal: total.subtotal + (selected ? item.unitPriceCents * item.qty : 0)
+            };
+        }, { count: 0, selectedCount: 0, subtotal: 0 });
+    }
+
+    function setItemSelected(itemId, selected) {
+        updateCurrentProject((project) => {
+            const item = (project.items || []).find((candidate) => candidate.itemId === itemId);
+            if (!item) return project;
+            const checked = itemIsCheckoutEligible(item) && selected;
+            return {
+                ...project,
+                selectionPreferences: {
+                    ...(project.selectionPreferences || {}),
+                    [item.configurationKey]: checked
+                },
+                items: project.items.map((candidate) => (
+                    candidate.itemId === itemId ? { ...candidate, selected: checked } : candidate
+                ))
+            };
+        });
+    }
+
+    function setAllItemsSelected(selected) {
+        updateCurrentProject((project) => {
+            const selectionPreferences = { ...(project.selectionPreferences || {}) };
+            const items = (project.items || []).map((item) => {
+                const checked = itemIsCheckoutEligible(item) && selected;
+                if (itemIsCheckoutEligible(item)) selectionPreferences[item.configurationKey] = checked;
+                return { ...item, selected: checked };
+            });
+            return { ...project, items, selectionPreferences };
+        });
     }
 
     function formatPrice(cents, currency = 'CNY') {
@@ -752,123 +819,99 @@
         }
     }
 
-    function formatItemStatus(item, product) {
-        if (item.sellable && product) return formatPrice(product.priceCents * item.qty, product.currency);
-        if (item.quoteRequired) return '需询价';
-        return '参考件';
+    function formatParameterValue(key, value) {
+        if (key.endsWith('Mm') && Number.isFinite(Number(value))) return `${value} mm`;
+        if (key === 'mounting') return value === 'standard' ? '标准' : String(value);
+        return String(value);
     }
 
-    function cartTotals(items) {
-        return items.reduce((total, item) => {
-            const product = getProduct(item.productId);
-            return {
-                count: total.count + item.qty,
-                selectedCount: total.selectedCount + (item.selected ? item.qty : 0),
-                subtotal: total.subtotal + (product && item.selected && item.sellable ? product.priceCents * item.qty : 0)
-            };
-        }, { count: 0, selectedCount: 0, subtotal: 0 });
+    function formatParameterSummary(parameters) {
+        return Object.entries(parameters || {})
+            .map(([key, value]) => `${PARAMETER_LABELS[key] || key} ${formatParameterValue(key, value)}`)
+            .join(' · ');
     }
 
-    function escapeHTML(value) {
-        return String(value)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;');
+    function getUnavailableReason(product) {
+        if (product?.unavailableReason) return product.unavailableReason;
+        if (product?.stock === 'out-of-stock') return '该商品当前无库存，暂不可下单';
+        if (product?.partClass === 'custom') return '定制件需先询价，暂不进入商城结算';
+        return '该物料暂不支持商城直接下单';
     }
 
-    function buildCheckoutUrl(projectId) {
-        const configured = window.HITBOT_STORE_CHECKOUT_URL || document.body?.dataset?.storeCheckoutUrl;
-        const query = `from=os&project=${encodeURIComponent(projectId)}`;
+    function createPreviewRowHTML(item, autoSyncEnabled) {
+        const product = getProduct(item.productId);
+        const checkoutEligible = itemIsCheckoutEligible(item);
+        const unavailableReason = getUnavailableReason(product);
+        const partLabels = {
+            standard: '标准件',
+            custom: '定制询价件',
+            machined: '加工件',
+            reference: '参考件'
+        };
+        const sourceLabel = item.source === 'scene' ? '3D 场景' : '历史物料';
+        const metaText = `${product?.model || item.productId} · ${sourceLabel} · ${partLabels[product?.partClass] || '物料'}`;
+        const parameterText = formatParameterSummary(item.parameters);
+        const removalLocked = item.source === 'scene' && autoSyncEnabled;
 
-        if (configured) {
-            const url = new URL(configured, window.location.href);
-            query.split('&').forEach((pair) => {
-                const [key, value] = pair.split('=');
-                url.searchParams.set(key, decodeURIComponent(value));
-            });
-            return url.toString();
-        }
-
-        const isLocal = window.location.protocol === 'file:'
-            || ['localhost', '127.0.0.1', ''].includes(window.location.hostname);
-        const base = isLocal ? 'http://localhost:3000/zh/checkout' : '/store/cart';
-        return `${base}?${query}`;
+        return `
+            <div class="cart-preview-row">
+                <label class="cart-preview-select ${checkoutEligible ? '' : 'is-disabled'}" ${checkoutEligible ? '' : `title="${escapeHTML(unavailableReason)}"`}>
+                    <input type="checkbox" data-cart-select-item="${escapeHTML(item.itemId)}" aria-label="选择 ${escapeHTML(product?.name || item.productId)}" ${item.selected && checkoutEligible ? 'checked' : ''} ${checkoutEligible ? '' : 'disabled'}>
+                </label>
+                <div class="cart-preview-main">
+                    <div class="cart-preview-name">${escapeHTML(product?.name || item.productId)}</div>
+                    <div class="cart-preview-meta" title="${escapeHTML(metaText)}">${escapeHTML(metaText)}</div>
+                    ${parameterText ? `<div class="cart-preview-extra" title="${escapeHTML(parameterText)}">${escapeHTML(parameterText)}</div>` : ''}
+                </div>
+                <div class="cart-preview-side">
+                    <div class="cart-preview-qty">x${item.qty}</div>
+                    ${checkoutEligible
+                        ? `<div class="cart-preview-price">${escapeHTML(formatPrice(item.unitPriceCents * item.qty, product.currency))}</div>`
+                        : `<div class="cart-preview-unavailable" title="${escapeHTML(unavailableReason)}">${product?.partClass === 'custom' ? '需询价' : '不可下单'}</div>`}
+                </div>
+                <button class="cart-preview-remove" type="button" data-cart-remove-item="${escapeHTML(item.itemId)}" title="${removalLocked ? '自动同步项请取消勾选以排除结算' : '移除物料'}" aria-label="${removalLocked ? '自动同步项不可移除' : `移除 ${escapeHTML(product?.model || item.productId)}`}" ${removalLocked ? 'disabled' : ''}>
+                    <i class="bi ${removalLocked ? 'bi-link-45deg' : 'bi-trash'}" aria-hidden="true"></i>
+                </button>
+            </div>
+        `;
     }
 
-    function renderCartUI(animateBadge = false) {
-        const root = document.querySelector('.cart-menu-dropdown');
-        if (!root) return;
-
-        const { state } = readCartEnvelope();
-        const activeProject = getActiveProject(state);
-        const items = Array.isArray(activeProject.items) ? activeProject.items : [];
-        const totals = cartTotals(items);
-        const autoSyncEnabled = isAutoSyncEnabled();
-        const syncReview = refreshPendingSyncReview();
-        const autoSyncChecked = autoSyncEnabled || Boolean(syncReview);
-        const button = root.querySelector('.cart-menu-btn');
-        const badge = root.querySelector('[data-cart-count]');
-        const dropdown = root.querySelector('[data-cart-dropdown]');
-
-        if (button) {
-            button.setAttribute('aria-label', totals.count > 0 ? `购物车，${totals.count} 件物料` : '购物车');
-        }
-
-        if (badge) {
-            badge.hidden = totals.count === 0;
-            badge.textContent = totals.count > 99 ? '99+' : String(totals.count);
-            if (animateBadge && totals.count > 0) {
-                badge.classList.remove('bump');
-                window.requestAnimationFrame(() => badge.classList.add('bump'));
-            }
-        }
-
-        if (!dropdown) return;
-
-        dropdown.innerHTML = createDropdownHTML(activeProject, items, totals, autoSyncChecked, syncReview);
-    }
-
-    function createDropdownHTML(project, items, totals, autoSyncChecked, syncReview) {
-        const previewItems = items.slice(0, 3);
-        const remainingCount = Math.max(0, items.length - previewItems.length);
-        const syncReviewHTML = syncReview ? createSyncReviewHTML(syncReview) : '';
+    function createDropdownHTML(project, items, totals, autoSyncEnabled) {
+        const eligibleItems = items.filter(itemIsCheckoutEligible);
+        const allSelected = eligibleItems.length > 0 && eligibleItems.every((item) => item.selected);
+        const canCheckout = totals.selectedCount > 0;
         const bodyHTML = items.length
             ? `
                 <div class="cart-preview-list">
-                    ${previewItems.map(createPreviewRowHTML).join('')}
+                    ${items.map((item) => createPreviewRowHTML(item, autoSyncEnabled)).join('')}
                 </div>
-                ${remainingCount > 0 ? `<div class="cart-preview-more">还有 ${remainingCount} 行物料，去商城结算页查看</div>` : ''}
             `
             : `
                 <div class="cart-empty-state">
-                    <div class="cart-empty-title">购物车里还没有物料</div>
-                    <div class="cart-empty-hint">从设备库添加标准件，或开启自动同步方案设备。</div>
+                    <div class="cart-empty-title">3D 场景还没有可采购物料</div>
+                    <div class="cart-empty-hint">从设备库拖入模型；开启自动同步后会按场景参数加入购物车。</div>
                 </div>
             `;
 
         return `
             <div class="cart-dropdown-header">
                 <div class="cart-dropdown-title-row">
-                    <span class="cart-dropdown-title">购物车</span>
+                    <span class="cart-dropdown-title">场景购物车</span>
                     <span class="cart-dropdown-count">${totals.count} 件</span>
                 </div>
                 <div class="cart-dropdown-meta-row">
                     <span class="cart-dropdown-project">项目名称：${escapeHTML(project.projectName || '当前项目')}</span>
                     <label class="cart-sync-option">
-                        <input type="checkbox" data-cart-auto-sync ${autoSyncChecked ? 'checked' : ''}>
-                        <span>自动同步方案设备</span>
+                        <input type="checkbox" data-cart-auto-sync ${autoSyncEnabled ? 'checked' : ''}>
+                        <span>自动同步 3D 场景</span>
                     </label>
                     <span class="cart-sync-help" tabindex="0" aria-label="自动同步说明" aria-describedby="cart-sync-tooltip">
                         <i class="bi bi-info-circle" aria-hidden="true"></i>
-                        <span class="cart-sync-tooltip" id="cart-sync-tooltip" role="tooltip">开启后，在仿真或电气架构界面里使用的可采购设备会自动加入购物车；参考件不会同步。</span>
+                        <span class="cart-sync-tooltip" id="cart-sync-tooltip" role="tooltip">开启后，当前及新增的 3D 场景物料会自动进入购物车；已加入物料的参数变化始终同步。</span>
                     </span>
                 </div>
             </div>
             <div class="cart-dropdown-divider"></div>
-            ${syncReviewHTML}
-            ${syncReviewHTML ? '<div class="cart-dropdown-divider"></div>' : ''}
             ${bodyHTML}
             <div class="cart-dropdown-divider"></div>
             <div class="cart-summary">
@@ -883,278 +926,259 @@
             </div>
             <div class="cart-dropdown-divider"></div>
             <div class="cart-dropdown-actions">
-                <button class="cart-dropdown-action primary" type="button" data-cart-action="checkout" ${items.length ? '' : 'disabled'}>
-                    <span>去商城结算</span>
-                    <i class="bi bi-arrow-right"></i>
-                </button>
-            </div>
-        `;
-    }
-
-    function createSyncReviewHTML(syncReview) {
-        const selectedCount = syncReview.candidates.filter((candidate) => (
-            syncReview.selectedProductIds.has(candidate.productId)
-        )).length;
-
-        return `
-            <div class="cart-sync-review" data-cart-sync-review>
-                <div class="cart-sync-review-head">
-                    <div>
-                        <div class="cart-sync-review-title">方案设备待同步</div>
-                        <div class="cart-sync-review-hint">这些设备已在仿真或电气架构界面里使用，购物车还未补齐。补齐后将开启自动同步。</div>
-                    </div>
-                    <span class="cart-sync-review-count">${syncReview.candidates.length} 种</span>
-                </div>
-                <div class="cart-sync-review-list">
-                    ${syncReview.candidates.map((candidate) => createSyncReviewRowHTML(candidate, syncReview.selectedProductIds)).join('')}
-                </div>
-                <div class="cart-sync-review-actions">
-                    <button class="cart-sync-review-action primary" type="button" data-cart-sync-action="sync-all">同步全部并开启</button>
-                    <button class="cart-sync-review-action secondary" type="button" data-cart-sync-action="sync-selected" ${selectedCount ? '' : 'disabled'}>同步已选</button>
-                    <button class="cart-sync-review-action ghost" type="button" data-cart-sync-action="cancel">取消</button>
-                </div>
-            </div>
-        `;
-    }
-
-    function createSyncReviewRowHTML(candidate, selectedProductIds) {
-        const checked = selectedProductIds.has(candidate.productId);
-        const cartStateText = candidate.cartQty > 0 ? `购物车 x${candidate.cartQty}` : '未加入';
-
-        return `
-            <label class="cart-sync-review-row" data-cart-sync-product-id="${escapeHTML(candidate.productId)}">
-                <input class="cart-sync-review-checkbox" type="checkbox" data-cart-sync-candidate="${escapeHTML(candidate.productId)}" ${checked ? 'checked' : ''}>
-                <span class="cart-sync-review-main">
-                    <span class="cart-sync-review-name">${escapeHTML(candidate.product.name)}</span>
-                    <span class="cart-sync-review-meta">${escapeHTML(candidate.product.model)} · 方案 x${candidate.qty} · ${escapeHTML(cartStateText)}</span>
+                <label class="cart-select-all ${eligibleItems.length ? '' : 'is-disabled'}">
+                    <input type="checkbox" data-cart-select-all ${allSelected ? 'checked' : ''} ${eligibleItems.length ? '' : 'disabled'}>
+                    <span>全选</span>
+                </label>
+                <span class="cart-checkout-control">
+                    <button class="cart-dropdown-action primary" type="button" data-cart-action="checkout" ${canCheckout ? '' : 'aria-describedby="cart-checkout-tooltip" disabled'}>
+                        <span>去商城结算</span>
+                        <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                    </button>
+                    ${canCheckout ? '' : '<span class="cart-checkout-tooltip" id="cart-checkout-tooltip" role="tooltip">去结算的前提是选择去结算的商品</span>'}
                 </span>
-                <span class="cart-sync-review-side">补齐至 x${candidate.qty}</span>
-            </label>
+            </div>
         `;
     }
 
-    function createPreviewRowHTML(item) {
-        const product = getProduct(item.productId);
-        const name = product ? product.name : item.productId;
-        const model = product ? product.model : item.productId;
-        const partLabel = item.quoteRequired ? '询价件' : item.sellable ? '标准件' : '参考件';
-        const usedQty = getUsedProductQty(item.productId);
-        const isConfirmingRemove = pendingRemoveProductId === item.productId && usedQty > 0;
-        const confirmText = isAutoSyncEnabled()
-            ? '该设备仍在方案中使用。移除后将关闭自动同步，确定移除？'
-            : '该设备仍在方案中使用，确定从购物车移除？';
+    function renderCartUI(animateBadge = false) {
+        const root = document.querySelector('.cart-menu-dropdown');
+        if (!root) return;
+        const { state } = readCartEnvelope();
+        const activeProject = getActiveProject(state);
+        const items = Array.isArray(activeProject.items) ? activeProject.items : [];
+        const totals = cartTotals(items);
+        const button = root.querySelector('.cart-menu-btn');
+        const badge = root.querySelector('[data-cart-count]');
+        const dropdown = cartDropdownElement
+            || root.querySelector('[data-cart-dropdown]')
+            || document.querySelector('[data-cart-dropdown]');
 
-        return `
-            <div class="cart-preview-row ${isConfirmingRemove ? 'is-confirming-remove' : ''}">
-                <div class="cart-preview-main">
-                    <div class="cart-preview-name">${escapeHTML(name)}</div>
-                    <div class="cart-preview-meta">${escapeHTML(model)} · OS 同步 · ${partLabel}</div>
-                </div>
-                <div class="cart-preview-side">
-                    <div class="cart-preview-qty">x${item.qty}</div>
-                    <div class="cart-preview-price">${escapeHTML(formatItemStatus(item, product))}</div>
-                </div>
-                <button class="cart-preview-remove" type="button" data-cart-remove-product="${escapeHTML(item.productId)}" title="移除物料" aria-label="移除 ${escapeHTML(model)}">
-                    <i class="bi bi-trash"></i>
-                </button>
-                ${isConfirmingRemove ? `
-                    <div class="cart-remove-confirm">
-                        <span>${escapeHTML(confirmText)}</span>
-                        <div class="cart-remove-confirm-actions">
-                            <button class="cart-remove-confirm-btn secondary" type="button" data-cart-remove-cancel="${escapeHTML(item.productId)}">取消</button>
-                            <button class="cart-remove-confirm-btn danger" type="button" data-cart-remove-confirm="${escapeHTML(item.productId)}">移除</button>
-                        </div>
-                    </div>
-                ` : ''}
-            </div>
-        `;
+        button?.setAttribute('aria-label', totals.count > 0 ? `3D 场景购物车，${totals.count} 件物料` : '3D 场景购物车');
+        if (badge) {
+            badge.hidden = totals.count === 0;
+            badge.textContent = totals.count > 99 ? '99+' : String(totals.count);
+            if (animateBadge && totals.count > 0) {
+                badge.classList.remove('bump');
+                window.requestAnimationFrame(() => badge.classList.add('bump'));
+            }
+        }
+        if (!dropdown) return;
+        dropdown.innerHTML = createDropdownHTML(activeProject, items, totals, isAutoSyncEnabled());
+        const selectAllInput = dropdown.querySelector('[data-cart-select-all]');
+        if (selectAllInput) {
+            const eligibleItems = items.filter(itemIsCheckoutEligible);
+            const selectedItems = eligibleItems.filter((item) => item.selected);
+            selectAllInput.indeterminate = selectedItems.length > 0 && selectedItems.length < eligibleItems.length;
+        }
+    }
+
+    function buildCheckoutPayload(project) {
+        const selectedItems = (project.items || []).filter((item) => item.selected && itemIsCheckoutEligible(item));
+        const totals = cartTotals(selectedItems);
+        return {
+            schemaVersion: CART_SCHEMA_VERSION,
+            source: 'hitbot-os',
+            enterpriseId: project.enterpriseId || DEFAULT_ENTERPRISE.enterpriseId,
+            companyName: project.companyName || DEFAULT_ENTERPRISE.companyName,
+            projectId: project.projectId,
+            projectName: project.projectName,
+            createdAt: new Date().toISOString(),
+            currency: 'CNY',
+            selectedCount: totals.selectedCount,
+            subtotalCents: totals.subtotal,
+            items: selectedItems.map((item) => ({
+                itemId: item.itemId,
+                productId: item.productId,
+                qty: item.qty,
+                unitPriceCents: item.unitPriceCents,
+                parameters: item.parameters,
+                configurationKey: item.configurationKey,
+                sceneObjectIds: item.sceneObjectIds || []
+            }))
+        };
+    }
+
+    function createCheckoutHandoff(project) {
+        const handoffId = `os-${now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+        const payload = buildCheckoutPayload(project);
+        const handoff = { handoffId, payload };
+        window.localStorage.setItem(CHECKOUT_HANDOFF_STORAGE_KEY, JSON.stringify(handoff));
+        window.dispatchEvent(new CustomEvent('hitbot:checkout-handoff', { detail: handoff }));
+        return handoff;
+    }
+
+    function buildCheckoutUrl(projectId, handoffId = '') {
+        const configured = window.HITBOT_STORE_CHECKOUT_URL || document.body?.dataset?.storeCheckoutUrl;
+        const isLocal = window.location.protocol === 'file:'
+            || ['localhost', '127.0.0.1', ''].includes(window.location.hostname);
+        const base = configured || (isLocal ? 'http://localhost:3000/zh/checkout' : '/store/cart');
+        const url = new URL(base, window.location.href);
+        url.searchParams.set('from', 'os');
+        url.searchParams.set('project', projectId);
+        if (handoffId) url.searchParams.set('handoff', handoffId);
+        return url.toString();
     }
 
     function showToast(message, tone = 'success') {
         let toast = document.querySelector('.hitbot-cart-toast');
-
         if (!toast) {
             toast = document.createElement('div');
             toast.className = 'hitbot-cart-toast';
             document.body.appendChild(toast);
         }
-
         toast.innerHTML = `<i class="bi ${tone === 'warn' ? 'bi-info-circle' : 'bi-check-circle'}"></i><span>${escapeHTML(message)}</span>`;
         toast.classList.add('visible');
-
-        if (toastTimer) {
-            window.clearTimeout(toastTimer);
-        }
-
-        toastTimer = window.setTimeout(() => {
-            toast.classList.remove('visible');
-        }, 1800);
+        window.clearTimeout(toastTimer);
+        toastTimer = window.setTimeout(() => toast.classList.remove('visible'), 1800);
     }
 
     function bindCartDropdown() {
         const root = document.querySelector('.cart-menu-dropdown');
         if (!root || root.dataset.cartBound === 'true') return;
-
         root.dataset.cartBound = 'true';
         const button = root.querySelector('.cart-menu-btn');
+        const dropdown = root.querySelector('[data-cart-dropdown]');
+        if (!dropdown) return;
 
-        const closeOtherTopDropdowns = () => {
-            document.querySelectorAll('.top-menu-dropdown.open').forEach((dropdown) => {
-                if (dropdown === root) return;
-                dropdown.classList.remove('open');
-                dropdown.querySelector('[aria-expanded="true"]')?.setAttribute('aria-expanded', 'false');
-            });
+        // The 3D window is deliberately allowed to be narrow in split layouts. Mounting
+        // the popup at the document level keeps it associated with the 3D toolbar while
+        // preventing a parent window's overflow boundary from clipping checkout controls.
+        cartDropdownElement = dropdown;
+        document.body.appendChild(dropdown);
+
+        const positionDropdown = () => {
+            if (!root.classList.contains('open')) return;
+            const buttonRect = button?.getBoundingClientRect();
+            if (!buttonRect) return;
+
+            const viewportPadding = 8;
+            const statusBarTop = document.querySelector('.status-bar')?.getBoundingClientRect().top
+                || window.innerHeight;
+            const dropdownWidth = dropdown.offsetWidth || 410;
+            const preferredLeft = buttonRect.right + 8;
+            const toolbarTop = button?.closest('.left-toolbar')?.getBoundingClientRect().top
+                ?? buttonRect.top;
+            const maxLeft = Math.max(viewportPadding, window.innerWidth - dropdownWidth - viewportPadding);
+            const left = Math.min(Math.max(viewportPadding, preferredLeft), maxLeft);
+            const top = Math.max(viewportPadding, toolbarTop);
+            const availableHeight = Math.max(120, statusBarTop - top - viewportPadding);
+
+            dropdown.style.left = `${Math.round(left)}px`;
+            dropdown.style.top = `${Math.round(top)}px`;
+            dropdown.style.maxHeight = `${Math.floor(availableHeight)}px`;
         };
 
-        const setOpen = (open) => {
+        setCartOpen = (open) => {
             root.classList.toggle('open', open);
+            dropdown.classList.toggle('is-open', open);
+            button?.classList.toggle('active', open);
             button?.setAttribute('aria-expanded', open ? 'true' : 'false');
             if (open) {
-                closeOtherTopDropdowns();
+                document.querySelectorAll('.top-menu-bar .top-menu-dropdown.open').forEach((dropdown) => {
+                    dropdown.classList.remove('open');
+                    dropdown.querySelector('[aria-expanded="true"]')?.setAttribute('aria-expanded', 'false');
+                });
+                window.getDeviceLibraryPanel?.()?.hide();
+                window.getBindingPanel?.()?.hide();
                 renderCartUI();
+                window.requestAnimationFrame(positionDropdown);
             }
         };
 
         button?.addEventListener('click', (event) => {
             event.preventDefault();
             event.stopPropagation();
-            setOpen(!root.classList.contains('open'));
+            setCartOpen(!root.classList.contains('open'));
         });
 
-        root.addEventListener('click', (event) => {
-            const removeConfirmButton = event.target.closest('[data-cart-remove-confirm]');
-            if (removeConfirmButton) {
-                event.preventDefault();
-                event.stopPropagation();
-                confirmRemoveProduct(removeConfirmButton.dataset.cartRemoveConfirm);
-                return;
-            }
-
-            const removeCancelButton = event.target.closest('[data-cart-remove-cancel]');
-            if (removeCancelButton) {
-                event.preventDefault();
-                event.stopPropagation();
-                pendingRemoveProductId = null;
-                renderCartUI();
-                return;
-            }
-
-            const removeButton = event.target.closest('[data-cart-remove-product]');
+        dropdown.addEventListener('click', (event) => {
+            const removeButton = event.target.closest('[data-cart-remove-item]');
             if (removeButton) {
                 event.preventDefault();
                 event.stopPropagation();
-                requestRemoveProduct(removeButton.dataset.cartRemoveProduct);
-                return;
-            }
-
-            const syncAction = event.target.closest('[data-cart-sync-action]');
-            if (syncAction) {
-                const actionName = syncAction.dataset.cartSyncAction;
-                const review = refreshPendingSyncReview();
-
-                event.preventDefault();
-                event.stopPropagation();
-
-                if (!review) {
-                    renderCartUI();
-                    return;
-                }
-
-                if (actionName === 'cancel') {
-                    cancelPendingSyncReview();
-                    return;
-                }
-
-                if (actionName === 'sync-all') {
-                    resolvePendingSyncReview(review.candidates);
-                    return;
-                }
-
-                if (actionName === 'sync-selected') {
-                    const selectedProductIds = new Set(
-                        Array.from(root.querySelectorAll('[data-cart-sync-candidate]:checked'))
-                            .map((input) => input.dataset.cartSyncCandidate)
-                    );
-                    resolvePendingSyncReview(
-                        review.candidates.filter((candidate) => selectedProductIds.has(candidate.productId))
-                    );
-                }
-
+                removeItem(removeButton.dataset.cartRemoveItem);
                 return;
             }
 
             const action = event.target.closest('[data-cart-action]');
             if (!action) return;
-
-            const { state } = readCartEnvelope();
-            const project = getActiveProject(state);
-            const actionName = action.dataset.cartAction;
-
             event.preventDefault();
             event.stopPropagation();
-
-            if (actionName === 'checkout' && project.items?.length) {
-                window.location.href = buildCheckoutUrl(project.projectId);
+            if (action.dataset.cartAction === 'checkout') {
+                const { state } = readCartEnvelope();
+                const project = getActiveProject(state);
+                if (cartTotals(project.items || []).selectedCount <= 0) return;
+                const handoff = createCheckoutHandoff(project);
+                window.location.href = buildCheckoutUrl(project.projectId, handoff.handoffId);
             }
         });
 
-        root.addEventListener('change', (event) => {
-            const input = event.target.closest('[data-cart-auto-sync]');
-            if (input) {
-                setAutoSyncEnabled(input.checked);
+        dropdown.addEventListener('change', (event) => {
+            const selectAllInput = event.target.closest('[data-cart-select-all]');
+            if (selectAllInput) {
+                setAllItemsSelected(selectAllInput.checked);
                 return;
             }
-
-            const candidateInput = event.target.closest('[data-cart-sync-candidate]');
-            if (!candidateInput || !pendingSyncReview) return;
-
-            if (candidateInput.checked) {
-                pendingSyncReview.selectedProductIds.add(candidateInput.dataset.cartSyncCandidate);
-            } else {
-                pendingSyncReview.selectedProductIds.delete(candidateInput.dataset.cartSyncCandidate);
+            const itemInput = event.target.closest('[data-cart-select-item]');
+            if (itemInput) {
+                setItemSelected(itemInput.dataset.cartSelectItem, itemInput.checked);
+                return;
             }
-
-            const selectedButton = root.querySelector('[data-cart-sync-action="sync-selected"]');
-            if (selectedButton) {
-                selectedButton.disabled = pendingSyncReview.selectedProductIds.size === 0;
-            }
+            const syncInput = event.target.closest('[data-cart-auto-sync]');
+            if (syncInput) setAutoSyncEnabled(syncInput.checked);
         });
 
         document.addEventListener('click', (event) => {
-            if (!root.contains(event.target)) {
-                setOpen(false);
-            }
+            if (!root.contains(event.target) && !dropdown.contains(event.target)) setCartOpen(false);
         });
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') setCartOpen(false);
+        });
+        window.addEventListener('resize', positionDropdown);
     }
 
     function initCart() {
         bindCartDropdown();
-        bindAutoSyncDrop();
-        if (isAutoSyncEnabled()) {
-            startAutoSync();
-            scheduleAutoSync();
-        }
+        startSceneSync();
+        reconcileSceneCart();
         renderCartUI();
     }
 
     window.HitbotCart = {
         init: initCart,
         render: renderCartUI,
+        open: () => setCartOpen?.(true),
+        close: () => setCartOpen?.(false),
         addProduct,
-        syncUsedProducts,
-        removeProduct,
-        collectUsedProductUsages,
+        addSceneObject,
+        removeItem,
+        reconcileSceneCart,
+        collectSceneProductSnapshots,
+        getSceneObjectCartState,
+        updateSceneObjectParameters,
         getProduct,
         getProductForDevice,
         canAddProduct,
+        isAutoSyncEnabled,
+        buildCheckoutPayload,
         buildCheckoutUrl,
-        getStateSnapshot: () => readCartEnvelope().state
+        createCheckoutHandoff,
+        getStateSnapshot: () => readCartEnvelope().state,
+        getCheckoutHandoff: () => {
+            try {
+                return JSON.parse(window.localStorage.getItem(CHECKOUT_HANDOFF_STORAGE_KEY) || 'null');
+            } catch (error) {
+                return null;
+            }
+        }
     };
 
     document.addEventListener('DOMContentLoaded', initCart);
     window.addEventListener('storage', (event) => {
-        if (event.key === STORAGE_KEY) {
+        if (event.key === STORAGE_KEY || event.key === AUTO_SYNC_STORAGE_KEY) {
             renderCartUI();
+            if (event.key === AUTO_SYNC_STORAGE_KEY) reconcileSceneCart();
         }
     });
     window.addEventListener(CART_UPDATED_EVENT, () => renderCartUI());

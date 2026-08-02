@@ -1826,6 +1826,9 @@ function setupToolbarControls() {
                     bindingPanel.toggle();
                     this.classList.toggle('active');
                 }
+            } else if (toolType === 'cart') {
+                // 购物车开合及状态由 HitbotCart 统一管理。
+                return;
             } else {
                 // 其他按钮：触发窗口打开逻辑（预留）
                 console.log(`打开${this.getAttribute('title')}窗口`);

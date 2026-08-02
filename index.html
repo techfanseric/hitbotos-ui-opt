@@ -104,15 +104,6 @@
                 <button class="menu-btn top-icon-btn" type="button" data-tooltip="日志查看"><span class="hitbot-icon"></span></button>
                 <button class="menu-btn top-icon-btn subdued" type="button" data-tooltip="国际化"><span class="hitbot-icon"></span></button>
                 <button class="menu-btn top-icon-btn" type="button" data-tooltip="后台管理"><span class="hitbot-icon"></span></button>
-                <div class="top-menu-dropdown cart-menu-dropdown">
-                    <button class="menu-btn cart-menu-btn" type="button" data-tooltip="购物车" aria-haspopup="menu" aria-expanded="false">
-                        <i class="bi bi-cart3"></i>
-                        <span class="cart-count-badge" data-cart-count hidden>0</span>
-                    </button>
-                    <div class="top-dropdown-menu cart-dropdown-menu" role="menu" aria-label="购物车" data-cart-dropdown>
-                        <!-- 购物车预览由 js/cart.js 渲染 -->
-                    </div>
-                </div>
                 <div class="top-menu-dropdown top-menu-download">
                     <button class="menu-btn download-menu-btn" type="button" data-tooltip="下载" aria-haspopup="menu" aria-expanded="false">
                         <span class="download-menu-icon" aria-hidden="true">
@@ -262,6 +253,16 @@
                                         <i class="bi bi-link"></i>
                                         <span>绑定</span>
                                     </button>
+                                    <div class="top-menu-dropdown cart-menu-dropdown cart-toolbar-entry">
+                                        <button class="left-toolbar-btn cart-menu-btn" type="button" title="购物车" data-tool="cart" aria-haspopup="menu" aria-expanded="false">
+                                            <i class="bi bi-cart3"></i>
+                                            <span>购物车</span>
+                                            <span class="cart-count-badge" data-cart-count hidden>0</span>
+                                        </button>
+                                        <div class="top-dropdown-menu cart-dropdown-menu" role="menu" aria-label="3D 场景购物车" data-cart-dropdown>
+                                            <!-- 购物车预览由 js/cart.js 渲染 -->
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -405,7 +406,7 @@
 
                                     <!-- 3D模型样本列表（用于绑定测试） -->
                                     <div class="scene-objects">
-                                        <div class="scene-object" data-scene-model-name="ThreeAxisPlatform_1" data-object-type="platform">
+                                        <div class="scene-object" data-scene-object-id="scene-platform-1" data-scene-model-name="ThreeAxisPlatform_1" data-scene-display-name="定位治具转接板" data-object-type="platform" data-product-id="p-011" data-cart-parameters='{"material":"AL6061","lengthMm":240,"widthMm":160,"heightMm":18,"toleranceMm":0.05,"surfaceFinish":"本色阳极氧化","drawingNo":"JIG-XYZ-024-R2"}'>
                                             <div class="object-3d cube">
                                                 <div class="face front"></div>
                                                 <div class="face back"></div>
@@ -416,7 +417,7 @@
                                             </div>
                                             <span class="object-label">ThressAxisPlatform_1</span>
                                         </div>
-                                        <div class="scene-object" data-scene-model-name="Bottle_cap_1" data-object-type="bottle-cap">
+                                        <div class="scene-object" data-scene-object-id="scene-bottle-cap-1" data-scene-model-name="Bottle_cap_1" data-object-type="bottle-cap" data-product-id="p-009">
                                             <div class="object-3d cylinder">
                                                 <div class="cylinder-side"></div>
                                                 <div class="cylinder-top"></div>
@@ -424,7 +425,7 @@
                                             </div>
                                             <span class="object-label">Bottle_cap_1</span>
                                         </div>
-                                        <div class="scene-object" data-scene-model-name="Bottle_cap_2" data-object-type="bottle-cap">
+                                        <div class="scene-object" data-scene-object-id="scene-bottle-cap-2" data-scene-model-name="Bottle_cap_2" data-object-type="bottle-cap" data-product-id="p-009">
                                             <div class="object-3d cylinder">
                                                 <div class="cylinder-side"></div>
                                                 <div class="cylinder-top"></div>
@@ -432,7 +433,7 @@
                                             </div>
                                             <span class="object-label">Bottle_cap_2</span>
                                         </div>
-                                        <div class="scene-object" data-scene-model-name="Bottle_cap_3" data-object-type="bottle-cap">
+                                        <div class="scene-object" data-scene-object-id="scene-bottle-cap-3" data-scene-model-name="Bottle_cap_3" data-object-type="bottle-cap" data-product-id="p-009">
                                             <div class="object-3d cylinder">
                                                 <div class="cylinder-side"></div>
                                                 <div class="cylinder-top"></div>
@@ -440,7 +441,7 @@
                                             </div>
                                             <span class="object-label">Bottle_cap_3</span>
                                         </div>
-                                        <div class="scene-object" data-scene-model-name="Bottle_cap_4" data-object-type="bottle-cap">
+                                        <div class="scene-object" data-scene-object-id="scene-bottle-cap-4" data-scene-model-name="Bottle_cap_4" data-object-type="bottle-cap" data-product-id="p-009">
                                             <div class="object-3d cylinder">
                                                 <div class="cylinder-side"></div>
                                                 <div class="cylinder-top"></div>
@@ -448,7 +449,7 @@
                                             </div>
                                             <span class="object-label">Bottle_cap_4</span>
                                         </div>
-                                        <div class="scene-object" data-scene-model-name="Z-Mod-SE-54-10SE_1" data-object-type="zmod">
+                                        <div class="scene-object" data-scene-object-id="scene-zmod-se54-1" data-scene-model-name="Z-Mod-SE-54-10SE_1" data-object-type="zmod" data-product-id="p-008" data-cart-parameters='{"strokeMm":100,"mounting":"standard"}'>
                                             <div class="object-3d box">
                                                 <div class="face front"></div>
                                                 <div class="face back"></div>
@@ -459,7 +460,7 @@
                                             </div>
                                             <span class="object-label">Z-Mod-SE-54-10SE_1</span>
                                         </div>
-                                        <div class="scene-object" data-scene-model-name="Z-Mod-SE-54-10SE_2" data-object-type="zmod">
+                                        <div class="scene-object" data-scene-object-id="scene-zmod-se54-2" data-scene-model-name="Z-Mod-SE-54-10SE_2" data-object-type="zmod" data-product-id="p-008" data-cart-parameters='{"strokeMm":180,"mounting":"standard"}'>
                                             <div class="object-3d box">
                                                 <div class="face front"></div>
                                                 <div class="face back"></div>
@@ -469,6 +470,17 @@
                                                 <div class="face bottom"></div>
                                             </div>
                                             <span class="object-label">Z-Mod-SE-54-10SE_2</span>
+                                        </div>
+                                        <div class="scene-object" data-scene-object-id="scene-gripper-1" data-scene-model-name="Z-EFG-8S_1" data-object-type="gripper" data-product-id="p-002" data-cart-parameters='{"jawStrokeMm":80}'>
+                                            <div class="object-3d box">
+                                                <div class="face front"></div>
+                                                <div class="face back"></div>
+                                                <div class="face left"></div>
+                                                <div class="face right"></div>
+                                                <div class="face top"></div>
+                                                <div class="face bottom"></div>
+                                            </div>
+                                            <span class="object-label">Z-EFG-8S_1</span>
                                         </div>
                                     </div>
                                 </div>

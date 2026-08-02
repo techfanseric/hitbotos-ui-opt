@@ -20,8 +20,8 @@ export const DEVICE_DATA = [
         category: "抓取设备",
         icon: "bi-hand-index",
         devices: [
-            withDetails({ id: "Z-EMG-4", name: "Z-EMG-4", icon: "bi-box", productId: "p-001" }),
-            withDetails({ id: "Z-EFG-8S", name: "Z-EFG-8S", icon: "bi-box", productId: "p-002" }),
+            withDetails({ id: "Z-EMG-4", name: "Z-EMG-4", icon: "bi-box", productId: "p-001", cartParameters: { jawStrokeMm: 40 } }),
+            withDetails({ id: "Z-EFG-8S", name: "Z-EFG-8S", icon: "bi-box", productId: "p-002", cartParameters: { jawStrokeMm: 80 } }),
             withDetails({ id: "Z-EFG-20", name: "Z-EFG-20", icon: "bi-box", productId: "p-003" }),
             withDetails({ id: "Z-EMG-CO-1", name: "Z-EMG-CO-1", icon: "bi-box" }),
             withDetails({ id: "Z-EMG-CO-2", name: "Z-EMG-CO-2", icon: "bi-box" }),
@@ -63,7 +63,7 @@ export const DEVICE_DATA = [
         category: "智能电缸",
         icon: "bi-arrows-expand",
         devices: [
-            withDetails({ id: "Z-Mod-SE-54", name: "Z-Mod-SE-54", icon: "bi-arrows-expand", productId: "p-008" })
+            withDetails({ id: "Z-Mod-SE-54", name: "Z-Mod-SE-54", icon: "bi-arrows-expand", productId: "p-008", cartParameters: { strokeMm: 100, mounting: "standard" } })
         ]
     },
     {
