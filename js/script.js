@@ -53,6 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupWindowSwapControls();
     initializeWindowStates();
     setupPanelTabs();
+    setupRightPanelResize();
     window.initActionEditorShell?.();
 
     // 初始化设备库面板
@@ -1597,7 +1598,7 @@ function setupExecuteToolbar() {
 
     const normalizeState = (rawState) => {
         const nextState = { ...defaultState, ...(rawState || {}) };
-        if (!['editor', 'blockly', 'flow'].includes(nextState.dataSource)) nextState.dataSource = defaultState.dataSource;
+        if (!['editor', 'scene-program', 'blockly', 'flow'].includes(nextState.dataSource)) nextState.dataSource = defaultState.dataSource;
         if (!['source-1', 'source-2', 'source-3'].includes(nextState.playSource)) nextState.playSource = defaultState.playSource;
         if (!['region-1', 'region-2', 'region-3'].includes(nextState.region)) nextState.region = defaultState.region;
         if (!['idle', 'running', 'paused'].includes(nextState.runState)) nextState.runState = defaultState.runState;
@@ -1625,6 +1626,7 @@ function setupExecuteToolbar() {
     let executeState = loadState();
 
     const getDataSourceLabel = (source) => {
+        if (source === 'scene-program') return '3D 场景程序';
         if (source === 'blockly') return 'Blockly';
         if (source === 'flow') return '流程图';
         return '编辑器';
@@ -1801,6 +1803,16 @@ function setupToolbarControls() {
                 if (bindingPanel) bindingPanel.hide();
             }
 
+            // 关闭全局变量面板（仅与设备库、绑定等左侧浮层互斥；程序在右侧，可同开）
+            if (toolType === 'devices' || toolType === 'bind') {
+                window.HitbotVariablesPanel?.hide();
+            }
+
+            // 程序面板已并入右侧属性面板的程序 tab；打开其他左侧工具时收起（变量面板与程序配合使用，除外）
+            if (toolType !== 'variables') {
+                window.HitbotProgramPanel?.close();
+            }
+
             // 然后处理当前按钮的行为
             if (toolType === 'tools') {
                 // 工具按钮：切换激活状态和子工具栏显示
@@ -1826,6 +1838,10 @@ function setupToolbarControls() {
                     bindingPanel.toggle();
                     this.classList.toggle('active');
                 }
+            } else if (toolType === 'variables') {
+                const isOpen = window.HitbotVariablesPanel?.toggle() ?? false;
+                this.classList.toggle('active', isOpen);
+                this.setAttribute('aria-expanded', String(isOpen));
             } else if (toolType === 'cart') {
                 // 购物车开合及状态由 HitbotCart 统一管理。
                 return;
@@ -2443,6 +2459,79 @@ function setupPanelTabs() {
     if (rightPanel) {
         rightPanel.classList.add('tabs-closed');
     }
+}
+
+// 右侧面板宽度调整：最左边缘隐形热区拖拽，最小宽度保持现有标准（320px）
+function setupRightPanelResize() {
+    const rightPanel = document.querySelector('.right-panel');
+    if (!rightPanel) return;
+
+    const MIN_WIDTH = 320;
+    const STORAGE_KEY = 'hitbot-right-panel-width';
+
+    // 恢复上次调整的宽度（按当前窗口可用空间钳制：为左侧工具栏与中间视口预留 300px）
+    const getMaxWidth = () => {
+        const parentWidth = rightPanel.parentElement?.getBoundingClientRect().width || window.innerWidth;
+        return Math.max(MIN_WIDTH, Math.min(640, Math.round(parentWidth - 300)));
+    };
+    const clampWidth = () => {
+        const current = parseInt(rightPanel.style.getPropertyValue('--right-panel-width'), 10) || MIN_WIDTH;
+        const clamped = Math.min(getMaxWidth(), Math.max(MIN_WIDTH, current));
+        rightPanel.style.setProperty('--right-panel-width', `${clamped}px`);
+    };
+
+    try {
+        const saved = Number(window.localStorage.getItem(STORAGE_KEY));
+        if (saved >= MIN_WIDTH) {
+            rightPanel.style.setProperty('--right-panel-width', `${Math.round(saved)}px`);
+        }
+    } catch (error) {
+        // localStorage 不可用时静默跳过
+    }
+    clampWidth();
+    window.addEventListener('resize', clampWidth);
+    // 布局异步完成（窗口初始化、布局切换、全屏）后再次钳制
+    if (window.ResizeObserver && rightPanel.parentElement) {
+        new ResizeObserver(clampWidth).observe(rightPanel.parentElement);
+    }
+
+    const resizer = document.createElement('div');
+    resizer.className = 'right-panel-resizer';
+    resizer.setAttribute('aria-hidden', 'true');
+    rightPanel.appendChild(resizer);
+
+    resizer.addEventListener('pointerdown', (event) => {
+        // 仅在 tab 展开状态下允许调整宽度
+        if (!rightPanel.classList.contains('tabs-open')) return;
+        event.preventDefault();
+
+        const startX = event.clientX;
+        const startWidth = rightPanel.getBoundingClientRect().width;
+        const maxWidth = getMaxWidth();
+
+        resizer.setPointerCapture(event.pointerId);
+        document.body.classList.add('right-panel-resizing');
+
+        let currentWidth = startWidth;
+        const onMove = (moveEvent) => {
+            currentWidth = Math.round(Math.min(maxWidth, Math.max(MIN_WIDTH, startWidth + (startX - moveEvent.clientX))));
+            rightPanel.style.setProperty('--right-panel-width', `${currentWidth}px`);
+        };
+        const onEnd = () => {
+            document.body.classList.remove('right-panel-resizing');
+            resizer.removeEventListener('pointermove', onMove);
+            resizer.removeEventListener('pointerup', onEnd);
+            resizer.removeEventListener('pointercancel', onEnd);
+            try {
+                window.localStorage.setItem(STORAGE_KEY, String(currentWidth));
+            } catch (error) {
+                // localStorage 不可用时静默跳过
+            }
+        };
+        resizer.addEventListener('pointermove', onMove);
+        resizer.addEventListener('pointerup', onEnd);
+        resizer.addEventListener('pointercancel', onEnd);
+    });
 }
 
 // 激活结构tab的辅助函数

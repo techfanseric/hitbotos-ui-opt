@@ -1,0 +1,471 @@
+/* 全局变量面板（左侧浮层）
+   结构、宽度、配色全面对齐设备库面板（css/device-library-panel.css）与设计系统令牌。 */
+
+.variables-panel {
+    position: fixed;
+    width: 320px;
+    max-height: calc(100vh - 100px);
+    background: var(--ds-bg-panel-floating);
+    border: 0;
+    border-radius: 8px;
+    box-shadow: var(--ds-shadow-floating-strong);
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    font-size: var(--ds-font-md);
+    color: var(--ds-text);
+}
+
+/* 初始位置 - 左侧居中（与设备库一致） */
+.variables-panel.initial-position {
+    left: 80px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.variables-panel.hidden {
+    display: none;
+}
+
+.variables-panel.dragging {
+    opacity: 0.8;
+    cursor: move;
+}
+
+/* 标题栏（同设备库） */
+.variables-panel .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 4px 12px 12px;
+    background: #383838;
+    cursor: move;
+    user-select: none;
+    flex-shrink: 0;
+}
+
+.variables-panel .panel-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.variables-panel .panel-title > i {
+    font-size: 16px;
+    color: var(--ds-accent);
+}
+
+.variables-panel .panel-close-btn {
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.variables-panel .panel-close-btn i {
+    font-size: 18px;
+}
+
+.variables-panel .panel-close-btn:hover {
+    color: #ffffff;
+}
+
+/* 说明信息图标（悬停/聚焦弹出解释，自动换行） */
+.variable-info {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    cursor: help;
+}
+
+.variable-info > i {
+    font-size: 12px;
+    color: var(--ds-text-muted);
+    transition: color var(--ds-motion-base);
+}
+
+.variable-info:hover > i,
+.variable-info:focus > i {
+    color: var(--ds-text-strong);
+}
+
+.variable-info:focus {
+    outline: none;
+}
+
+.variable-info-tip {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    width: 230px;
+    padding: 8px 10px;
+    background: #1f1f1f;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    box-shadow: var(--ds-shadow-floating-strong);
+    color: var(--ds-text);
+    font-size: var(--ds-font-xs);
+    font-weight: 400;
+    line-height: var(--ds-line-base);
+    white-space: normal;
+    z-index: 30;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--ds-motion-base), visibility var(--ds-motion-base);
+    cursor: default;
+}
+
+.variable-info:hover .variable-info-tip,
+.variable-info:focus .variable-info-tip,
+.variable-info:focus-within .variable-info-tip {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* 内容区（同设备库 .panel-devices） */
+.variables-panel-body {
+    flex: 1;
+    min-height: 120px;
+    overflow-y: auto;
+    padding: 8px;
+    background: var(--ds-bg-workspace);
+}
+
+.variables-panel-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.variables-panel-body::-webkit-scrollbar-track {
+    background: #2b2b2b;
+}
+
+.variables-panel-body::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 3px;
+}
+
+.variables-panel-body::-webkit-scrollbar-thumb:hover {
+    background: #666;
+}
+
+/* 变量列表 */
+.variables-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.variables-list-empty {
+    padding: 24px 16px;
+    color: var(--ds-text-muted);
+    font-size: var(--ds-font-sm);
+    text-align: center;
+}
+
+.variable-row {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    background: #383838;
+    border: 0;
+    border-radius: 6px;
+    transition: background-color var(--ds-motion-base);
+}
+
+.variable-row:hover {
+    background: var(--ds-bg-control-hover);
+}
+
+.variable-row-name {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+}
+
+.variable-row-name strong {
+    overflow: hidden;
+    color: #ffffff;
+    font-size: var(--ds-font-md);
+    font-weight: 500;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.variable-type-badge {
+    flex-shrink: 0;
+    padding: 2px 6px;
+    border-radius: var(--ds-radius-md);
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--ds-text-muted);
+    font-size: var(--ds-font-xs);
+    line-height: var(--ds-line-tight);
+}
+
+/* 行内说明图标的气泡：相对整行定位，靠右展开，避免被面板裁切 */
+.variable-row .variable-info {
+    position: static;
+}
+
+.variable-row .variable-info-tip {
+    top: calc(100% + 4px);
+    left: auto;
+    right: 8px;
+    width: 200px;
+}
+
+/* 行内值编辑 + 操作列：所有行的值列与三点按钮分别右对齐 */
+.variable-row-side {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.variable-row-value {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+}
+
+.variable-row-value output {
+    min-width: 30px;
+    color: var(--ds-text-muted);
+    font-size: var(--ds-font-xs);
+    font-weight: 600;
+    text-align: right;
+}
+
+.variable-row-value input[type="number"],
+.variable-row-value input[type="text"] {
+    width: 88px;
+    min-width: 0;
+    height: var(--ds-control-h-sm);
+    padding: 0 6px;
+    font-size: var(--ds-font-sm);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    box-sizing: border-box;
+}
+
+.variable-row-value .custom-checkbox {
+    margin-bottom: 0;
+}
+
+/* 三点操作菜单（常显弱化，悬停加强，点击展开菜单） */
+.variable-row-menu {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.variable-action-btn {
+    width: 22px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    color: var(--ds-text-muted);
+    background: transparent;
+    border: 0;
+    border-radius: var(--ds-radius-sm);
+    cursor: pointer;
+    opacity: 0.55;
+    transition: background-color var(--ds-motion-base), color var(--ds-motion-base), opacity var(--ds-motion-base);
+}
+
+.variable-row:hover .variable-action-btn,
+.variable-action-btn:hover,
+.variable-action-btn:focus-visible,
+.variable-row-menu:has(.variable-menu:not([hidden])) .variable-action-btn {
+    opacity: 1;
+}
+
+.variable-action-btn i {
+    font-size: 12px;
+}
+
+.variable-action-btn:hover {
+    color: var(--ds-text-strong);
+    background: var(--ds-bg-control-active);
+}
+
+/* 只读变量的禁用操作按钮：保持元素对齐，并表明不可操作的原因 */
+.variable-action-btn:disabled {
+    opacity: 0.28;
+    cursor: not-allowed;
+}
+
+.variable-row:hover .variable-action-btn:disabled {
+    opacity: 0.28;
+    color: var(--ds-text-muted);
+    background: transparent;
+}
+
+.variable-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0;
+    min-width: 96px;
+    display: flex;
+    flex-direction: column;
+    padding: 4px;
+    background: #1f1f1f;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    box-shadow: var(--ds-shadow-floating-strong);
+    z-index: 30;
+}
+
+.variable-menu[hidden] {
+    display: none;
+}
+
+.variable-menu button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    padding: 5px 8px;
+    color: var(--ds-text);
+    font-size: var(--ds-font-sm);
+    text-align: left;
+    background: transparent;
+    border: 0;
+    border-radius: var(--ds-radius-sm);
+    cursor: pointer;
+    transition: background-color var(--ds-motion-base), color var(--ds-motion-base);
+}
+
+.variable-menu button:hover {
+    color: var(--ds-text-strong);
+    background: var(--ds-bg-control-hover);
+}
+
+.variable-menu button.is-danger:hover {
+    color: #ffffff;
+    background: var(--ds-accent);
+}
+
+/* 新建/编辑变量表单 */
+.variables-create-form,
+.variable-edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 8px;
+    padding: 8px;
+    background: #383838;
+    border-radius: 6px;
+}
+
+.variable-edit-form {
+    grid-column: 1 / -1;
+    margin-bottom: 0;
+}
+
+.variables-create-form[hidden] {
+    display: none;
+}
+
+.variables-create-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 6px;
+}
+
+.variables-create-row input,
+.variables-create-row select {
+    width: 100%;
+    min-width: 0;
+    height: var(--ds-control-h-sm);
+    padding: 0 6px;
+    font-size: var(--ds-font-sm);
+    box-sizing: border-box;
+}
+
+.variables-create-row select {
+    width: 88px;
+    cursor: pointer;
+    padding-right: 20px;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23888' viewBox='0 0 16 16'%3e%3cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 7px center;
+    background-size: 9px;
+}
+
+.variables-create-row .variables-create-value {
+    display: block;
+    grid-column: 1 / -1;
+}
+
+.variables-create-row .variables-create-value input,
+.variables-create-row .variables-create-value select {
+    width: 100%;
+}
+
+.variables-create-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+}
+
+.variables-create-actions button {
+    min-height: var(--ds-control-h-sm);
+    padding: 0 10px;
+    font-size: var(--ds-font-sm);
+    cursor: pointer;
+}
+
+.variables-create-error {
+    min-height: 0;
+    margin: 0;
+    color: var(--ds-danger);
+    font-size: var(--ds-font-xs);
+}
+
+.variables-create-error:empty {
+    display: none;
+}
+
+/* 底部操作栏 */
+.variables-panel-footer {
+    flex-shrink: 0;
+    padding: 8px;
+    background: var(--ds-bg-workspace);
+}
+
+.variables-add-btn {
+    width: 100%;
+    min-height: var(--ds-control-h-md);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    font-size: var(--ds-font-md);
+    cursor: pointer;
+}
+
+.variables-panel input:focus,
+.variables-panel input:focus-visible,
+.variables-panel select:focus,
+.variables-panel select:focus-visible,
+.variables-panel button:focus,
+.variables-panel button:focus-visible {
+    outline: none;
+    box-shadow: none;
+}

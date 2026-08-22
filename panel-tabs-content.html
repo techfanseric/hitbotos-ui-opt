@@ -490,4 +490,44 @@
             </div>
         </div>
     </div>
-</div> 
+
+    <!-- 程序Tab内容 - 3D 场景程序 -->
+    <div class="panel-tab-content" data-content="program" data-program-panel aria-label="3D 场景程序面板">
+        <!-- 程序工作区：函数手风琴列表 -->
+        <div class="panel-section program-section-workspace">
+            <div class="panel-header">
+                <span class="panel-title">程序 · <span data-program-device-name>Z-Arm S622_1</span></span>
+                <span class="program-run-state" data-program-run-state>未运行</span>
+            </div>
+            <div class="panel-content program-workspace">
+                <div class="program-function-list" data-function-list></div>
+                <button class="panel-secondary-btn program-btn program-function-add" type="button" data-create-function-toggle>
+                    <i class="bi bi-plus-lg" aria-hidden="true"></i>
+                    新建函数
+                </button>
+                <form class="program-inline-create" data-create-function-form hidden>
+                    <label for="program-function-name">函数名称</label>
+                    <div>
+                        <input id="program-function-name" name="functionName" type="text" maxlength="24" autocomplete="off" placeholder="例如：放置物料">
+                        <button class="panel-primary-btn program-btn" type="submit">创建</button>
+                        <button class="panel-secondary-btn program-btn" type="button" data-create-function-cancel>取消</button>
+                    </div>
+                    <p data-function-error role="alert"></p>
+                </form>
+            </div>
+            <div class="program-panel-footer">
+                <span data-program-feedback>程序已保存到当前仿真场景</span>
+                <div>
+                    <button class="panel-secondary-btn program-btn" type="button" data-program-stop disabled>
+                        <i class="bi bi-stop-fill" aria-hidden="true"></i>
+                        停止
+                    </button>
+                    <button class="panel-primary-btn program-btn program-run-button" type="button" data-program-run>
+                        <i class="bi bi-play-fill" aria-hidden="true"></i>
+                        运行程序
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -35,11 +35,11 @@ class PanelLoader {
 
         try {
             // 异步加载HTML内容
-            const response = await fetch('panel-tabs-content.html');
+            const response = await fetch('panel-tabs-content.html?v=1.6.0');
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            
+
             const htmlContent = await response.text();
             
             // 查找内容容器位置
@@ -54,10 +54,13 @@ class PanelLoader {
             
             // 激活默认tab
             this.activateTab(this.activeTab);
-            
+
             // 绑定内容区域的事件
             this.bindContentEvents();
-            
+
+            // 初始化程序面板（其 DOM 由面板内容提供，需在内容插入后执行）
+            window.initProgramPanel?.();
+
             this.isLoaded = true;
             console.log('属性面板内容加载完成');
             

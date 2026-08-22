@@ -1,0 +1,733 @@
+/* 3D 场景程序面板（右侧属性面板 · 程序 tab）
+   样式对齐 design-system.css / panel-tabs.css / panel-ui-components.css 的既有规范，
+   颜色、字号、控件高度、圆角均复用设计系统令牌，不另起一套。 */
+
+/* 程序 tab：单个工作区区段占满，函数列表在工作区内部滚动 */
+.panel-tab-content[data-content="program"] {
+    overflow: hidden;
+}
+
+.program-section-workspace {
+    flex: 1 1 0;
+    min-height: 0;
+}
+
+/* 工作区内容：函数手风琴列表 + 新建函数按钮，垂直滚动
+   （提高优先级，覆盖 panel-tabs.css 中 .panel-section:not(.collapsed) .panel-content 的 display:block） */
+.panel-section:not(.collapsed) > .panel-content.program-workspace {
+    flex: 1 1 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-space-2);
+    padding: var(--ds-space-2);
+    overflow-y: auto;
+}
+
+/* 通用小按钮：复用 panel-primary-btn / panel-secondary-btn 的配色，仅补尺寸 */
+.program-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-height: var(--ds-control-h-sm);
+    padding: 0 8px;
+    font-size: var(--ds-font-sm);
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+/* 运行状态徽标（对齐 window-state-badge 规范） */
+.program-run-state {
+    flex-shrink: 0;
+    padding: 3px 7px;
+    border-radius: var(--ds-radius-md);
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--ds-text-muted);
+    font-size: var(--ds-font-xs);
+    line-height: var(--ds-line-tight);
+}
+
+.program-run-state.is-running {
+    color: #7BE0A6;
+    background: rgba(35, 195, 112, 0.16);
+}
+
+.program-run-state.is-paused,
+.program-run-state.is-waiting {
+    color: #ffd37a;
+    background: rgba(255, 183, 77, 0.16);
+}
+
+/* 函数手风琴列表 */
+.program-function-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.program-function {
+    background: var(--ds-bg-control);
+    border-radius: var(--ds-radius-md);
+    overflow: hidden;
+}
+
+/* 函数头：整行可点击，展开/收起 */
+.program-function-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 8px;
+    color: var(--ds-text);
+    background: transparent;
+    border: 0;
+    border-radius: var(--ds-radius-md);
+    cursor: pointer;
+    font: inherit;
+    text-align: left;
+    user-select: none;
+    transition: background-color var(--ds-motion-base), color var(--ds-motion-base);
+}
+
+.program-function-header:focus-visible {
+    outline: none;
+    background: var(--ds-bg-control-hover);
+}
+
+.program-function-header:hover {
+    color: var(--ds-text-strong);
+    background: var(--ds-bg-control-hover);
+}
+
+/* 重命名按钮：悬停函数头时显示 */
+.program-function-rename {
+    width: 20px;
+    height: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    padding: 0;
+    color: var(--ds-text-muted);
+    background: transparent;
+    border: 0;
+    border-radius: var(--ds-radius-sm);
+    cursor: pointer;
+    opacity: 0;
+    transition: background-color var(--ds-motion-base), color var(--ds-motion-base), opacity var(--ds-motion-base);
+}
+
+.program-function-header:hover .program-function-rename,
+.program-function-rename:focus-visible {
+    opacity: 1;
+}
+
+.program-function-rename:hover {
+    color: var(--ds-text-strong);
+    background: var(--ds-bg-control-active);
+}
+
+.program-function-rename i {
+    font-size: 11px;
+}
+
+/* 重命名行内输入框 */
+.program-function-rename-input {
+    flex: 1 1 0;
+    min-width: 0;
+    height: var(--ds-control-h-sm);
+    padding: 0 6px;
+    font-size: var(--ds-font-md);
+    box-sizing: border-box;
+}
+
+.program-function-chevron {
+    flex-shrink: 0;
+    color: var(--ds-text-muted);
+    font-size: 10px;
+    transition: transform var(--ds-motion-base);
+}
+
+.program-function:not(.is-expanded) .program-function-chevron {
+    transform: rotate(-90deg);
+}
+
+.program-function-name {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--ds-text-strong);
+    font-size: var(--ds-font-md);
+    font-weight: 500;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.program-function-count {
+    flex-shrink: 0;
+    margin-left: auto;
+    color: var(--ds-text-muted);
+    font-size: var(--ds-font-xs);
+    white-space: nowrap;
+}
+
+/* 函数体：指令列表 + 添加指令按钮 + 选指令时内嵌的属性面板 */
+.program-function-body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 0 4px 4px;
+}
+
+.program-function-body[hidden] {
+    display: none;
+}
+
+/* 指令列表 */
+.program-instruction-list {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.program-instruction-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: var(--ds-space-3);
+    color: var(--ds-text-muted);
+    font-size: var(--ds-font-sm);
+    text-align: center;
+}
+
+.program-instruction-empty i {
+    color: var(--ds-text-muted);
+    font-size: 14px;
+}
+
+/* 添加指令按钮（函数内最后一条指令下方）与新建函数按钮（最后一个函数下方） */
+.program-instruction-add,
+.program-function-add {
+    width: 100%;
+    flex-shrink: 0;
+}
+
+.program-function-add {
+    margin-top: var(--ds-space-1);
+}
+
+/* 选中指令的属性设置面板：嵌入所属函数最底部，默认高度自适应内容 */
+.program-inspector {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: var(--ds-bg-workspace);
+    border-radius: var(--ds-radius-md);
+    overflow: hidden;
+}
+
+.program-inspector.has-custom-height {
+    flex: 0 0 auto;
+}
+
+.program-inspector-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    padding: 8px 8px 2px;
+}
+
+.program-inspector-title {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--ds-text-strong);
+    font-size: var(--ds-font-sm);
+    font-weight: 500;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* 下拉与输入：配色来自 design-system 全局字段规范，这里只补尺寸与下拉箭头（同 panel-custom-select） */
+[data-program-panel] select,
+[data-program-panel] input[type="text"],
+[data-program-panel] input[type="number"],
+.program-property-form select,
+.program-property-form input {
+    width: 100%;
+    box-sizing: border-box;
+    height: var(--ds-control-h-sm);
+    padding: 0 6px;
+    font-size: var(--ds-font-sm);
+    font-variant-numeric: tabular-nums;
+}
+
+[data-program-panel] select,
+.program-property-form select {
+    padding-right: 22px;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23888' viewBox='0 0 16 16'%3e%3cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 7px center;
+    background-size: 9px;
+}
+
+/* 新建函数内联表单 */
+.program-inline-create > label {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--ds-text-muted);
+    font-size: var(--ds-font-xs);
+    font-weight: 500;
+}
+
+.program-inline-create[hidden] {
+    display: none;
+}
+
+.program-inline-create > div {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 6px;
+}
+
+.program-inline-create p {
+    min-height: 0;
+    margin: 4px 0 0;
+    color: var(--ds-danger);
+    font-size: var(--ds-font-xs);
+}
+
+/* 指令工具栏样式已移除：函数切换为手风琴，添加指令内嵌各函数 */
+
+.program-instruction-row {
+    min-height: 30px;
+    display: grid;
+    grid-template-columns: 20px 24px minmax(0, 1fr) auto auto 14px;
+    align-items: center;
+    gap: 5px;
+    position: relative;
+    padding: 3px 6px;
+    color: var(--ds-text);
+    background: var(--ds-bg-control);
+    border-radius: var(--ds-radius-md);
+    cursor: pointer;
+    user-select: none;
+    transition: background-color var(--ds-motion-base), color var(--ds-motion-base), opacity var(--ds-motion-base);
+}
+
+.program-instruction-row:hover {
+    color: var(--ds-text-strong);
+    background: var(--ds-bg-control-hover);
+}
+
+.program-instruction-row.is-selected {
+    color: var(--ds-text-strong);
+    background: var(--ds-accent-soft);
+}
+
+.program-instruction-row.is-running {
+    color: #7BE0A6;
+    background: rgba(35, 195, 112, 0.16);
+}
+
+.program-instruction-row.is-waiting {
+    color: #ffd37a;
+    background: rgba(255, 183, 77, 0.16);
+}
+
+.program-instruction-row.is-complete {
+    opacity: 0.66;
+}
+
+.program-instruction-row.is-dragging {
+    opacity: 0.42;
+}
+
+/* 拖拽排序的落点提示：插位线（行的上缘或下缘），而非框住目标行 */
+.program-instruction-row.is-drop-before::before,
+.program-instruction-row.is-drop-after::after {
+    content: "";
+    position: absolute;
+    right: 4px;
+    left: 4px;
+    height: 2px;
+    border-radius: 1px;
+    background: var(--ds-accent);
+    box-shadow: 0 0 4px rgba(189, 28, 34, 0.6);
+    z-index: 3;
+    pointer-events: none;
+}
+
+.program-instruction-row.is-drop-before::before {
+    top: -3px;
+}
+
+.program-instruction-row.is-drop-after::after {
+    bottom: -3px;
+}
+
+/* 嵌套层级缩进（loop / if 的从属指令） */
+.program-instruction-row[data-depth="1"] {
+    width: calc(100% - 20px);
+    margin-left: 20px;
+}
+
+.program-instruction-handle {
+    width: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ds-text-muted);
+    cursor: grab;
+}
+
+.program-instruction-handle:active {
+    cursor: grabbing;
+}
+
+.program-instruction-index {
+    color: var(--ds-text-muted);
+    font-size: var(--ds-font-xs);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+}
+
+.program-instruction-icon {
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ds-text-muted);
+    background: var(--ds-bg-panel-raised);
+    border-radius: var(--ds-radius-sm);
+    font-size: 13px;
+}
+
+.program-instruction-row.is-selected .program-instruction-icon,
+.program-instruction-row.is-running .program-instruction-icon,
+.program-instruction-row.is-waiting .program-instruction-icon {
+    color: inherit;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.program-instruction-content {
+    min-width: 0;
+}
+
+.program-instruction-content strong {
+    display: block;
+    overflow: hidden;
+    color: inherit;
+    font-size: var(--ds-font-sm);
+    font-weight: 500;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.program-instruction-state {
+    min-width: 30px;
+    color: var(--ds-text-muted);
+    font-size: var(--ds-font-xs);
+    text-align: right;
+}
+
+.program-instruction-state.is-active {
+    color: inherit;
+    font-weight: 600;
+}
+
+.program-instruction-delete {
+    width: 22px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    color: var(--ds-text-muted);
+    background: var(--ds-bg-control-active);
+    border: 0;
+    border-radius: var(--ds-radius-sm);
+    cursor: pointer;
+    visibility: hidden;
+}
+
+.program-instruction-row:hover .program-instruction-delete,
+.program-instruction-row:focus-within .program-instruction-delete {
+    visibility: visible;
+}
+
+.program-instruction-delete:hover {
+    color: var(--ds-text-strong);
+    background: var(--ds-accent);
+}
+
+/* 底部运行控制栏 */
+.program-panel-footer {
+    min-height: 40px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ds-space-2);
+    padding: 6px var(--ds-space-2);
+    background: var(--ds-bg-panel-raised);
+}
+
+.program-panel-footer > span {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--ds-text-muted);
+    font-size: var(--ds-font-xs);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.program-panel-footer > div {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.program-run-button.is-running {
+    color: #ffd37a;
+    background: rgba(255, 183, 77, 0.28);
+}
+
+/* 属性面板底边隐形拖拽热区（同右侧面板左缘调宽的交互，无外露手柄） */
+.program-inspector-grip {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 6px;
+    cursor: ns-resize;
+    touch-action: none;
+    z-index: 2;
+}
+
+.program-inspector-grip:hover,
+.program-inspector-grip.is-resizing {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+body.program-inspector-resizing,
+body.program-inspector-resizing * {
+    cursor: ns-resize !important;
+    user-select: none !important;
+}
+
+/* 指令属性表单（嵌入函数底部的属性面板内） */
+.program-property-kind {
+    padding: 2px 6px;
+    border-radius: var(--ds-radius-md);
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--ds-text-muted);
+    font-size: var(--ds-font-xs);
+    line-height: var(--ds-line-tight);
+}
+
+.program-property-kind:empty {
+    display: none;
+}
+
+.program-property-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--ds-space-2);
+    align-content: start;
+    padding: 4px 8px 8px;
+}
+
+/* 用户拖拽固定高度后，表单区域内滚动 */
+.program-inspector.has-custom-height .program-property-form {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.program-property-field {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.program-property-field.is-wide {
+    grid-column: 1 / -1;
+}
+
+.program-property-triple {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--ds-space-2);
+}
+
+.program-property-field > span {
+    color: var(--ds-text-muted);
+    font-size: var(--ds-font-xs);
+    font-weight: 500;
+}
+
+.program-property-inline {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 6px;
+}
+
+.program-property-help {
+    grid-column: 1 / -1;
+    margin: 0;
+    color: var(--ds-text-muted);
+    font-size: var(--ds-font-xs);
+    line-height: var(--ds-line-base);
+}
+
+/* 设备在线状态标识 */
+.program-device-signal {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.program-device-signal i {
+    color: var(--ds-green);
+    font-size: 7px;
+}
+
+/* 添加指令弹出菜单（popover，对齐 dropdown-menu 规范） */
+.program-instruction-menu {
+    width: 260px;
+    max-height: min(340px, calc(100vh - 24px));
+    margin: 8px 0 0;
+    padding: 4px;
+    color: var(--ds-text);
+    background: var(--ds-bg-popover);
+    border: 0;
+    border-radius: var(--ds-radius-lg);
+    box-shadow: var(--ds-shadow-popover);
+    font-family: inherit;
+    font-size: var(--ds-font-md);
+    position: fixed;
+    inset: unset;
+    position-anchor: --program-instruction-trigger;
+    position-area: block-end span-inline-end;
+    position-try-fallbacks: flip-block;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.program-instruction-menu::backdrop {
+    background: transparent;
+}
+
+.program-instruction-menu-heading {
+    padding: 5px 8px 6px;
+    color: var(--ds-text-muted);
+    font-size: var(--ds-font-xs);
+    font-weight: 500;
+}
+
+.program-instruction-menu button {
+    width: 100%;
+    min-height: 40px;
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr);
+    align-items: center;
+    gap: 8px;
+    padding: 5px 8px;
+    color: var(--ds-text);
+    background: transparent;
+    border: 0;
+    border-radius: var(--ds-radius-md);
+    cursor: pointer;
+    font: inherit;
+    text-align: left;
+    transition: background-color var(--ds-motion-base), color var(--ds-motion-base);
+}
+
+.program-instruction-menu button:hover {
+    color: var(--ds-text-strong);
+    background: var(--ds-bg-control-hover);
+}
+
+.program-instruction-menu button > i {
+    color: var(--ds-text-muted);
+    font-size: 15px;
+    text-align: center;
+}
+
+.program-instruction-menu button:hover > i {
+    color: var(--ds-text-strong);
+}
+
+.program-instruction-menu button > span {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.program-instruction-menu button strong {
+    font-size: var(--ds-font-sm);
+    font-weight: 500;
+}
+
+.program-instruction-menu button small {
+    color: var(--ds-text-muted);
+    font-size: var(--ds-font-xs);
+}
+
+/* 操作反馈 Toast（对齐深色浮层规范） */
+.program-toast {
+    min-width: 240px;
+    max-width: min(340px, calc(100vw - 24px));
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ds-space-3);
+    position: fixed;
+    right: 16px;
+    bottom: 48px;
+    z-index: 500;
+    padding: 7px 10px 7px 12px;
+    color: var(--ds-text);
+    background: var(--ds-bg-popover);
+    border: 0;
+    border-radius: var(--ds-radius-lg);
+    box-shadow: var(--ds-shadow-popover);
+    font-size: var(--ds-font-sm);
+}
+
+.program-toast[hidden] {
+    display: none;
+}
+
+.program-toast button {
+    min-height: var(--ds-control-h-sm);
+    padding: 0 8px;
+    color: var(--ds-text-strong);
+    background: var(--ds-accent);
+    border: 0;
+    border-radius: var(--ds-radius-md);
+    cursor: pointer;
+    font: inherit;
+    font-size: var(--ds-font-sm);
+    transition: background-color var(--ds-motion-base);
+}
+
+.program-toast button:hover {
+    background: var(--ds-accent-hover);
+}
+
+@media (pointer: coarse) {
+    .program-btn,
+    .program-instruction-menu button {
+        min-height: 34px;
+    }
+}

@@ -188,6 +188,14 @@ function setupSceneContextMenu(viewport, canvas, rangeEditor) {
         }
         selectedObject = object || null;
         selectedObject?.classList.add('is-selected');
+        window.dispatchEvent(new CustomEvent('hitbot:scene-selection-changed', {
+            detail: selectedObject ? {
+                id: selectedObject.dataset.sceneObjectId,
+                modelName: selectedObject.dataset.sceneModelName,
+                displayName: selectedObject.dataset.sceneDisplayName || selectedObject.dataset.sceneModelName,
+                objectType: selectedObject.dataset.objectType
+            } : {}
+        }));
     };
 
     const updateMenuState = () => {

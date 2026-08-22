@@ -16,6 +16,8 @@
     <link rel="stylesheet" href="css/binding-panel.css">
     <link rel="stylesheet" href="css/design-system.css">
     <link rel="stylesheet" href="css/cart.css">
+    <link rel="stylesheet" href="css/program-panel.css?v=1.6.0">
+    <link rel="stylesheet" href="css/variables-panel.css?v=1.6.0">
     <link rel="stylesheet" href="css/borderless.css">
 </head>
 <body>
@@ -245,6 +247,10 @@
                                         <i class="bi bi-globe"></i>
                                         <span>场景</span>
                                     </button>
+                                    <button class="left-toolbar-btn" type="button" title="全局变量" data-tool="variables" aria-expanded="false">
+                                        <i class="bi bi-braces"></i>
+                                        <span>变量</span>
+                                    </button>
                                     <button class="left-toolbar-btn" title="设备库" data-tool="devices">
                                         <i class="bi bi-box-seam"></i>
                                         <span>设备库</span>
@@ -351,6 +357,7 @@
                                             <label class="execute-field-label" for="execute-data-source">数据源</label>
                                             <select class="execute-select" id="execute-data-source" data-execute-source>
                                                 <option value="editor">编辑器</option>
+                                                <option value="scene-program">3D 场景程序</option>
                                                 <option value="blockly">Blockly</option>
                                                 <option value="flow">流程图</option>
                                             </select>
@@ -586,6 +593,22 @@
                                 </div>
                             </div>
 
+                            <div id="programInstructionMenu" class="program-instruction-menu" popover aria-label="添加指令">
+                                <div class="program-instruction-menu-heading">添加到当前函数</div>
+                                <button type="button" data-add-instruction="moveJ"><i class="bi bi-bezier2"></i><span><strong>机器人运动</strong><small>MoveJ · 关节运动</small></span></button>
+                                <button type="button" data-add-instruction="moveL"><i class="bi bi-arrow-up-right"></i><span><strong>直线运动</strong><small>MoveL · 笛卡尔直线</small></span></button>
+                                <button type="button" data-add-instruction="setIO"><i class="bi bi-toggles"></i><span><strong>设置 IO 状态</strong><small>设备节点与参数值</small></span></button>
+                                <button type="button" data-add-instruction="wait"><i class="bi bi-hourglass-split"></i><span><strong>等待条件</strong><small>时间或全局变量</small></span></button>
+                                <button type="button" data-add-instruction="setVar"><i class="bi bi-pencil-square"></i><span><strong>设置变量</strong><small>写入用户变量触发协同</small></span></button>
+                                <button type="button" data-add-instruction="loop"><i class="bi bi-arrow-repeat"></i><span><strong>循环</strong><small>重复执行一组指令</small></span></button>
+                                <button type="button" data-add-instruction="call"><i class="bi bi-box-arrow-in-right"></i><span><strong>调用函数</strong><small>复用已定义动作</small></span></button>
+                            </div>
+
+                            <div class="program-toast" data-program-toast role="status" aria-live="polite" hidden>
+                                <span data-program-toast-message></span>
+                                <button type="button" data-program-undo hidden>撤销</button>
+                            </div>
+
                             <!-- 补充行为控制面板 -->
                             <div class="timeline-panel dock-empty">
                                 <div class="timeline-header">
@@ -608,6 +631,9 @@
                                 </div>
                                 <div class="panel-tab" data-tab="properties" title="属性">
                                     <i class="bi bi-info-circle"></i>
+                                </div>
+                                <div class="panel-tab" data-tab="program" title="程序">
+                                    <i class="bi bi-diagram-3"></i>
                                 </div>
                             </div>
 
@@ -734,8 +760,10 @@
     <script src="js/layout-manager.js"></script>
     <script src="js/action-editor.js"></script>
     <script src="js/cart.js"></script>
+    <script src="js/program-panel.js?v=1.6.0"></script>
+    <script src="js/variables-panel.js?v=1.6.0"></script>
     <script src="js/script.js"></script>
-    <script src="js/panel-loader.js"></script>
+    <script src="js/panel-loader.js?v=1.6.0"></script>
     <script type="module" src="js/device-library-panel.js"></script>
 </body>
 </html> 

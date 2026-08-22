@@ -11,6 +11,8 @@
     flex-direction: row;
     gap: 4px;
     transition: width 0.3s ease;
+    position: relative;
+    flex-shrink: 0; /* 保持用户调整的宽度不被兄弟元素压缩 */
 }
 
 .right-panel.tabs-closed {
@@ -18,7 +20,30 @@
 }
 
 .right-panel.tabs-open {
-    width: 320px; /* 展开时的完整宽度 */
+    width: var(--right-panel-width, 320px); /* 展开时的宽度，可通过左边缘拖拽调整 */
+    max-width: none;
+}
+
+/* 左边缘隐形拖拽热区（无外露手柄） */
+.right-panel-resizer {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 5px;
+    cursor: ew-resize;
+    touch-action: none;
+    z-index: 6;
+}
+
+body.right-panel-resizing,
+body.right-panel-resizing * {
+    cursor: ew-resize !important;
+    user-select: none !important;
+}
+
+body.right-panel-resizing .right-panel {
+    transition: none;
 }
 
 /* 垂直Tab栏样式 */
